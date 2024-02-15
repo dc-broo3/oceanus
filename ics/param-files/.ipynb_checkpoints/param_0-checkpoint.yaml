@@ -1,0 +1,19 @@
+---
+# AN OC like initial conditions
+inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/param-files/"
+snapname : "param_0"
+outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/"
+outname : "stream_0"
+Tbegin : -3.
+Tfinal :  0.  
+dtmin  : 0.002
+prog_mass : 10000000.0 
+prog_scale : 1.
+prog_ics : [0.90597066,  -16.51944387,    1.82896457, -257.34722039, 11.75569947,  217.33668052]
+strip_rate : 4 
+haloflag : 63
+lmcflag : 63
+discflag : 63
+discframe : False
+static_mwh : False
+...

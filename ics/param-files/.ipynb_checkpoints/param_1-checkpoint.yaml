@@ -1,0 +1,19 @@
+---
+# AN GD-1 like initial conditions
+inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/param-files/"
+snapname : "param_1"
+outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/"
+outname : "stream_1"
+Tbegin : -3.
+Tfinal :  0.  
+dtmin  : 0.002
+prog_mass : 20000.0
+prog_scale : 0.005
+prog_ics : [ -12.74302709,   -0.65193598,    5.95016371,  -76.71109844, -213.0667057 , -101.23881431]
+strip_rate : 4
+haloflag : 63
+lmcflag : 63
+discflag : 63
+discframe : False
+static_mwh : False
+...

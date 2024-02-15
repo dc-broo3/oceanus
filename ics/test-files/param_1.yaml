@@ -1,0 +1,18 @@
+Tbegin: -3.0
+Tfinal: 0.0
+discflag: 63
+discframe: false
+dtmin: 0.002
+haloflag: 63
+lmcflag: 63
+prog_ics:
+- 19.99870716050351
+- -55.678122648424164
+- 50.56703531227536
+- -0.03195993392273525
+- 0.05180662409353016
+- 0.06984285126247451
+prog_mass: 999624.7150499099
+prog_scale: 0.6904658708340982
+static_mwh: false
+strip_rate: 4
