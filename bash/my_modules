@@ -1,0 +1,6 @@
+module load slurm
+module load gcc
+module load gsl
+module load hdf5
+module load python
+module load disBatch 
