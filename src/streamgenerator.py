@@ -3,6 +3,7 @@ import astropy.units as u
 import yaml
 import h5py
 from astropy.constants import G
+import os.path
 # import gala
 import sys
 from mwlmc import model as mwlmc_model
@@ -230,7 +231,7 @@ def lagrange_cloud_strip_adT(params):
     mask = np.all(np.isnan(xs_data), axis=(1,2))    
     
     pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag)    
-    write_stream_hdf5(outpath + filename, 
+    write_stream_hdf5(outpath, filename, 
                       xs_data[~mask], 
                       vs_data[~mask], 
                       ts,
@@ -280,7 +281,7 @@ def readparams(paramfile):
     return [inpath, snapname, outpath, outname, prog_ics ,prog_mass, prog_scale, Tbegin, Tfinal, dtmin, 
            haloflag, discflag, lmcflag, strip_rate, discframe, static_mwh]
 
-def write_stream_hdf5(filename, positions, velocities, times, potential, progics, progmass, progscale, frame):
+def write_stream_hdf5(outpath, filename, positions, velocities, times, potential, progics, progmass, progscale, frame):
     """
     Write stream into an hdf5 file
     
@@ -289,19 +290,39 @@ def write_stream_hdf5(filename, positions, velocities, times, potential, progics
     tmax = positions.shape[0]
     particlemax = positions.shape[1]
     
-    print("* Writing stream in {}".format(filename))
+    print("* Writing stream: {}, for potential: {}".format(filename, potential))
+    
+    if os.path.exists(outpath + potential + ".hdf5"):
+        # print("hdf5 already exists")
+        f = h5py.File(outpath + potential + ".hdf5", 'a')
+    else:
+        f = h5py.File(outpath + potential + ".hdf5", 'w')
+    ## You can create a group for each stream
+    if filename not in f:
+        stream = f.create_group(filename)
+        stream.create_dataset('positions', data=positions, shape=(tmax, particlemax, 3))
+        stream.create_dataset('velocities', data=velocities, shape=(tmax, particlemax, 3))
+        stream.create_dataset('times', data=times)
+        stream.create_dataset('potential', data=potential)
+        stream.create_dataset('progenitor-ics', data=progics)
+        stream.create_dataset('progenitor-mass', data=progmass)
+        stream.create_dataset('progenitor-scale', data=progscale)
+        stream.create_dataset('frame-of-reference', data=frame)
+    
+    # f.close()
+                
 
-    hf = h5py.File(filename + ".hdf5", 'w')
-    hf.create_dataset('positions', data=positions, shape=(tmax, particlemax, 3))
-    hf.create_dataset('velocities', data=velocities, shape=(tmax, particlemax, 3))
-    hf.create_dataset('times', data=times)
-    hf.create_dataset('potential', data=potential)
-    hf.create_dataset('progenitor-ics', data=progics)
-    hf.create_dataset('progenitor-mass', data=progmass)
-    hf.create_dataset('progenitor-scale', data=progscale)
-    hf.create_dataset('frame-of-reference', data=frame)
-    #... flags to names for what ics we have used 
-    hf.close()
+    # hf = h5py.File(filename + ".hdf5", 'w')
+    # hf.create_dataset('positions', data=positions, shape=(tmax, particlemax, 3))
+    # hf.create_dataset('velocities', data=velocities, shape=(tmax, particlemax, 3))
+    # hf.create_dataset('times', data=times)
+    # hf.create_dataset('potential', data=potential)
+    # hf.create_dataset('progenitor-ics', data=progics)
+    # hf.create_dataset('progenitor-mass', data=progmass)
+    # hf.create_dataset('progenitor-scale', data=progscale)
+    # hf.create_dataset('frame-of-reference', data=frame)
+    # #... flags to names for what ics we have used 
+    # hf.close()
     
 def fill_with_zeros(arr, m):
     n = arr.shape[0]
@@ -325,7 +346,7 @@ def fill_with_nans_1d(arr, m):
 def harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag):
     
     if mwhflag==63 and mwdflag==63 and lmcflag==63:
-        label = 'Full MW halo, MW disc and LMC expansion'
+        label = 'Full-MWhalo-MWdisc-LMC'
         
     #etc for the rest of the potentials considered but only worth 
     # filling this out once we decide which ones we want to look at
