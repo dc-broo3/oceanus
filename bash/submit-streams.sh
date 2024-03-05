@@ -1,4 +1,5 @@
 #!/bin/bash
 module load disBatch
-sbatch -N1 --constraint=rome -p cca -e streams.e disBatch -p ./log-dbUtil-status-files/ Tasks-128streams
+#change Tasks to which potential we want 
+sbatch -N8 --constraint=rome -p cca -e streams.e disBatch -p ./log-dbUtil-status-files/ Tasks-em-mwh
 

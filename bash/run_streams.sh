@@ -17,4 +17,5 @@ source $VENVDIR/mwlmc_venv/bin/activate
 
 mkdir -p ../logs/
 
-python streamgenerator.py "$@" &> ../logs/disbatch_${id}.log
+#-o to overwrite after .py 
+python streamgenerator.py -f "$@" &> ../logs/disbatch_${id}.log
