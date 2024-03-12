@@ -1,0 +1,20 @@
+---
+ext: "md-mwh-full-mwd-full-lmc"
+inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/md-mwh-full-mwd-full-lmc" 
+outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/md-mwh-full-mwd-full-lmc/"
+Tbegin : -5.0
+Tfinal :  0.  
+dtmin  : 0.001
+strip_rate : 4
+haloflag : 1
+lmcflag : 63
+discflag : 63
+discframe : False
+static_mwh : False
+lmc_switch: False
+Noversample: 10000
+Nsample: 1024
+peri_cut: [5, 25] 
+apo_cut: 50
+...
+
