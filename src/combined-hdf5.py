@@ -35,11 +35,11 @@ def combine_hdf5_files(input_dir, input_sub, output_file):
 
         master.close()
         
-    # Remove all files in the directory after processing
-    # for filename in os.listdir(input_dir):
-    #     file_path = os.path.join(input_dir, filename)
-    #     if filename.endswith(".hdf5"):
-    #         os.remove(file_path)
+    Remove all files in the directory after processing
+    for filename in os.listdir(input_dir):
+        file_path = os.path.join(input_dir, filename)
+        if filename.endswith(".hdf5"):
+            os.remove(file_path)
 
                     
 # Input directory containing HDF5 files
@@ -47,8 +47,9 @@ ending = "mdq-mwh-full-mwd-full-lmc/"
 input_ =  "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/" 
 
 # Output master HDF5 file
-output_ = what_potential(input_ +ending + "stream_1.hdf5") #all streams will have same label, saves doing same steps for 10^X streams
-# print(output_)
+output_ = what_potential(input_ + ending + "stream_0.hdf5") #all streams will have same label, saves doing same steps for 10^X streams
+# output_ = "combined-files/full-MWhalo-full-MWdisc-no-LMC.hdf5"
 # Combine HDF5 files
+
+print(output_)
 combine_hdf5_files(input_, ending, output_)
-    

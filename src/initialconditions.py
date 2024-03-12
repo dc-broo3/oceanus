@@ -57,8 +57,8 @@ def make_ics(params):
     #--------------------------------------------------------------------------------------
     pericenters = wf.pericenter()
     apocenters = wf.apocenter()
-    peri_mask = (pericenters <= peri_cut*u.kpc)
-    apo_mask = (apocenters >= 10*u.kpc)
+    peri_mask = (pericenters < peri_cut[1]*u.kpc) & (pericenters < peri_cut[0]*u.kpc)
+    apo_mask = (apocenters < apo_cut*u.kpc)
     
     pericenters_sample = pericenters[peri_mask]
     apocenters_sample = apocenters[apo_mask]
@@ -69,6 +69,7 @@ def make_ics(params):
     #--------------------------------------------------------------------------------------
     ### Save the initial conditions data for the progenitors into a yaml file
     #--------------------------------------------------------------------------------------
+    # for p in range(len(potentials)): something like this to run over each potential and just change flags, etc. Same x,v, M, a_s
     for i in range(len(prog_ics)):
         yaml_data = {'Tbegin': Tbegin, 
                      'Tfinal': Tfinal, 
