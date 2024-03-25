@@ -202,7 +202,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     inpath, snapname, outpath, filename, \
     fc, Mprog, a_s, pericenter, apocenter, Tbegin, Tfinal, dtmin, \
     mwhflag, mwdflag, lmcflag, strip_rate, \
-    discframe, static_mwh, mwd_switch, lmc_switch = params
+    discframe, static_mwh, static_mwd, lmc_switch = params
         
     fullfile_path = pathlib.Path(outpath) / filename
 
@@ -225,17 +225,16 @@ def lagrange_cloud_strip_adT(params, overwrite):
         _, MWHcoeffs = Model.return_mw_coefficients()
         assert np.allclose(np.array(MWHcoeffs)[:,1:],0)==True, "MW halo coefficients need to be set to zero"
         
-    if mwd_switch==True:
-        MWDfloats, MWDctmp,MWDstmp = Model.return_disc_coefficients()
-        ntimesteps = len(MWDctmp)
-        MWDc, MWDs = np.zeros([ntimesteps, MWDctmp[0].shape[0],MWDctmp[0].shape[1]]), np.zeros([ntimesteps,MWDstmp[0].shape[0],MWDstmp[0].shape[1]])
-        MWDc *= 0
-        MWDs *= 0
-        Model.install_disc_coefficients(MWDc,MWDs)
+    if static_mwd==True:
+        MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
+        MWDctmp, MWDstmp = np.array(MWDctmp), np.array(MWDstmp)
+        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0], MWDstmp[:,0][0]
+        MWDctmp[:,1:], MWDstmp[:,1:] = MWDctmp[:,1:]*0, MWDstmp[:,1:]*0
+        Model.install_disc_coefficients(MWDctmp,MWDstmp)
         #Some line of code here to check they have been set to zero and reinstalled.
-        MWDfloats, MWDctmp,MWDstmp = Model.return_disc_coefficients()
-        assert np.allclose(np.array(MWDctmp),0)==True, "MW disc coefficients (c) need to be set to zero"
-        assert np.allclose(np.array(MWDstmp),0)==True, "MW disc coefficients (s) need to be set to zero"
+        MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
+        assert np.allclose(np.array(MWDctmp)[:,1:],0)==True, "MW disc coefficients (c) need to be set to zero"
+        assert np.allclose(np.array(MWDstmp)[:,1:],0)==True, "MW disc coefficients (s) need to be set to zero"
         
     if lmc_switch==True:
         _, LMCcoeffs = Model.return_lmc_coefficients()
@@ -375,7 +374,11 @@ def lagrange_cloud_strip_adT(params, overwrite):
         xs_data[i], vs_data[i] = fill_with_zeros(xs, max_particles), fill_with_zeros(vs, max_particles)
 
         i += 1
-        
+    
+    mask = np.all(np.isnan(xs_data), axis=(1,2)) 
+    xs_data = xs_data[~mask]
+    vs_data = vs_data[~mask]
+      
     for i in range(len(xs_data)):
             
         disk_x0 = np.array(Model.expansion_centres(ts[i])[:3])
@@ -383,10 +386,9 @@ def lagrange_cloud_strip_adT(params, overwrite):
         xs_data[i] -= disk_x0
         vs_data[i] -= disk_v0
     
-    mask = np.all(np.isnan(xs_data), axis=(1,2)) 
     # Save only every 100th time snapshot - flipping to slice properly, flip back after
-    xs_snaps_flip = np.flip(xs_data[~mask], axis=0)[::100]
-    vs_snaps_flip = np.flip(vs_data[~mask], axis=0)[::100]
+    xs_snaps_flip = np.flip(xs_data, axis=0)[::100]
+    vs_snaps_flip = np.flip(vs_data, axis=0)[::100]
     
     xs_snaps = np.flip(xs_snaps_flip, axis=0)
     vs_snaps = np.flip(vs_snaps_flip, axis=0)
@@ -426,7 +428,7 @@ def readparams(paramfile):
     strip_rate = d["strip_rate"]
     discframe = d["discframe"]
     static_mwh = d["static_mwh"]
-    mwd_switch = d["mwd_switch"]
+    static_mwd = d["mwd_switch"]
     lmc_switch = d["lmc_switch"]
 
     assert type(inpath)==str, "inpath parameter  must be a string"
@@ -445,7 +447,7 @@ def readparams(paramfile):
     assert type(strip_rate)==int, "strip_rate parameter must be an int"
 
     return [inpath, snapname, outpath, outname, prog_ics ,prog_mass, prog_scale, pericenter, apocenter, Tbegin, Tfinal, dtmin, 
-            haloflag, discflag, lmcflag, strip_rate, discframe, static_mwh, mwd_switch, lmc_switch]
+            haloflag, discflag, lmcflag, strip_rate, discframe, static_mwh, static_mwd, lmc_switch]
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, potential, progics, progmass, progscale, pericenter, apocenter, frame):
     """
