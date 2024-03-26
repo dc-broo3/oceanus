@@ -56,7 +56,7 @@ def make_ics(params_mass_scale):
     
     IMF, Noversample, Nsample, peri_cut, apo_cut = params_mass_scale
 
-    gala_pot = gp.NFWPotential.from_circular_velocity(v_c=240 * u.km / u.s, r_s=10 * u.kpc, units=galactic)
+    gala_pot = gp.NFWPotential.from_circular_velocity(v_c=178 * u.km / u.s, r_s=8 * u.kpc, units=galactic)
     agama_pot = gala_pot.as_interop("agama")
 
     dens = agama.Density(type="Dehnen", scaleRadius=15)
@@ -90,8 +90,13 @@ def make_ics(params_mass_scale):
     ### Over-sample from the DF and integrate orbits to be able to find pericenters
     #--------------------------------------------------------------------------------------
     xv = gm.sample(len(samples_mass))[0]
+    
+    # ADD SOME CODE TO SHIFT TO GALACTOCENTRIC FRAME (ADDING MWH MOTIONS)
+    
+    Model.exp...(t=0)
+    
     w0 = gd.PhaseSpacePosition.from_w(xv.T, units=galactic)
-    wf = gala_pot.integrate_orbit(w0, dt=1. * u.Myr, t1=0, t2=6 * u.Gyr, store_all=True) 
+    wf = gala_pot.integrate_orbit(w0, dt=1. * u.Myr, t1=0, t2=5 * u.Gyr, store_all=True) 
 
     #--------------------------------------------------------------------------------------
     ### Cut on the pericentric and apocentric passage conditions
@@ -107,10 +112,12 @@ def make_ics(params_mass_scale):
     cut_prog_ics = xv[peri_mask & apo_mask]
     prog_ics = rng.choice(cut_prog_ics, size=Nsample)
     
-    peris = pericenters[peri_mask & apo_mask]
-    apos = apocenters[peri_mask & apo_mask]
+    peris_cut = pericenters[peri_mask & apo_mask]
+    peris = rng.choice(peris_cut, size=Nsample)
+    apos_cut = apocenters[peri_mask & apo_mask]
+    apos = rng.choice(apos_cut, size=Nsample)
 
-    return prog_ics, mass_scales, peris, apos
+    return prog_ics, mass_scales, peris*u.kpc, apos*u.kpc
 
 
 def streamparams(ics, mass_scales, peris, apos):
