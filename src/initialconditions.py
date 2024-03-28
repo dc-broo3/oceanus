@@ -1,15 +1,24 @@
 import agama
 import astropy.units as u
 import gala.dynamics as gd
+import gala.integrate as gi
 import gala.potential as gp
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import yaml
 import sys
-
 import numpy as np
+
+from mwlmc import model as mwlmc_model
+Model = mwlmc_model.MWLMC()
+
 from gala.units import galactic
 agama.setUnits(length=u.kpc, mass=u.Msun, time=u.Myr)
+
+Integrators = {'Leapfrog': gi.LeapfrogIntegrator, 
+                        'RK4': gi.Ruth4Integrator, 
+                        'RK5': gi.RK5Integrator,
+                        'DOPRI853': gi.DOPRI853Integrator}
 
 rng = np.random.default_rng(seed=1)
 
@@ -25,8 +34,10 @@ def read_mass_scale_params(paramfile):
     Nsample = d["Nsample"]
     peri_cut = d["peri_cut"]
     apo_cut = d["apo_cut"]
+    m200 = d["m200"]
+    c200 = d["c200"]
     
-    return [IMF, Noversample, Nsample, peri_cut, apo_cut]
+    return [IMF, Noversample, Nsample, peri_cut, apo_cut, m200, c200]
 
 def read_pot_params(paramfile):
     """
@@ -52,11 +63,20 @@ def read_pot_params(paramfile):
     return [inpath, outpath, Tbegin, Tfinal, dtmin, 
            haloflag, discflag, lmcflag, strip_rate, discframe, static_mwh, mwd_switch, lmc_switch]
 
+def F_rigid(t, w, m200, c200):
+        origin_halo = np.array(Model.expansion_centres(t/1e3))[3:6]
+        pot = gp.NFWPotential.from_M200_c(M200=m200, c=c200, units=galactic, origin=origin_halo)   
+
+        wdot = np.zeros_like(w)
+        wdot[3:] = pot.acceleration(w[:3]).value    
+        wdot[:3] = w[3:]
+        return wdot
+
 def make_ics(params_mass_scale):
     
-    IMF, Noversample, Nsample, peri_cut, apo_cut = params_mass_scale
+    IMF, Noversample, Nsample, peri_cut, apo_cut, m200, c200 = params_mass_scale
 
-    gala_pot = gp.NFWPotential.from_circular_velocity(v_c=178 * u.km / u.s, r_s=8 * u.kpc, units=galactic)
+    gala_pot = gp.NFWPotential.from_M200_c(M200=m200*u.Msun, c=c200, units=galactic, origin=np.array(Model.expansion_centres(0.))[3:6])
     agama_pot = gala_pot.as_interop("agama")
 
     dens = agama.Density(type="Dehnen", scaleRadius=15)
@@ -66,7 +86,6 @@ def make_ics(params_mass_scale):
     #--------------------------------------------------------------------------------------
     ### Lognormal (final) or truncated lognormal (initial) distribution for the GC masses
     #--------------------------------------------------------------------------------------
-    
     if IMF==True:
         lower_bound = 1e4
         upper_bound = 1e7
@@ -91,21 +110,25 @@ def make_ics(params_mass_scale):
     #--------------------------------------------------------------------------------------
     xv = gm.sample(len(samples_mass))[0]
     
-    # ADD SOME CODE TO SHIFT TO GALACTOCENTRIC FRAME (ADDING MWH MOTIONS)
+    mwh0_xv = np.concatenate((np.array(Model.expansion_centres(0.)[3:6]),
+                              np.array(Model.expansion_centre_velocities(0.)[3:6])*(u.km/u.s).to(u.kpc/u.Myr)))
     
-    Model.exp...(t=0)
-    
-    w0 = gd.PhaseSpacePosition.from_w(xv.T, units=galactic)
-    wf = gala_pot.integrate_orbit(w0, dt=1. * u.Myr, t1=0, t2=5 * u.Gyr, store_all=True) 
+    w0 = gd.PhaseSpacePosition.from_w(xv.T + mwh0_xv[:, None], units=galactic)
+    print("integrating orbits backwards in time...")
+    integrator=Integrators['Leapfrog'](F_rigid, func_args=(m200*u.Msun, c200), func_units=galactic, progress=False)
+    wf = integrator.run(w0,  dt=-1 * u.Myr, t1=0* u.Gyr, t2=-5 * u.Gyr)
+    # wf = gala_pot.integrate_orbit(w0, dt=1. * u.Myr, t1=0, t2=5 * u.Gyr, store_all=True) 
 
     #--------------------------------------------------------------------------------------
     ### Cut on the pericentric and apocentric passage conditions
     #--------------------------------------------------------------------------------------
+    print("finding pericenters and apocenters...")
     pericenters = wf.pericenter()
     apocenters = wf.apocenter()
     peri_mask = (pericenters > peri_cut[0]*u.kpc) & (pericenters < peri_cut[1]*u.kpc)
     apo_mask = (apocenters < apo_cut*u.kpc)
     
+    print("cutting to sample DF...")
     cut_mass_scales = prog_mass_scale[peri_mask & apo_mask]
     mass_scales = rng.choice(cut_mass_scales, size=Nsample)
     
@@ -118,7 +141,6 @@ def make_ics(params_mass_scale):
     apos = rng.choice(apos_cut, size=Nsample)
 
     return prog_ics, mass_scales, peris*u.kpc, apos*u.kpc
-
 
 def streamparams(ics, mass_scales, peris, apos):
     
@@ -166,8 +188,6 @@ def streamparams(ics, mass_scales, peris, apos):
 #-----------------------------------------------------------------------------------------    
 # Run the script - python initialconditions.py ../ics/generation-files/mass-scale.yaml
 #-----------------------------------------------------------------------------------------  
-
 params_mass_scales = read_mass_scale_params(sys.argv[1])   
 prog_ics, mass_scales, peris, apos = make_ics(params_mass_scales)
-
 streamparams(prog_ics, mass_scales, peris, apos)
