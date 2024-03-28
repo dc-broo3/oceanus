@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#SBATCH --job-name=oceanus
+
 id=$1
 shift
 cd /mnt/home/rbrooks/ceph/oceanus/src/
@@ -13,9 +15,9 @@ module load python
 module load disBatch 
 
 VENVDIR=/mnt/home/rbrooks/ceph/venvs
-source $VENVDIR/mwlmc_venv/bin/activate
+source $VENVDIR/mwlmc_fulldiscexp_venv/bin/activate
 
 mkdir -p ../logs/
 
 #-o to overwrite after .py 
-python streamgenerator.py -f "$@" &> ../logs/disbatch_${id}.log
+python streamgenerator.py -o -f "$@" &> ../logs/disbatch_${id}.log

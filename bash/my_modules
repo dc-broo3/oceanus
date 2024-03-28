@@ -4,3 +4,7 @@ module load gsl
 module load hdf5
 module load python
 module load disBatch 
+module load gcc
+module load eigen
+module load texlive
+module load jupyter-kernels
