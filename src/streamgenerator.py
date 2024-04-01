@@ -178,6 +178,18 @@ def energies_angmom(t, xs, vs, mwdflag, mwhflag, lmcflag):
     
     return E, L, Lz
 
+def orbpole(xs,vs):
+    uu = np.cross(xs, vs, axis=1)
+    uumag = np.linalg.norm(uu, axis=1)
+    u = uu.T/uumag
+    b = np.arcsin(u[2])
+    sinl = u[1]/np.cos(b)
+    cosl = u[0]/np.cos(b)
+    ll = np.arctan2(sinl, cosl)
+    gl = np.degrees(ll)
+    gb = np.degrees(b)
+    return gl, gb    
+
 def lagrange_cloud_strip_adT(params, overwrite):  
     
     inpath, snapname, outpath, filename, \
@@ -373,17 +385,20 @@ def lagrange_cloud_strip_adT(params, overwrite):
     Lzs = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     sigma_v = np.nanstd(np.linalg.norm(vs_snaps[-1], axis=1), axis=0)
     lmc_sep = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
+    gls  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
+    gbs  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     
     for i in range(len(xs_snaps)):
         Es[i], Ls[i], Lzs[i] = energies_angmom(ts_snaps[i], xs_snaps[i], vs_snaps[i], mwdflag, mwhflag, lmcflag)
         lmc_sep[i] = np.linalg.norm(Model.expansion_centres(ts_snaps[i])[6:9]) - np.linalg.norm(xs_snaps[i], axis=1)
+        gls[i], gbs[i] = orbpole(xs_snaps[i], vs_snaps[i])
     
     print("calculating LMC closest approach...")
     lmc_close_sep = np.nanmin(lmc_sep, axis=0)
         
     pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh)    
     write_stream_hdf5(outpath, filename, xs_snaps, vs_snaps, ts2,
-                      Es, Ls, Lzs, sigma_v, lmc_sep,
+                      Es, Ls, Lzs, sigma_v, lmc_sep, gls, gbs,
                       pot_label, fc, Mprog, a_s, 
                       pericenter, apocenter, discframe)
 
@@ -434,7 +449,7 @@ def readparams(paramfile):
             haloflag, discflag, lmcflag, strip_rate, discframe, static_mwh, static_mwd, lmc_switch]
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
-                      energies, Ls, Lzs, sigma_v, lmc_sep,
+                      energies, Ls, Lzs, sigma_v, lmc_sep, gls, gbs,
                       potential, progics, progmass, progscale, 
                       pericenter, apocenter, frame):
     """
@@ -454,7 +469,9 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('L', data=Ls)
     hf.create_dataset('Lz', data=Lzs)
     hf.create_dataset('vel_dispersion', data=sigma_v)
-    hf.create_dataset('lmc_sep_min', data=lmc_sep)
+    hf.create_dataset('lmc_sep', data=lmc_sep)
+    hf.create_dataset('pole_l', data=gls)
+    hf.create_dataset('pole_b', data=gbs)
     hf.create_dataset('potential', data=potential)
     hf.create_dataset('progenitor-ics', data=progics)
     hf.create_dataset('progenitor-mass', data=progmass)
