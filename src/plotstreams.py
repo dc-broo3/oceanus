@@ -1,17 +1,27 @@
 from scipy.spatial.transform import Rotation
+import numpy as np
 import scipy
 import pathlib
 import h5py
 
 import astropy.units as u
+from astropy.coordinates import SkyCoord
+from astropy.stats import median_absolute_deviation as mad_
 from astropy.coordinates import CartesianRepresentation, SphericalRepresentation
+import gala.dynamics as gd
+import gala.coordinates as gc
+from mwlmc import model as mwlmc_model
+Model = mwlmc_model.MWLMC()
 import yaml
 
 import matplotlib
 import matplotlib.pyplot as plt
 import os
 os.environ["PATH"] += os.pathsep + "/Library/TeX/texbin"
-plt.style.use('my_standard.mplstyle')
+plt.style.use('/mnt/ceph/users/rbrooks/oceanus/analysis/my_standard.mplstyle')
+
+galcen_v_sun = (11.1, 245, 7.3)*u.km/u.s
+galcen_distance = 8.249*u.kpc
 
 def plot_stream_frames(streams, path, plotname, savefig=False):
     
@@ -95,7 +105,9 @@ def plot_stream_frames(streams, path, plotname, savefig=False):
     if savefig==False:
         return
     elif savefig==True:
-        return plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname))
+        savepath = '/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname)
+        print('* Saving figure at {}.pdf'.format(savepath))
+        return plt.savefig(savepath)
     
     
 def plot_stream_cartesian(streams, path, plotname, savefig=False):
@@ -256,3 +268,272 @@ def plot_stream_cartesian(streams, path, plotname, savefig=False):
 
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname + '_xz'))
+        
+def rv_dispersion(p, v):
+    
+    galcen_v_sun = (11.1, 245, 7.3)*u.km/u.s
+    galcen_distance = 8.249*u.kpc
+    
+    positions = p + Model.expansion_centres(0.)[:3]
+    velocities = v + Model.expansion_centre_velocities(0.)[:3]
+    
+    posvel_gc = SkyCoord(x=positions[:,0]*u.kpc, y=positions[:,1]*u.kpc, z=positions[:,2]*u.kpc,
+                         v_x=velocities[:,0]*u.km/u.s, v_y=velocities[:,1]*u.km/u.s, v_z=velocities[:,2]*u.km/u.s ,
+                         frame='galactocentric', galcen_distance=galcen_distance, galcen_v_sun=galcen_v_sun)
+    posvel_galactic = posvel_gc.transform_to('galactic')
+    posvel_galactic_rc = gc.reflex_correct(posvel_galactic)
+    rvs =  posvel_galactic_rc.radial_velocity
+    
+    return np.nanstd(rvs)      
+        
+def pole_hist(path, plotname, savefig=False):
+    
+    potentials = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', 'md-MWhalo-full-MWdisc-full-LMC.hdf5', \
+                       'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', 'Full-MWhalo-MWdisc-LMC.hdf5', \
+                       'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
+    labels = list(['Static MW','Static Monopole', 'Evolving Monopole', 'Monopole + Dipole', 'Mono + Quadrupole', \
+                      'Monopole + Dipole \n + Quadrupole', 'Full Expansion', 'Full Expansion \n (no LMC)'])
+    fig, ax = plt.subplots(1,1, figsize=(5,2.5))
+
+    Nstreams = 128
+    for j in range(len(potentials)):    
+        data_path = pathlib.Path(path) / potentials[j]
+        pole_b = []
+        for i in range(Nstreams):
+            with h5py.File(data_path,'r') as file:
+
+                pole_b.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
+                
+        sinb = np.sin((pole_b*u.deg).to(u.rad)).value        
+        plt.sca(ax)
+        plt.hist(sinb, bins=np.linspace(-1,1,20), histtype='step', fill=False, label=labels[j])
+
+    plt.xlabel('$\sin(b_{\mathrm{pole}})$')
+    plt.ylabel('N')
+    plt.legend(bbox_to_anchor=(1.45,1.), fontsize=9)
+    
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname))
+    
+        
+def radialphase_peris_veldis(galdist, pericenters, apocenters, sigmavs, mass,plotname, potential, savefig=False):
+
+    f = (np.array(galdist) - np.array(pericenters)) / (np.array(apocenters) - np.array(pericenters))
+    fig, ax = plt.subplots(1,2, figsize=(9,2.75), sharey='row')
+
+    plt.subplots_adjust(wspace=0.)
+    plt.sca(ax[0])
+    plot=plt.scatter(f, sigmavs, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+
+    plt.xlabel(r'$\frac{r_{\mathrm{gal}} - r_p}{r_a - r_p}$')
+    plt.ylabel('$\sigma_v$ [km/s]')
+    plt.xlim(-0.2,1.2)
+
+    plt.sca(ax[1])
+    plot=plt.scatter(pericenters, sigmavs, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    plt.xlabel('$r_{p}$ [kpc]')
+    plt.xlim(1,30)
+    plt.ylim(0,110)
+    
+    cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
+    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.ax.tick_params(labelsize=12)
+    
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
+        
+def poledisp_peri(poledis_l, poledis_b, pericenters, mass, plotname, potential, savefig=False):
+
+    fig, ax = plt.subplots(1,2, figsize=(9,2.75), sharey='row')
+
+    plt.subplots_adjust(wspace=0.)
+    plt.sca(ax[0])
+    plot=plt.scatter(poledis_l, pericenters, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+
+    plt.xlabel(r'$\sigma_{l,\mathrm{pole}}\,[^\circ]$')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlim(1.01e-1,5e2)
+    plt.ylim(4e0,30)
+    plt.ylabel('$r_p$ [kpc]')
+
+    plt.sca(ax[1])
+    plot=plt.scatter(poledis_b, pericenters, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    plt.xlabel(r'$\sigma_{b,\mathrm{pole}}\,[^\circ]$')
+    plt.xscale('log')
+    plt.xlim(1.01e-1,5e1)
+
+    cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
+    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.ax.tick_params(labelsize=12)
+    
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
+        
+def poledisp_distance(poledis_l, poledis_b, distances, mass, plotname, potential, savefig=False):
+    
+    fig, ax = plt.subplots(1,2, figsize=(9,2.75), sharey='row')
+
+    plt.subplots_adjust(wspace=0.)
+    plt.sca(ax[0])
+    plot=plt.scatter(poledis_l, distances, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+
+    plt.xlabel(r'$\sigma_{l,\mathrm{pole}}\,[^\circ]$')
+    plt.xscale('log')
+    plt.ylabel('$r_{\mathrm{gal}}$ [kpc]')
+    plt.xlim(1.01e-1,5e2)
+    plt.ylim(0,55)
+
+    plt.sca(ax[1])
+    plot=plt.scatter(poledis_b, distances, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    plt.xlabel(r'$\sigma_{b,\mathrm{pole}}\,[^\circ]$')
+    plt.xscale('log')
+    plt.xlim(1.01e-1,5e1)
+
+    cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
+    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.ax.tick_params(labelsize=12)
+    
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
+        
+def mollewide_poles_distance(polel, poleb, distance, plotname, potential, savefig=False):
+    
+    plt.figure(figsize=(8,5))
+    plt.subplot(projection="mollweide")
+    plt.grid(alpha=.25)
+    sc=plt.scatter((polel*u.deg).to(u.rad), (poleb*u.deg).to(u.rad),
+               c=distance, cmap='plasma_r', edgecolor='k')
+
+    cb=plt.colorbar(sc,location='right', aspect=30, pad=0.02, shrink=.65)
+    cb.set_label(r'Distance [kpc]')
+    cb.ax.tick_params(labelsize=12)
+    
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+        
+def width_length(width, length, mass, plotname, potential, savefig=False):
+    
+    fig, ax = plt.subplots(1,1, figsize=(5,3))
+    plot=ax.scatter(width, length, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    plt.sca(ax)
+    plt.xlabel('$w\,[^{\circ}]$')
+    plt.ylabel('$l$ [kpc]')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlim(1e-2,3e1)
+    plt.ylim(5e-1,1e2)
+
+    cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
+    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.ax.tick_params(labelsize=12)
+    
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
+        
+def av_lon_lat(lons, lats, mass, plotname, potential, savefig=False):
+    
+    fig, ax = plt.subplots(1,1, figsize=(5,3))
+    plot=ax.scatter(lons, lats, c=mass, cmap='plasma_r', edgecolor='k',
+                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+
+    plt.sca(ax)
+    plt.xlabel(r'$\bar{\psi_{1}}\,[^{\circ}]$')
+    plt.ylabel(r'$\bar{\psi_{2}}\,[^{\circ}]$')
+    plt.xlim(-20,20)
+    plt.ylim(-20,20)
+
+    cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
+    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.ax.tick_params(labelsize=12)
+    
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
+        
+###-------------------------------------------------------------------------------
+### run the script
+###--------------------------------------------------------------------------------
+
+path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
+
+# streams = list(['stream_0', 'stream_1','stream_2','stream_3','stream_4']) 
+# plotname = 'plot_stream_coords'
+# plot_stream_frames(streams, path, plotname, True)
+        
+# pole_hist(path, 'sinbpole-histogram', True)
+
+potentials_list = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', \
+                   'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', \
+                   'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
+
+for potential in potentials_list:
+
+    veldis_rv = []
+    rgal = []
+    peris = []
+    apos = []
+    widths = []
+    lengths = []
+    av_lon = []
+    av_lat = []
+    veldis_gc = []
+    lmc_sep = []
+    pole_b = []
+    pole_b_dis = []
+    pole_l = []
+    pole_l_dis = []
+    masses = []
+    energy = []
+    Ls = []
+    Lzs = []
+
+    Nstreams = 128
+    for i in range(Nstreams):
+        data_path = pathlib.Path(path) / potential 
+        with h5py.File(data_path,'r') as file:
+
+            if i ==1:
+                pot_folder = file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
+
+            pos = np.array(file['stream_{}'.format(i)]['positions'])[-1]
+            vel = np.array(file['stream_{}'.format(i)]['velocities'])[-1]
+            veldis_rv.append(rv_dispersion(pos,vel).value)
+            veldis_gc.append(np.nanstd(np.linalg.norm(vel + Model.expansion_centre_velocities(0.)[:3],axis=1)))
+
+            rgal.append( np.nanmedian(np.linalg.norm(np.array(file['stream_{}'.format(i)]['positions'])[-1],axis=1)) )
+            peris.append(np.array(file['stream_{}'.format(i)]['pericenter']))
+            apos.append(np.array(file['stream_{}'.format(i)]['apocenter']))
+            widths.append(np.array(file['stream_{}'.format(i)]['width']))
+            lengths.append(np.array(file['stream_{}'.format(i)]['length']))
+            av_lon.append(np.array(file['stream_{}'.format(i)]['av_lon']))
+            av_lat.append(np.array(file['stream_{}'.format(i)]['av_lat']))
+            # veldis.append(np.array(file['stream_{}'.format(i)]['vel_dispersion']))
+            lmc_sep.append(np.array(file['stream_{}'.format(i)]['lmc_sep']))
+            pole_b.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
+            pole_l.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
+            pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
+            pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
+            masses.append(np.array(file['stream_{}'.format(i)]['progenitor-mass']))
+            energy.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['energies'])[-1]))
+            Ls.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['L'])[-1]))
+            Lzs.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['Lz'])[-1]))
+
+    print('* Saving figures for potential: {}'.format(potential))
+    radialphase_peris_veldis(rgal, peris, apos, veldis_gc, masses, 'radialphase_peris_veldis', pot_folder, True)
+    poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
+    poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
+    mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
+    width_length(widths, lengths, masses, 'width_length', pot_folder, True)
+    av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
