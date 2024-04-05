@@ -284,13 +284,54 @@ def rv_dispersion(p, v):
     posvel_galactic_rc = gc.reflex_correct(posvel_galactic)
     rvs =  posvel_galactic_rc.radial_velocity
     
-    return np.nanstd(rvs)      
+    return np.nanstd(rvs) 
+
+def lons_lats(pos, vel):
+    prog = gd.PhaseSpacePosition(pos[0] * u.kpc, vel[0] * u.km / u.s)
+    stream = gd.PhaseSpacePosition(pos[1:].T * u.kpc, vel[1:].T * u.km / u.s)
+    R1 = Rotation.from_euler("z", -prog.spherical.lon.degree, degrees=True)
+    R2 = Rotation.from_euler("y", prog.spherical.lat.degree, degrees=True)
+    R_prog0 = R2.as_matrix() @ R1.as_matrix()  
+
+    new_vxyz = R_prog0 @ prog.v_xyz
+    v_angle = np.arctan2(new_vxyz[2], new_vxyz[1])
+    R3 = Rotation.from_euler("x", -v_angle.to_value(u.degree), degrees=True)
+    R = (R3 * R2 * R1).as_matrix()
+
+    stream_rot = gd.PhaseSpacePosition(stream.data.transform(R))
+    stream_sph = stream_rot.spherical
+    lon = stream_sph.lon.wrap_at(180*u.deg).degree
+    lat = stream_sph.lat.degree
+    return lon, lat
+
+def local_veldis(lons, vfs):
+
+    # Compute percentiles
+    lower_value = np.nanpercentile(lons, 0.1)
+    upper_value = np.nanpercentile(lons, 99.9)
+    # Filter lons_mainbody
+    lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
+    vfs_mainbody = vfs[1:][(lons >= lower_value) & (lons <= upper_value)] #excludes progenitor [1:]
+    # Create bins
+    lon_bins = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50)
+    # Compute absolute velocity norms
+    vfs_absol = np.linalg.norm(vfs_mainbody, axis=1)
+    # Slice lons_mainbody into bins
+    bin_indices = np.digitize(lons_mainbody, lon_bins)
+    # Create a mask array
+    mask = np.zeros((len(lons_mainbody), len(lon_bins) - 1), dtype=bool)
+    for i in range(1, len(lon_bins)):
+        mask[:, i - 1] = (bin_indices == i)
+
+    # Calculate standard deviation for each bin
+    local_veldis = np.array([np.std(vfs_absol[m]) for m in mask.T])
+    return np.nanmedian(local_veldis)
         
 def pole_hist(path, plotname, savefig=False):
     
-    potentials = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', 'md-MWhalo-full-MWdisc-full-LMC.hdf5', \
-                       'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', 'Full-MWhalo-MWdisc-LMC.hdf5', \
-                       'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
+    potentials = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', 
+                       'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', \
+                       'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
     labels = list(['Static MW','Static Monopole', 'Evolving Monopole', 'Monopole + Dipole', 'Mono + Quadrupole', \
                       'Monopole + Dipole \n + Quadrupole', 'Full Expansion', 'Full Expansion \n (no LMC)'])
     fig, ax = plt.subplots(1,1, figsize=(5,2.5))
@@ -320,7 +361,7 @@ def radialphase_peris_veldis(galdist, pericenters, apocenters, sigmavs, mass,plo
 
     f = (np.array(galdist) - np.array(pericenters)) / (np.array(apocenters) - np.array(pericenters))
     fig, ax = plt.subplots(1,2, figsize=(9,2.75), sharey='row')
-
+    
     plt.subplots_adjust(wspace=0.)
     plt.sca(ax[0])
     plot=plt.scatter(f, sigmavs, c=mass, cmap='plasma_r', edgecolor='k',
@@ -334,8 +375,8 @@ def radialphase_peris_veldis(galdist, pericenters, apocenters, sigmavs, mass,plo
     plot=plt.scatter(pericenters, sigmavs, c=mass, cmap='plasma_r', edgecolor='k',
                    norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
     plt.xlabel('$r_{p}$ [kpc]')
-    plt.xlim(1,30)
-    plt.ylim(0,110)
+    plt.xlim(6,30)
+    plt.ylim(0,30)
     
     cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
     cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
@@ -356,9 +397,8 @@ def poledisp_peri(poledis_l, poledis_b, pericenters, mass, plotname, potential, 
 
     plt.xlabel(r'$\sigma_{l,\mathrm{pole}}\,[^\circ]$')
     plt.xscale('log')
-    plt.yscale('log')
-    plt.xlim(1.01e-1,5e2)
-    plt.ylim(4e0,30)
+    plt.xlim(1e-1,5e2)
+    plt.ylim(9,26)
     plt.ylabel('$r_p$ [kpc]')
 
     plt.sca(ax[1])
@@ -495,16 +535,33 @@ def stellarmass_veldis(mass, veldis, plotname, potential, savefig=False):
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
     plt.close()
+    
+def rlmc_veldis(rlmc, veldis, pericenters, plotname, potential, savefig=False):
+
+    fig, ax = plt.subplots(1,1, figsize=(5,3)) 
+    plot=plt.scatter(np.nanmin(rlmc,axis=1), np.array(veldis), c=pericenters, 
+                     edgecolor='k',cmap='plasma_r', vmin=10, vmax=25)
+
+    plt.xlabel(r'Closest approach to LMC [kpc]')
+    plt.ylabel(r'$\sigma_v$ [km/s]')
+    plt.xlim(0,49)
+    plt.ylim(0,31)
+    
+    cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
+    cb.set_label(r'$r_{p}\,[\mathrm{kpc}]$')
+    cb.ax.tick_params(labelsize=12)
+
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
         
 ###-------------------------------------------------------------------------------
 ### run the script
 ###--------------------------------------------------------------------------------
 
 path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
-
 # streams = list(['stream_0', 'stream_1','stream_2','stream_3','stream_4']) 
-# plotname = 'plot_stream_coords'
-# plot_stream_frames(streams, path, plotname, True)
+# plot_stream_frames(streams, path, 'plot_stream_coords', True)
         
 # pole_hist(path, 'sinbpole-histogram', True)
 
@@ -514,7 +571,6 @@ potentials_list = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.h
 
 for potential in potentials_list:
 
-    veldis_rv = []
     rgal = []
     peris = []
     apos = []
@@ -522,7 +578,7 @@ for potential in potentials_list:
     lengths = []
     av_lon = []
     av_lat = []
-    veldis_gc = []
+    loc_veldis = []
     lmc_sep = []
     pole_b = []
     pole_b_dis = []
@@ -532,7 +588,7 @@ for potential in potentials_list:
     energy = []
     Ls = []
     Lzs = []
-
+    
     Nstreams = 128
     for i in range(Nstreams):
         data_path = pathlib.Path(path) / potential 
@@ -541,34 +597,32 @@ for potential in potentials_list:
             if i ==1:
                 pot_folder = file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
 
-            # pos = np.array(file['stream_{}'.format(i)]['positions'])[-1]
+            pos = np.array(file['stream_{}'.format(i)]['positions'])[-1]
             vel = np.array(file['stream_{}'.format(i)]['velocities'])[-1]
-            # veldis_rv.append(rv_dispersion(pos,vel).value)
-            veldis_gc.append(np.nanstd(np.linalg.norm(vel + Model.expansion_centre_velocities(0.)[:3],axis=1)))
-
-            # rgal.append( np.nanmedian(np.linalg.norm(np.array(file['stream_{}'.format(i)]['positions'])[-1],axis=1)) )
-            # peris.append(np.array(file['stream_{}'.format(i)]['pericenter']))
-            # apos.append(np.array(file['stream_{}'.format(i)]['apocenter']))
-            # widths.append(np.array(file['stream_{}'.format(i)]['width']))
-            # lengths.append(np.array(file['stream_{}'.format(i)]['length']))
-            # av_lon.append(np.array(file['stream_{}'.format(i)]['av_lon']))
-            # av_lat.append(np.array(file['stream_{}'.format(i)]['av_lat']))
-            # veldis.append(np.array(file['stream_{}'.format(i)]['vel_dispersion']))
-            # lmc_sep.append(np.array(file['stream_{}'.format(i)]['lmc_sep']))
-            # pole_b.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
-            # pole_l.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
-            # pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
-            # pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
+            lons, lats = lons_lats(pos, vel)
+            loc_veldis.append(local_veldis(lons, vel))
+            rgal.append( np.nanmedian(np.linalg.norm(np.array(file['stream_{}'.format(i)]['positions'])[-1],axis=1)) )
+            peris.append(np.array(file['stream_{}'.format(i)]['pericenter']))
+            apos.append(np.array(file['stream_{}'.format(i)]['apocenter']))
+            widths.append(np.array(file['stream_{}'.format(i)]['width']))
+            lengths.append(np.array(file['stream_{}'.format(i)]['length']))
+            av_lon.append(np.array(file['stream_{}'.format(i)]['av_lon']))
+            av_lat.append(np.array(file['stream_{}'.format(i)]['av_lat']))
+            lmc_sep.append(np.array(file['stream_{}'.format(i)]['lmc_sep']))
+            pole_b.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
+            pole_l.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
+            pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
+            pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
             masses.append(np.array(file['stream_{}'.format(i)]['progenitor-mass']))
-            # energy.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['energies'])[-1]))
-            # Ls.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['L'])[-1]))
-            # Lzs.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['Lz'])[-1]))
-
+            energy.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['energies'])[-1]))
+            Ls.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['L'])[-1]))
     print('* Saving figures for potential: {}'.format(potential))
-    # radialphase_peris_veldis(rgal, peris, apos, veldis_gc, masses, 'radialphase_peris_veldis', pot_folder, True)
+    
+    radialphase_peris_veldis(rgal, peris, apos, loc_veldis, masses, 'radialphase_peris_veldis', pot_folder, True)
     # poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
     # poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
     # mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
     # width_length(widths, lengths, masses, 'width_length', pot_folder, True)
     # av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
-    stellarmass_veldis(masses, veldis_gc, 'stellarmass_veldis', pot_folder, True)
+    # stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
+    # rlmc_veldis(lmc_sep, loc_veldis, peris, 'rlmc_veldis', pot_folder, True)
