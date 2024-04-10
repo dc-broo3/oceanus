@@ -1,6 +1,7 @@
 from scipy.spatial.transform import Rotation
 import numpy as np
 import scipy
+import concurrent.futures
 import pathlib
 import h5py
 
@@ -336,7 +337,7 @@ def pole_hist(path, plotname, savefig=False):
                       'Monopole + Dipole \n + Quadrupole', 'Full Expansion', 'Full Expansion \n (no LMC)'])
     fig, ax = plt.subplots(1,1, figsize=(5,2.5))
 
-    Nstreams = 128
+    Nstreams = 1024
     for j in range(len(potentials)):    
         data_path = pathlib.Path(path) / potentials[j]
         pole_b = []
@@ -355,31 +356,39 @@ def pole_hist(path, plotname, savefig=False):
     
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname))
+    plt.close()
     
         
 def radialphase_peris_veldis(galdist, pericenters, apocenters, sigmavs, mass,plotname, potential, savefig=False):
 
     f = (np.array(galdist) - np.array(pericenters)) / (np.array(apocenters) - np.array(pericenters))
     fig, ax = plt.subplots(1,2, figsize=(9,2.75), sharey='row')
-    
+
     plt.subplots_adjust(wspace=0.)
     plt.sca(ax[0])
-    plot=plt.scatter(f, sigmavs, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
-
+    
+    x_range, xbins = (0, 1) , 20
+    y_range, ybins = (0, 40) , 15
+    plot = plt.hexbin(f, sigmavs, cmap='magma',
+                      gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
+    
     plt.xlabel(r'$\frac{r_{\mathrm{gal}} - r_p}{r_a - r_p}$')
-    plt.ylabel('$\sigma_v$ [km/s]')
-    plt.xlim(-0.2,1.2)
+    plt.ylabel('$\sigma_{v,\,\mathrm{loc}}$ [km/s]')
+    plt.xlim(-0.05,1.05)
 
     plt.sca(ax[1])
-    plot=plt.scatter(pericenters, sigmavs, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    x_range, xbins = (9, 26) , 20
+    y_range, ybins = (0, 40) , 15
+    plot = plt.hexbin(pericenters, sigmavs, cmap='magma',
+                      gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2)) 
     plt.xlabel('$r_{p}$ [kpc]')
-    plt.xlim(6,30)
+    plt.xlim(9,26)
     plt.ylim(0,30)
     
     cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
-    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.set_label('Number counts')
     cb.ax.tick_params(labelsize=12)
     
     if savefig==True:
@@ -392,24 +401,28 @@ def poledisp_peri(poledis_l, poledis_b, pericenters, mass, plotname, potential, 
 
     plt.subplots_adjust(wspace=0.)
     plt.sca(ax[0])
-    plot=plt.scatter(poledis_l, pericenters, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    x_bins_log = np.logspace(np.log10(0.1), np.log10(250), 25)
+    y_range, ybins = (9, 26) , 20
+    plot = plt.hexbin(np.log10(poledis_l), pericenters, cmap='magma',
+                      gridsize=(x_bins_log.size, ybins),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
 
-    plt.xlabel(r'$\sigma_{l,\mathrm{pole}}\,[^\circ]$')
-    plt.xscale('log')
-    plt.xlim(1e-1,5e2)
+    plt.xlabel(r'$\log_{10}(\sigma_{l,\mathrm{pole}})\,[^\circ]$')
+    plt.xlim(np.log10(0.1),np.log10(300))
     plt.ylim(9,26)
     plt.ylabel('$r_p$ [kpc]')
 
     plt.sca(ax[1])
-    plot=plt.scatter(poledis_b, pericenters, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
-    plt.xlabel(r'$\sigma_{b,\mathrm{pole}}\,[^\circ]$')
-    plt.xscale('log')
-    plt.xlim(1.01e-1,5e1)
+    x_bins_log = np.logspace(np.log10(0.1), np.log10(50), 20)
+    y_range, ybins = (9, 26) , 20
+    plot = plt.hexbin(np.log10(poledis_b), pericenters, cmap='magma',
+                      gridsize=(x_bins_log.size, ybins),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
+    plt.xlim(np.log10(0.1),np.log10(50))
+    plt.xlabel(r'$\log_{10}(\sigma_{b,\mathrm{pole}})\,[^\circ]$')
 
     cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
-    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.set_label('Number counts')
     cb.ax.tick_params(labelsize=12)
     
     if savefig==True:
@@ -422,24 +435,28 @@ def poledisp_distance(poledis_l, poledis_b, distances, mass, plotname, potential
 
     plt.subplots_adjust(wspace=0.)
     plt.sca(ax[0])
-    plot=plt.scatter(poledis_l, distances, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    x_bins_log = np.logspace(np.log10(0.1), np.log10(250), 25)
+    y_range, ybins = (0, 55) , 20
+    plot = plt.hexbin(np.log10(poledis_l), distances, cmap='magma',
+                      gridsize=(x_bins_log.size, ybins),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
 
-    plt.xlabel(r'$\sigma_{l,\mathrm{pole}}\,[^\circ]$')
-    plt.xscale('log')
+    plt.xlabel(r'$\log_{10}(\sigma_{l,\mathrm{pole}})\,[^\circ]$')
     plt.ylabel('$r_{\mathrm{gal}}$ [kpc]')
-    plt.xlim(1.01e-1,5e2)
+    plt.xlim(np.log10(0.1),np.log10(300))
     plt.ylim(0,55)
 
     plt.sca(ax[1])
-    plot=plt.scatter(poledis_b, distances, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
-    plt.xlabel(r'$\sigma_{b,\mathrm{pole}}\,[^\circ]$')
-    plt.xscale('log')
-    plt.xlim(1.01e-1,5e1)
+    x_bins_log = np.logspace(np.log10(0.1), np.log10(50), 20)
+    y_range, ybins = (9, 26) , 20
+    plot = plt.hexbin(np.log10(poledis_b), distances, cmap='magma',
+                      gridsize=(x_bins_log.size, ybins),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
+    plt.xlabel(r'$\log_{10}(\sigma_{b,\mathrm{pole}})\,[^\circ]$')
+    plt.xlim(np.log10(0.1),np.log10(50))
 
     cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
-    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.set_label('Number counts')
     cb.ax.tick_params(labelsize=12)
     
     if savefig==True:
@@ -452,7 +469,7 @@ def mollewide_poles_distance(polel, poleb, distance, plotname, potential, savefi
     plt.subplot(projection="mollweide")
     plt.grid(alpha=.25)
     sc=plt.scatter((polel*u.deg).to(u.rad), (poleb*u.deg).to(u.rad),
-               c=distance, cmap='plasma_r', edgecolor='k')
+               c=distance, cmap='plasma_r', edgecolor='k', rasterized=True)
 
     cb=plt.colorbar(sc,location='right', aspect=30, pad=0.02, shrink=.65)
     cb.set_label(r'Distance [kpc]')
@@ -464,18 +481,19 @@ def mollewide_poles_distance(polel, poleb, distance, plotname, potential, savefi
 def width_length(width, length, mass, plotname, potential, savefig=False):
     
     fig, ax = plt.subplots(1,1, figsize=(5,3))
-    plot=ax.scatter(width, length, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    x_bins_log = np.logspace(np.log10(1e-2), np.log10(3e1), 25)
+    y_bins_log = np.logspace(np.log10(5e-1), np.log10(1e2), 25)
+    plot = plt.hexbin(np.log10(width), np.log10(length), cmap='magma',
+                      gridsize=(x_bins_log.size, y_bins_log.size),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
     plt.sca(ax)
-    plt.xlabel('$w\,[^{\circ}]$')
-    plt.ylabel('$l$ [kpc]')
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.xlim(1e-2,3e1)
-    plt.ylim(5e-1,1e2)
+    plt.xlabel('$\log_{10}(w)\,[^{\circ}]$')
+    plt.ylabel('$\log_{10}(l)$ [kpc]')
+    plt.xlim(np.log10(1e-2),np.log10(3e1))
+    plt.ylim(np.log10(5e-1),np.log10(1e2))
 
     cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
-    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.set_label('Number counts')
     cb.ax.tick_params(labelsize=12)
     
     if savefig==True:
@@ -485,17 +503,21 @@ def width_length(width, length, mass, plotname, potential, savefig=False):
 def av_lon_lat(lons, lats, mass, plotname, potential, savefig=False):
     
     fig, ax = plt.subplots(1,1, figsize=(5,3))
-    plot=ax.scatter(lons, lats, c=mass, cmap='plasma_r', edgecolor='k',
-                   norm=matplotlib.colors.LogNorm(vmin=1e4, vmax=1e6))
+    
+    x_range, xbins = (-5, 5) , 25
+    y_range, ybins = (-5, 5) , 20
+    plot = plt.hexbin(lons, lats, cmap='magma',
+                      gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
 
     plt.sca(ax)
     plt.xlabel(r'$\bar{\psi_{1}}\,[^{\circ}]$')
     plt.ylabel(r'$\bar{\psi_{2}}\,[^{\circ}]$')
-    plt.xlim(-20,20)
-    plt.ylim(-20,20)
+    plt.xlim(-5,5)
+    plt.ylim(-5,5)
 
     cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
-    cb.set_label(r'$M_{\mathrm{prog}}\,[\mathrm{M}_{\odot}$]')
+    cb.set_label('Number counts')
     cb.ax.tick_params(labelsize=12)
     
     if savefig==True:
@@ -509,8 +531,8 @@ def veldis_mstellar_rel(m):
 def stellarmass_veldis(mass, veldis, plotname, potential, savefig=False):
     
     fig, ax = plt.subplots(1,1, figsize=(5,3))
-    plt.scatter(np.array(masses)[veldis < veldis_mstellar_rel(mass)], np.array(veldis)[veldis < veldis_mstellar_rel(mass)], c='k', s=5)
-    plt.scatter(np.array(masses)[veldis > veldis_mstellar_rel(mass)], np.array(veldis)[veldis > veldis_mstellar_rel(mass)], c='r', s=5)
+    plt.scatter(np.array(masses)[veldis < veldis_mstellar_rel(mass)], np.array(veldis)[veldis < veldis_mstellar_rel(mass)], c='k', s=5, rasterized=True)
+    plt.scatter(np.array(masses)[veldis > veldis_mstellar_rel(mass)], np.array(veldis)[veldis > veldis_mstellar_rel(mass)], c='r', s=5, rasterized=True)
 
     plt.sca(ax)
     plt.xlabel(r'$M_{\mathrm{*}}\,[\mathrm{M}_{\odot}]$')
@@ -536,19 +558,23 @@ def stellarmass_veldis(mass, veldis, plotname, potential, savefig=False):
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
     plt.close()
     
-def rlmc_veldis(rlmc, veldis, pericenters, plotname, potential, savefig=False):
-
+def rlmc_veldis(rlmc, veldis, plotname, potential, savefig=False):
+    
     fig, ax = plt.subplots(1,1, figsize=(5,3)) 
-    plot=plt.scatter(np.nanmin(rlmc,axis=1), np.array(veldis), c=pericenters, 
-                     edgecolor='k',cmap='plasma_r', vmin=10, vmax=25)
+    
+    x_range, xbins = (0, 50) , 25
+    y_range, ybins = (0, 40) , 20
+    plot = plt.hexbin(np.nanmin(rlmc,axis=1), veldis, cmap='magma',
+                      gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
+                      norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
 
     plt.xlabel(r'Closest approach to LMC [kpc]')
     plt.ylabel(r'$\sigma_v$ [km/s]')
     plt.xlim(0,49)
     plt.ylim(0,31)
-    
+ 
     cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
-    cb.set_label(r'$r_{p}\,[\mathrm{kpc}]$')
+    cb.set_label('Number counts')
     cb.ax.tick_params(labelsize=12)
 
     if savefig==True:
@@ -562,8 +588,80 @@ def rlmc_veldis(rlmc, veldis, pericenters, plotname, potential, savefig=False):
 path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
 # streams = list(['stream_0', 'stream_1','stream_2','stream_3','stream_4']) 
 # plot_stream_frames(streams, path, 'plot_stream_coords', True)
-        
 # pole_hist(path, 'sinbpole-histogram', True)
+
+# def process_potential(potential):
+#     rgal = []
+#     peris = []
+#     apos = []
+#     widths = []
+#     lengths = []
+#     av_lon = []
+#     av_lat = []
+#     loc_veldis = []
+#     lmc_sep = []
+#     pole_b = []
+#     pole_b_dis = []
+#     pole_l = []
+#     pole_l_dis = []
+#     masses = []
+#     energy = []
+#     Ls = []
+
+#     Nstreams = 100 #1024
+#     for i in range(Nstreams):
+#         data_path = pathlib.Path(path) / potential 
+#         with h5py.File(data_path, 'r') as file:
+#             if i == 1:
+#                 pot_folder = file[f'stream_{i}']['potential'][()].decode('utf-8')
+
+#             pos = np.array(file[f'stream_{i}']['positions'])[-1]
+#             vel = np.array(file[f'stream_{i}']['velocities'])[-1]
+#             lons, lats = lons_lats(pos, vel)  
+#             loc_veldis.append(local_veldis(lons, vel)) 
+#             rgal.append(np.nanmedian(np.linalg.norm(np.array(file[f'stream_{i}']['positions'])[-1],axis=1)))
+#             peris.append(np.array(file[f'stream_{i}']['pericenter']))
+#             apos.append(np.array(file[f'stream_{i}']['apocenter']))
+#             widths.append(np.array(file[f'stream_{i}']['width']))
+#             lengths.append(np.array(file[f'stream_{i}']['length']))
+#             av_lon.append(np.array(file[f'stream_{i}']['av_lon']))
+#             av_lat.append(np.array(file[f'stream_{i}']['av_lat']))
+#             lmc_sep.append(np.array(file[f'stream_{i}']['lmc_sep']))
+#             pole_b.append(np.nanmedian(np.array(file[f'stream_{i}']['pole_b'])[-1]))
+#             pole_l.append(np.nanmedian(np.array(file[f'stream_{i}']['pole_l'])[-1]))
+#             pole_b_dis.append(np.nanstd(np.array(file[f'stream_{i}']['pole_b'])[-1]))
+#             pole_l_dis.append(np.nanstd(np.array(file[f'stream_{i}']['pole_l'])[-1]))
+#             masses.append(np.array(file[f'stream_{i}']['progenitor-mass']))
+#             energy.append(np.nanmedian(np.array(file[f'stream_{i}']['energies'])[-1]))
+#             Ls.append(np.nanmedian(np.array(file[f'stream_{i}']['L'])[-1]))
+            
+#     return rgal, peris, apos, widths, lengths, av_lon, av_lat, loc_veldis, lmc_sep, pole_b, pole_b_dis, pole_l, pole_l_dis, masses, energy, Ls, pot_folder
+
+# def main():
+#     path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
+#     potentials_list = ['static-mwh-only.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',
+#                        'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 
+#                        'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', 'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5']
+
+#     with concurrent.futures.ThreadPoolExecutor() as executor:
+#         futures = [executor.submit(process_potential, potential) for potential in potentials_list]
+
+#         for future in concurrent.futures.as_completed(futures):
+#             rgal, peris, apos, widths, lengths, av_lon, av_lat, loc_veldis, lmc_sep, pole_b, pole_b_dis, pole_l, pole_l_dis, masses, energy, Ls, pot_folder = future.result()
+#             # Do something with the processed data
+#             print('* Saving figures for potential: {}'.format(future))
+#             radialphase_peris_veldis(rgal, peris, apos, loc_veldis, masses, 'radialphase_peris_veldis', pot_folder, True)
+#             poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
+#             poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
+#             mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
+#             width_length(widths, lengths, masses, 'width_length', pot_folder, True)
+#             av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
+#             stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
+#             rlmc_veldis(lmc_sep, loc_veldis, peris, 'rlmc_veldis', pot_folder, True)
+
+# if __name__ == "__main__":
+#     main()
+
 
 potentials_list = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', \
                    'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', \
@@ -589,7 +687,7 @@ for potential in potentials_list:
     Ls = []
     Lzs = []
     
-    Nstreams = 128
+    Nstreams = 1024
     for i in range(Nstreams):
         data_path = pathlib.Path(path) / potential 
         with h5py.File(data_path,'r') as file:
@@ -619,10 +717,10 @@ for potential in potentials_list:
     print('* Saving figures for potential: {}'.format(potential))
     
     radialphase_peris_veldis(rgal, peris, apos, loc_veldis, masses, 'radialphase_peris_veldis', pot_folder, True)
-    # poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
-    # poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
-    # mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
-    # width_length(widths, lengths, masses, 'width_length', pot_folder, True)
-    # av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
-    # stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
-    # rlmc_veldis(lmc_sep, loc_veldis, peris, 'rlmc_veldis', pot_folder, True)
+    poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
+    poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
+    mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
+    width_length(widths, lengths, masses, 'width_length', pot_folder, True)
+    av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
+    stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
+    rlmc_veldis(lmc_sep, loc_veldis, 'rlmc_veldis', pot_folder, True)

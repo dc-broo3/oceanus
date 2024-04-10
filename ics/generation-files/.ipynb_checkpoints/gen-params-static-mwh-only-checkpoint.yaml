@@ -8,7 +8,6 @@ strip_rate : 2
 haloflag : 0
 lmcflag : 0
 discflag : 0
-discframe : False
 static_mwh : True
 mwd_switch : True
 lmc_switch: True
