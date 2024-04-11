@@ -116,10 +116,8 @@ def gala_F(t, w, mwdflag, mwhflag, lmcflag):
     x0 = np.array(Model.expansion_centres(t))
     # disk
     acc_disk = Model.mwd_fields(t, *(w[:3, :] - x0[:3, None]), mwdharmonicflag=mwdflag)[:, :3]
-    
     # halo
     acc_halo = Model.mwhalo_fields(t, *(w[:3] - x0[3:6, None]), mwhharmonicflag=mwhflag)[:, :3]
-    
     # lmc
     acc_lmc = Model.lmc_fields(t, *(w[:3] - x0[6:9, None]), lmcharmonicflag=lmcflag)[:, :3]
     
@@ -190,12 +188,52 @@ def orbpole(xs,vs):
     gb = np.degrees(b)
     return gl, gb    
 
+def lons_lats(pos, vel):
+    prog = gd.PhaseSpacePosition(pos[0] * u.kpc, vel[0] * u.km / u.s)
+    stream = gd.PhaseSpacePosition(pos[1:].T * u.kpc, vel[1:].T * u.km / u.s)
+    R1 = Rotation.from_euler("z", -prog.spherical.lon.degree, degrees=True)
+    R2 = Rotation.from_euler("y", prog.spherical.lat.degree, degrees=True)
+    R_prog0 = R2.as_matrix() @ R1.as_matrix()  
+
+    new_vxyz = R_prog0 @ prog.v_xyz
+    v_angle = np.arctan2(new_vxyz[2], new_vxyz[1])
+    R3 = Rotation.from_euler("x", -v_angle.to_value(u.degree), degrees=True)
+    R = (R3 * R2 * R1).as_matrix()
+
+    stream_rot = gd.PhaseSpacePosition(stream.data.transform(R))
+    stream_sph = stream_rot.spherical
+    lon = stream_sph.lon.wrap_at(180*u.deg).degree
+    lat = stream_sph.lat.degree
+    return lon, lat
+
+def local_veldis(lons, vfs):
+    # Compute percentiles
+    lower_value = np.nanpercentile(lons, 0.1)
+    upper_value = np.nanpercentile(lons, 99.9)
+    # Filter lons_mainbody
+    lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
+    vfs_mainbody = vfs[1:][(lons >= lower_value) & (lons <= upper_value)] #excludes progenitor [1:]
+    # Create bins
+    lon_bins = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50)
+    # Compute absolute velocity norms
+    vfs_absol = np.linalg.norm(vfs_mainbody, axis=1)
+    # Slice lons_mainbody into bins
+    bin_indices = np.digitize(lons_mainbody, lon_bins)
+    # Create a mask array
+    mask = np.zeros((len(lons_mainbody), len(lon_bins) - 1), dtype=bool)
+    for i in range(1, len(lon_bins)):
+        mask[:, i - 1] = (bin_indices == i)
+
+    # Calculate standard deviation for each bin
+    local_veldis = np.array([np.std(vfs_absol[m]) for m in mask.T])
+    return np.nanmedian(local_veldis)
+
 def lagrange_cloud_strip_adT(params, overwrite):  
     
     inpath, snapname, outpath, filename, \
     fc, Mprog, a_s, pericenter, apocenter, Tbegin, Tfinal, dtmin, \
     mwhflag, mwdflag, lmcflag, strip_rate, \
-    discframe, static_mwh, static_mwd, lmc_switch = params
+    static_mwh, static_mwd, lmc_switch = params
     
     fullfile_path = pathlib.Path(outpath) / filename
 
@@ -374,16 +412,23 @@ def lagrange_cloud_strip_adT(params, overwrite):
         xs_data[i] -= disk_x0
         vs_data[i] -= disk_v0
         
-    # Save only every 100th time snapshot - flipping to slice properly, flip back after
-    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::100], axis=0)
-    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::100], axis=0)
-    ts_snaps = np.flip(np.flip(ts, axis=0)[::100])
+    # Save only every 200th time snapshot - flipping to slice properly, flip back after
+    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::200], axis=0)
+    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::200], axis=0)
+    ts_snaps = np.flip(np.flip(ts, axis=0)[::200])
     
     print("calculating energies, angular momenta, velocity dispersion, LMC separation...")
     Es = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     Ls = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     Lzs = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
-    sigma_v = np.nanstd(np.linalg.norm(vs_snaps[-1], axis=1), axis=0)
+    
+    lons, lats = lons_lats(xs_snaps[-1], vs_snaps[-1])
+    sigma_v = local_veldis(lons, vel)
+    ds = np.linalg.norm(xs_snaps[-1], axis=1)
+    length = np.nanpercentile(ds, 95) - np.nanpercentile(ds, 5)
+    width = mad_(lats, ignore_nan=True)
+    med_lon, med_lat = np.nanmedian(lons), np.nanmedian(lats)
+    
     lmc_sep = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     gls  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     gbs  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
@@ -398,9 +443,11 @@ def lagrange_cloud_strip_adT(params, overwrite):
         
     pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh)    
     write_stream_hdf5(outpath, filename, xs_snaps, vs_snaps, ts2,
-                      Es, Ls, Lzs, sigma_v, lmc_sep, gls, gbs,
+                      Es, Ls, Lzs, sigma_v, 
+                      length, width, med_lon, med_lat,
+                      lmc_close_sep, gls, gbs,
                       pot_label, fc, Mprog, a_s, 
-                      pericenter, apocenter, discframe)
+                      pericenter, apocenter)
 
 def readparams(paramfile):
     """
@@ -425,7 +472,7 @@ def readparams(paramfile):
     lmcflag = d["lmcflag"]
     discflag = d["discflag"]
     strip_rate = d["strip_rate"]
-    discframe = d["discframe"]
+    # discframe = d["discframe"]
     static_mwh = d["static_mwh"]
     static_mwd = d["mwd_switch"]
     lmc_switch = d["lmc_switch"]
@@ -446,17 +493,18 @@ def readparams(paramfile):
     assert type(strip_rate)==int, "strip_rate parameter must be an int"
 
     return [inpath, snapname, outpath, outname, prog_ics ,prog_mass, prog_scale, pericenter, apocenter, Tbegin, Tfinal, dtmin, 
-            haloflag, discflag, lmcflag, strip_rate, discframe, static_mwh, static_mwd, lmc_switch]
+            haloflag, discflag, lmcflag, strip_rate, static_mwh, static_mwd, lmc_switch]
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
-                      energies, Ls, Lzs, sigma_v, lmc_sep, gls, gbs,
+                      energies, Ls, Lzs, sigma_v, 
+                      length, width, med_lon, med_lat,
+                      lmc_sep, gls, gbs,
                       potential, progics, progmass, progscale, 
-                      pericenter, apocenter, frame):
+                      pericenter, apocenter):
     """
     Write stream into an hdf5 file
     
     """
-    
     tmax = positions.shape[0]
     particlemax = positions.shape[1]
     
@@ -468,7 +516,11 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('energies', data=energies)
     hf.create_dataset('L', data=Ls)
     hf.create_dataset('Lz', data=Lzs)
-    hf.create_dataset('vel_dispersion', data=sigma_v)
+    hf.create_dataset('loc_veldis', data=sigma_v)
+    hf.create_dataset('lengths', data=length)
+    hf.create_dataset('widths', data=width)
+    hf.create_dataset('av_lon', data=med_lon)
+    hf.create_dataset('av_lat', data=med_lat)
     hf.create_dataset('lmc_sep', data=lmc_sep)
     hf.create_dataset('pole_l', data=gls)
     hf.create_dataset('pole_b', data=gbs)
@@ -478,8 +530,6 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('progenitor-scale', data=progscale)
     hf.create_dataset('pericenter',data=pericenter)
     hf.create_dataset('apocenter', data=apocenter)
-    hf.create_dataset('frame-of-reference', data=frame)
-    #... flags to names for what ics we have used 
     hf.close()
     
 def fill_with_zeros(arr, m):
