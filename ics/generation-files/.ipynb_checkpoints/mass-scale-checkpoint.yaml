@@ -2,7 +2,7 @@
 IMF : True
 Noversample: 20000 
 Nsample: 1024
-peri_cut: [10, 25] 
+peri_cut: [5, 25] 
 apo_cut: 50
 m200: 6.5e11
 c200: 25

@@ -2,7 +2,7 @@
 
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=rbrooks@flatironinstitute.org
-#SBATCH --time=01:00:00
+#SBATCH --time=00:30:00
 #SBATCH --job-name=oceanus-plots-LMC
 #SBATCH -N1 --ntasks-per-node=1
 #SBATCH -e stderr.txt

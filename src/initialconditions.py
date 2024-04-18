@@ -55,13 +55,13 @@ def read_pot_params(paramfile):
     lmcflag = d["lmcflag"]
     discflag = d["discflag"]
     strip_rate = d["strip_rate"]
-    discframe = d["discframe"]
+    # discframe = d["discframe"]
     static_mwh = d["static_mwh"]
     mwd_switch = d["mwd_switch"]
     lmc_switch = d["lmc_switch"]
     
     return [inpath, outpath, Tbegin, Tfinal, dtmin, 
-           haloflag, discflag, lmcflag, strip_rate, discframe, static_mwh, mwd_switch, lmc_switch]
+           haloflag, discflag, lmcflag, strip_rate, static_mwh, mwd_switch, lmc_switch]
 
 def F_rigid(t, w, m200, c200):
         origin_halo = np.array(Model.expansion_centres(t/1e3))[3:6]
@@ -132,15 +132,16 @@ def make_ics(params_mass_scale):
     cut_mass_scales = prog_mass_scale[peri_mask & apo_mask]
     mass_scales = rng.choice(cut_mass_scales, size=Nsample)
     
-    cut_prog_ics = xv[peri_mask & apo_mask]
-    prog_ics = rng.choice(cut_prog_ics, size=Nsample)
+    cut_xv = xv[peri_mask & apo_mask]
+    prog_ics = rng.choice(cut_xv, size=Nsample)
     
-    peris_cut = pericenters[peri_mask & apo_mask]
-    peris = rng.choice(peris_cut, size=Nsample)
-    apos_cut = apocenters[peri_mask & apo_mask]
-    apos = rng.choice(apos_cut, size=Nsample)
+    print("re-finding pericenters and apocenters of cut sample...")
+    w0 = gd.PhaseSpacePosition.from_w(prog_ics.T + mwh0_xv[:, None], units=galactic)
+    wf2 = integrator.run(w0,  dt=-1 * u.Myr, t1=0* u.Gyr, t2=-5 * u.Gyr)
+    peris = wf2.pericenter()
+    apos = wf2.apocenter()
 
-    return prog_ics, mass_scales, peris*u.kpc, apos*u.kpc
+    return prog_ics, mass_scales, peris, apos
 
 def streamparams(ics, mass_scales, peris, apos):
     
@@ -159,7 +160,7 @@ def streamparams(ics, mass_scales, peris, apos):
           
         inpath, outpath, Tbegin, Tfinal, dtmin, \
         haloflag, discflag, lmcflag, strip_rate, \
-        discframe, static_mwh, mwd_switch, lmc_switch = read_pot_params(path + gens[j])
+        static_mwh, mwd_switch, lmc_switch = read_pot_params(path + gens[j])
             
         for i in range(len(ics)):
             yaml_data = {'Tbegin': Tbegin, 
@@ -174,7 +175,7 @@ def streamparams(ics, mass_scales, peris, apos):
                          'haloflag': haloflag,
                          'lmcflag': lmcflag,
                          'discflag': discflag,
-                         'discframe': discframe,
+                         # 'discframe': discframe,
                          'static_mwh': static_mwh,
                          'mwd_switch': mwd_switch,
                          'lmc_switch': lmc_switch, 

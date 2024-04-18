@@ -270,22 +270,24 @@ def plot_stream_cartesian(streams, path, plotname, savefig=False):
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname + '_xz'))
         
-def rv_dispersion(p, v):
+def galactic_coords(p, v):
     
     galcen_v_sun = (11.1, 245, 7.3)*u.km/u.s
     galcen_distance = 8.249*u.kpc
+    # positions = p + Model.expansion_centres(0.)[:3]
+    # velocities = v + Model.expansion_centre_velocities(0.)[:3]
     
-    positions = p + Model.expansion_centres(0.)[:3]
-    velocities = v + Model.expansion_centre_velocities(0.)[:3]
-    
-    posvel_gc = SkyCoord(x=positions[:,0]*u.kpc, y=positions[:,1]*u.kpc, z=positions[:,2]*u.kpc,
-                         v_x=velocities[:,0]*u.km/u.s, v_y=velocities[:,1]*u.km/u.s, v_z=velocities[:,2]*u.km/u.s ,
+    posvel_gc = SkyCoord(x=p[:,0]*u.kpc, y=p[:,1]*u.kpc, z=p[:,2]*u.kpc,
+                         v_x=v[:,0]*u.km/u.s, v_y=v[:,1]*u.km/u.s, v_z=v[:,2]*u.km/u.s ,
                          frame='galactocentric', galcen_distance=galcen_distance, galcen_v_sun=galcen_v_sun)
     posvel_galactic = posvel_gc.transform_to('galactic')
     posvel_galactic_rc = gc.reflex_correct(posvel_galactic)
-    rvs =  posvel_galactic_rc.radial_velocity
+    l, b, d = np.nanmedian(posvel_galactic_rc.l), np.nanmedian(posvel_galactic_rc.b), np.nanmedian(posvel_galactic_rc.distance)
+    pm_l_cosb, pm_b, rvs = np.nanmedian(posvel_galactic_rc.pm_l_cosb), np.nanmedian(posvel_galactic_rc.pm_b), np.nanmedian(posvel_galactic_rc.radial_velocity)
     
-    return np.nanstd(rvs) 
+    sigma_rv = np.nanstd(posvel_galactic_rc.radial_velocity)
+    
+    return l.value, b.value, d.value, pm_l_cosb.value, pm_b.value, rvs.value, sigma_rv.value
 
 def lons_lats(pos, vel):
     prog = gd.PhaseSpacePosition(pos[0] * u.kpc, vel[0] * u.km / u.s)
@@ -384,7 +386,7 @@ def radialphase_peris_veldis(galdist, pericenters, apocenters, sigmavs, mass,plo
                       gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
                       norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2)) 
     plt.xlabel('$r_{p}$ [kpc]')
-    plt.xlim(9,26)
+    plt.xlim(5,30)
     plt.ylim(0,30)
     
     cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
@@ -580,142 +582,239 @@ def rlmc_veldis(rlmc, veldis, plotname, potential, savefig=False):
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
     plt.close()
+    
+    
+def plt_1dhists(path, plotname, savefig=False):
+    fig, ax = plt.subplots(2,3, figsize=(13,5.5))
+    plt.subplots_adjust(hspace=0.3, wspace=0.3)
+
+    potentials = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                           'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                           'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
+
+    labels = list(['Static MW','Static Monopole', 'Evolving Monopole', 'Monopole + Dipole', 'Mono + Quadrupole', \
+                   'Monopole + Dipole + Quadrupole', 'Full Expansion', 'Full Expansion (no LMC)'])
+
+    for j in range(len(potentials)): 
+
+        with h5py.File(path + potentials[j],'r') as file:
+            lengths = np.array(file['lengths'])
+            widths = np.array(file['widths'])
+            loc_veldis = np.array(file['loc_veldis'])
+            energies = np.array(file['energies'])
+            Ls = np.array(file['L'])
+            Lzs = np.array(file['Lz'])
+
+        # lengths
+        plt.sca(ax[0,0])
+        h, bin_edges = np.histogram(lengths, bins=np.linspace(0, 30, 10))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        plt.plot(bin_mids, h, label=labels[j])
+        plt.xlabel(r'$l\,[\mathrm{kpc}]$')
+        plt.ylabel('Counts')
+        plt.xlim(0,30)
+        plt.ylim(0.1,)
+        plt.legend(frameon=False, ncol=4, fontsize=12, bbox_to_anchor=(3.6,1.35))
+
+        #widths
+        plt.sca(ax[1,0])
+        h, bin_edges = np.histogram(widths, bins=np.linspace(0, 3, 15))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        plt.plot(bin_mids, h)
+        plt.xlabel(r'$w\,[^{\circ}]$')
+        plt.ylabel('Counts')
+        plt.xlim(0,)
+        plt.ylim(0.1,)
+
+        # velocity dispersion
+        plt.sca(ax[0,1])
+        h, bin_edges = np.histogram(loc_veldis, bins=np.linspace(0, 20, 15))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        plt.plot(bin_mids, h)
+        plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
+        plt.ylabel('Counts')
+        plt.xlim(0,20)
+        plt.ylim(0.1,)
+
+        # median energies
+        plt.sca(ax[1,1])
+        h, bin_edges = np.histogram(np.log10(-energies), bins=np.linspace(4, 5.5, 25))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        plt.plot(bin_mids, h)
+        plt.xlabel(r'$\log_{10}(\bar{E})\,[(\mathrm{km}\,\mathrm{s}^{-1})^2]$')
+        plt.ylabel('Counts')
+        plt.xlim(4,5.5)
+        plt.ylim(0.1,)
+
+        # median L
+        plt.sca(ax[0,2])
+        h, bin_edges = np.histogram(Ls, bins=np.linspace(1500, 6500, 20))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        plt.plot(bin_mids, h)
+        plt.xlabel(r'$L\,[\mathrm{km}\,\mathrm{s}^{-1}\,\mathrm{kpc}]$')
+        plt.ylabel('Counts')
+        plt.ylim(0.1,)
+
+        # median Lz
+        plt.sca(ax[1,2])
+        h, bin_edges = np.histogram(Lzs, bins=np.linspace(-6000, 6000, 30))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        plt.plot(bin_mids, h)
+        plt.xlabel(r'$L_{z}\,[\mathrm{km}\,\mathrm{s}^{-1}\,\mathrm{kpc}]$')
+        plt.ylabel('Counts')
+        plt.ylim(0.1,)
+        
+    if savefig==False:
+        return
+    elif savefig==True:
+        savepath = '/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname)
+        print('* Saving figure at {}.pdf'.format(savepath))
+        plt.savefig(savepath)
+    plt.close()
+    
+    
+def plt_1dhists_quadrants(path, plotname, savefig=False):
+    
+    potentials = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                           'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                           'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
+    
+    labels = list(['Static MW','Static Monopole', 'Evolving Monopole', 'Monopole + Dipole', 'Mono + Quadrupole', \
+                   'Monopole + Dipole \n + Quadrupole', 'Full Expansion', 'Full Expansion \n (no LMC)'])
+    
+    quadrants = list(['Q1', 'Q2', 'Q3', 'Q4'])
+    
+    fig, ax = plt.subplots(6,len(potentials), figsize=(24,12))
+    plt.subplots_adjust(hspace=0.5, wspace=0.3)
+
+    for j in range(len(potentials)): 
+
+        with h5py.File(path + potentials[j],'r') as file:
+            
+            l_gc,b_gc  = np.array(file['l_gc']), np.array(file['b_gc'])
+            mask_q1 = ( (l_gc > 0) & (l_gc < 180) & (b_gc > 0) & (b_gc < 90) )
+            mask_q2 = ( (l_gc > 180) & (l_gc < 360) & (b_gc > 0) & (b_gc < 90) )
+            mask_q3 = ( (l_gc > 0) & (l_gc < 180) & (b_gc > -90) & (b_gc < 0) )
+            mask_q4 = ( (l_gc > 180) & (l_gc < 360) & (b_gc > -90) & (b_gc < 0) )
+            
+            masks = [mask_q1, mask_q2, mask_q3, mask_q4]
+            
+            lengths = np.array(file['lengths'])
+            widths = np.array(file['widths'])
+            loc_veldis = np.array(file['loc_veldis'])
+            energies = np.array(file['energies'])
+            Ls = np.array(file['L'])
+            Lzs = np.array(file['Lz'])
+            
+        for m in range(len(masks)):
+        
+            # lengths
+            plt.sca(ax[0,j])
+            h, bin_edges = np.histogram(lengths[masks[m]], bins=np.linspace(0, 30, 10))
+            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            plt.plot(bin_mids, h, label=quadrants[m])
+            plt.xlabel(r'$l\,[\mathrm{kpc}]$', fontsize=14)
+            plt.xlim(0,30)
+            plt.ylim(0.1,)
+            if j==0:
+                plt.legend(frameon=False,fontsize=10)
+
+            #widths
+            plt.sca(ax[1,j])
+            h, bin_edges = np.histogram(widths[masks[m]], bins=np.linspace(0, 3, 15))
+            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            plt.plot(bin_mids, h)
+            plt.xlabel(r'$w\,[^{\circ}]$', fontsize=14)
+            plt.xlim(0,)
+            plt.ylim(0.1,)
+
+            # velocity dispersion
+            plt.sca(ax[2,j])
+            h, bin_edges = np.histogram(loc_veldis[masks[m]], bins=np.linspace(0, 20, 15))
+            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            plt.plot(bin_mids, h)
+            plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$', fontsize=14)
+            plt.xlim(0,20)
+            plt.ylim(0.1,)
+
+            # median energies
+            plt.sca(ax[3,j])
+            h, bin_edges = np.histogram(np.log10(-energies)[masks[m]], bins=np.linspace(4, 5.5, 25))
+            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            plt.plot(bin_mids, h)
+            plt.xlabel(r'$\log_{10}(\bar{E})\,[(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=14)
+            plt.xlim(4,5.5)
+            plt.ylim(0.1,)
+
+            # median L
+            plt.sca(ax[4,j])
+            h, bin_edges = np.histogram(Ls[masks[m]], bins=np.linspace(1500, 6500, 20))
+            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            plt.plot(bin_mids, h)
+            plt.xlabel(r'$L\,[\mathrm{km}\,\mathrm{s}^{-1}\,\mathrm{kpc}]$', fontsize=14)
+            plt.ylim(0.1,)
+
+            # median Lz
+            plt.sca(ax[5,j])
+            h, bin_edges = np.histogram(Lzs[masks[m]], bins=np.linspace(-6000, 6000, 20))
+            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            plt.plot(bin_mids, h)
+            plt.xlabel(r'$L_{z}\,[\mathrm{km}\,\mathrm{s}^{-1}\,\mathrm{kpc}]$', fontsize=14)
+            plt.ylim(0.1,)
+        
+    #-------------------------------------------------------------------------------------
+    ### Plot cosmetics
+    #-------------------------------------------------------------------------------------
+    for k in range(len(labels)):
+        ax[0,k].set_title(labels[k], fontsize=14)
+        
+    for l in range(6):
+        ax[l, 0].set_ylabel('Counts', fontsize=14)
+        
+    if savefig==False:
+        return
+    elif savefig==True:
+        savepath = '/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname)
+        print('* Saving figure at {}.pdf'.format(savepath))
+        plt.savefig(savepath)
+    plt.close()
         
 ###-------------------------------------------------------------------------------
 ### run the script
 ###--------------------------------------------------------------------------------
 
-path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
+path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/'
 # streams = list(['stream_0', 'stream_1','stream_2','stream_3','stream_4']) 
 # plot_stream_frames(streams, path, 'plot_stream_coords', True)
 # pole_hist(path, 'sinbpole-histogram', True)
-
-# def process_potential(potential):
-#     rgal = []
-#     peris = []
-#     apos = []
-#     widths = []
-#     lengths = []
-#     av_lon = []
-#     av_lat = []
-#     loc_veldis = []
-#     lmc_sep = []
-#     pole_b = []
-#     pole_b_dis = []
-#     pole_l = []
-#     pole_l_dis = []
-#     masses = []
-#     energy = []
-#     Ls = []
-
-#     Nstreams = 100 #1024
-#     for i in range(Nstreams):
-#         data_path = pathlib.Path(path) / potential 
-#         with h5py.File(data_path, 'r') as file:
-#             if i == 1:
-#                 pot_folder = file[f'stream_{i}']['potential'][()].decode('utf-8')
-
-#             pos = np.array(file[f'stream_{i}']['positions'])[-1]
-#             vel = np.array(file[f'stream_{i}']['velocities'])[-1]
-#             lons, lats = lons_lats(pos, vel)  
-#             loc_veldis.append(local_veldis(lons, vel)) 
-#             rgal.append(np.nanmedian(np.linalg.norm(np.array(file[f'stream_{i}']['positions'])[-1],axis=1)))
-#             peris.append(np.array(file[f'stream_{i}']['pericenter']))
-#             apos.append(np.array(file[f'stream_{i}']['apocenter']))
-#             widths.append(np.array(file[f'stream_{i}']['width']))
-#             lengths.append(np.array(file[f'stream_{i}']['length']))
-#             av_lon.append(np.array(file[f'stream_{i}']['av_lon']))
-#             av_lat.append(np.array(file[f'stream_{i}']['av_lat']))
-#             lmc_sep.append(np.array(file[f'stream_{i}']['lmc_sep']))
-#             pole_b.append(np.nanmedian(np.array(file[f'stream_{i}']['pole_b'])[-1]))
-#             pole_l.append(np.nanmedian(np.array(file[f'stream_{i}']['pole_l'])[-1]))
-#             pole_b_dis.append(np.nanstd(np.array(file[f'stream_{i}']['pole_b'])[-1]))
-#             pole_l_dis.append(np.nanstd(np.array(file[f'stream_{i}']['pole_l'])[-1]))
-#             masses.append(np.array(file[f'stream_{i}']['progenitor-mass']))
-#             energy.append(np.nanmedian(np.array(file[f'stream_{i}']['energies'])[-1]))
-#             Ls.append(np.nanmedian(np.array(file[f'stream_{i}']['L'])[-1]))
-            
-#     return rgal, peris, apos, widths, lengths, av_lon, av_lat, loc_veldis, lmc_sep, pole_b, pole_b_dis, pole_l, pole_l_dis, masses, energy, Ls, pot_folder
-
-# def main():
-#     path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
-#     potentials_list = ['static-mwh-only.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',
-#                        'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 
-#                        'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', 'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5']
-
-#     with concurrent.futures.ThreadPoolExecutor() as executor:
-#         futures = [executor.submit(process_potential, potential) for potential in potentials_list]
-
-#         for future in concurrent.futures.as_completed(futures):
-#             rgal, peris, apos, widths, lengths, av_lon, av_lat, loc_veldis, lmc_sep, pole_b, pole_b_dis, pole_l, pole_l_dis, masses, energy, Ls, pot_folder = future.result()
-#             # Do something with the processed data
-#             print('* Saving figures for potential: {}'.format(future))
-#             radialphase_peris_veldis(rgal, peris, apos, loc_veldis, masses, 'radialphase_peris_veldis', pot_folder, True)
-#             poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
-#             poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
-#             mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
-#             width_length(widths, lengths, masses, 'width_length', pot_folder, True)
-#             av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
-#             stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
-#             rlmc_veldis(lmc_sep, loc_veldis, peris, 'rlmc_veldis', pot_folder, True)
-
-# if __name__ == "__main__":
-#     main()
-
 
 potentials_list = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', \
                    'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', \
                    'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
 
-for potential in potentials_list:
+pot_folders = list(['static-mwh-only', 'rm-MWhalo-full-MWdisc-full-LMC', 'em-MWhalo-full-MWdisc-full-LMC',
+                  'md-MWhalo-full-MWdisc-full-LMC', 'mq-MWhalo-full-MWdisc-full-LMC', 'mdq-MWhalo-full-MWdisc-full-LMC',
+                  'Full-MWhalo-MWdisc-LMC', 'full-MWhalo-full-MWdisc-no-LMC'])
 
-    rgal = []
-    peris = []
-    apos = []
-    widths = []
-    lengths = []
-    av_lon = []
-    av_lat = []
-    loc_veldis = []
-    lmc_sep = []
-    pole_b = []
-    pole_b_dis = []
-    pole_l = []
-    pole_l_dis = []
-    masses = []
-    energy = []
-    Ls = []
-    Lzs = []
-    
-    Nstreams = 1024
-    for i in range(Nstreams):
-        data_path = pathlib.Path(path) / potential 
-        with h5py.File(data_path,'r') as file:
-
-            if i ==1:
-                pot_folder = file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
-
-            pos = np.array(file['stream_{}'.format(i)]['positions'])[-1]
-            vel = np.array(file['stream_{}'.format(i)]['velocities'])[-1]
-            lons, lats = lons_lats(pos, vel)
-            loc_veldis.append(local_veldis(lons, vel))
-            rgal.append( np.nanmedian(np.linalg.norm(np.array(file['stream_{}'.format(i)]['positions'])[-1],axis=1)) )
-            peris.append(np.array(file['stream_{}'.format(i)]['pericenter']))
-            apos.append(np.array(file['stream_{}'.format(i)]['apocenter']))
-            widths.append(np.array(file['stream_{}'.format(i)]['width']))
-            lengths.append(np.array(file['stream_{}'.format(i)]['length']))
-            av_lon.append(np.array(file['stream_{}'.format(i)]['av_lon']))
-            av_lat.append(np.array(file['stream_{}'.format(i)]['av_lat']))
-            lmc_sep.append(np.array(file['stream_{}'.format(i)]['lmc_sep']))
-            pole_b.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
-            pole_l.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
-            pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
-            pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
-            masses.append(np.array(file['stream_{}'.format(i)]['progenitor-mass']))
-            energy.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['energies'])[-1]))
-            Ls.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['L'])[-1]))
-    print('* Saving figures for potential: {}'.format(potential))
-    
+for (potential, folder) in zip(potentials_list, pot_folders):
+    with h5py.File(path + potential,'r') as file:
+            pot_folder = folder
+            rgal = np.array(file['ds'])
+            peris = np.array(file['pericenter'])
+            apos = np.array(file['apocenter'])
+            loc_veldis = np.array(file['loc_veldis'])
+            masses = np.array(file['mass'])
+            pole_l_dis = np.array(file['sigma_pole_l'])
+            pole_l = np.array(file['pole_l'])
+            pole_b_dis = np.array(file['sigma_pole_b'])
+            pole_b = np.array(file['pole_b'])
+            widths = np.array(file['widths'])
+            lengths = np.array(file['lengths'])
+            av_lon = np.array(file['av_lon'])
+            av_lat = np.array(file['av_lat'])
+            lmc_sep = np.array(file['lmc_sep'])
+                 
+    print('* Saving figures for potential: {}'.format(potential))     
     radialphase_peris_veldis(rgal, peris, apos, loc_veldis, masses, 'radialphase_peris_veldis', pot_folder, True)
     poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
     poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
@@ -724,3 +823,6 @@ for potential in potentials_list:
     av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
     stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
     rlmc_veldis(lmc_sep, loc_veldis, 'rlmc_veldis', pot_folder, True)
+
+plt_1dhists('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists' , True)
+plt_1dhists_quadrants('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists-quad' , True)

@@ -3,7 +3,7 @@ inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/static-mwh-only"
 outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/static-mwh-only/"
 Tbegin : -5.0
 Tfinal :  0.  
-dtmin  : 0.001
+dtmin  : 0.0001
 strip_rate : 2
 haloflag : 0
 lmcflag : 0

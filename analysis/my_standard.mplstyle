@@ -9,8 +9,8 @@ xtick.direction : in
 ytick.direction : in
 xtick.minor.visible : True
 ytick.minor.visible : True
-xtick.labelsize : 15
-ytick.labelsize : 15
+xtick.labelsize : 12
+ytick.labelsize : 12
 xtick.major.width : .8
 xtick.minor.width : .4
 ytick.major.width : .8
@@ -25,10 +25,7 @@ savefig.bbox : tight
 savefig.dpi : 200
 
 image.cmap   : magma        
-axes.prop_cycle: cycler('color', ['CC6677', '332288', 'DDCC77', '117733', '88CCEE', '882255', '44AA99', '999933', 'AA4499'])
-
-
-
-#['4477AA', 'EE6677', '228833', 'CCBB44', '66CCEE', 'AA3377', 'BBBBBB']
+#axes.prop_cycle: cycler('color',['EE7733', '0077BB', '33BBEE', 'EE3377', 'CC3311', '009988', '44AA99', '999933', 'AA4499', 'BBBBBB'])
+#axes.prop_cycle: cycler('color',['CC6677', '332288', 'DDCC77', '117733', '88CCEE', '882255', '44AA99', '999933', 'AA4499'])
 
 hist.bins: 20

@@ -5,11 +5,16 @@ import h5py
 from astropy.constants import G
 import gala.integrate as gi
 import gala.dynamics as gd
+import gala.coordinates as gc
 from gala.units import galactic
 import os.path
 import sys
 from argparse import ArgumentParser
 import pathlib
+
+from scipy.spatial.transform import Rotation
+
+
 from mwlmc import model as mwlmc_model
 Model = mwlmc_model.MWLMC()
 
@@ -228,6 +233,27 @@ def local_veldis(lons, vfs):
     local_veldis = np.array([np.std(vfs_absol[m]) for m in mask.T])
     return np.nanmedian(local_veldis)
 
+def widths_deforms(lons, lats):
+    # Compute percentiles
+    lower_value = np.nanpercentile(lons, 0.1)
+    upper_value = np.nanpercentile(lons, 99.9)
+    # Filter lons_mainbody
+    lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
+    lats_mainbody = lats[(lons >= lower_value) & (lons <= upper_value)] 
+    # Create bins
+    lon_bins = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50)
+    # Slice lons_mainbody into bins
+    bin_indices = np.digitize(lons_mainbody, lon_bins)
+    # Create a mask array
+    mask = np.zeros((len(lons_mainbody), len(lon_bins) - 1), dtype=bool)
+    for i in range(1, len(lon_bins)):
+        mask[:, i - 1] = (bin_indices == i)
+
+    # Calculate width for each bin
+    local_width = np.array([np.nanstd(lats_mainbody[m]) for m in mask.T])
+    track_deforms = np.array([np.abs(np.nanmedian(lats_mainbody[m])) for m in mask.T])
+    return np.nanmedian(local_width), np.nanmedian(track_deforms)
+
 def lagrange_cloud_strip_adT(params, overwrite):  
     
     inpath, snapname, outpath, filename, \
@@ -412,10 +438,10 @@ def lagrange_cloud_strip_adT(params, overwrite):
         xs_data[i] -= disk_x0
         vs_data[i] -= disk_v0
         
-    # Save only every 200th time snapshot - flipping to slice properly, flip back after
-    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::200], axis=0)
-    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::200], axis=0)
-    ts_snaps = np.flip(np.flip(ts, axis=0)[::200])
+    # Save only every 5000th time snapshot (10 total saved) - flipping to slice properly, flip back after
+    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::5000], axis=0)
+    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::5000], axis=0)
+    ts_snaps = np.flip(np.flip(ts, axis=0)[::5000])
     
     print("calculating energies, angular momenta, velocity dispersion, LMC separation...")
     Es = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
@@ -423,10 +449,9 @@ def lagrange_cloud_strip_adT(params, overwrite):
     Lzs = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     
     lons, lats = lons_lats(xs_snaps[-1], vs_snaps[-1])
-    sigma_v = local_veldis(lons, vel)
-    ds = np.linalg.norm(xs_snaps[-1], axis=1)
-    length = np.nanpercentile(ds, 95) - np.nanpercentile(ds, 5)
-    width = mad_(lats, ignore_nan=True)
+    sigma_v = local_veldis(lons, vs_snaps[-1])
+    length = np.nanpercentile(lons, 95) - np.nanpercentile(lons, 5)
+    width, track_deform = widths_deforms(lons, lats)
     med_lon, med_lat = np.nanmedian(lons), np.nanmedian(lats)
     
     lmc_sep = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
@@ -444,7 +469,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh)    
     write_stream_hdf5(outpath, filename, xs_snaps, vs_snaps, ts2,
                       Es, Ls, Lzs, sigma_v, 
-                      length, width, med_lon, med_lat,
+                      length, width, track_deform, med_lon, med_lat,
                       lmc_close_sep, gls, gbs,
                       pot_label, fc, Mprog, a_s, 
                       pericenter, apocenter)
@@ -497,7 +522,7 @@ def readparams(paramfile):
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
                       energies, Ls, Lzs, sigma_v, 
-                      length, width, med_lon, med_lat,
+                      length, width, track_deform, med_lon, med_lat,
                       lmc_sep, gls, gbs,
                       potential, progics, progmass, progscale, 
                       pericenter, apocenter):
@@ -519,6 +544,7 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('loc_veldis', data=sigma_v)
     hf.create_dataset('lengths', data=length)
     hf.create_dataset('widths', data=width)
+    hf.create_dataset('track_deform', data=track_deform)
     hf.create_dataset('av_lon', data=med_lon)
     hf.create_dataset('av_lat', data=med_lat)
     hf.create_dataset('lmc_sep', data=lmc_sep)
