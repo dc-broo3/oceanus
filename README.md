@@ -22,5 +22,6 @@ $ git clone --recursive https://github.com/dc-broo3/oceanus.git
 On Rusty, a virtual environment ready to use to run the stream generation code can be found at:
 
 ```bash
-$ source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate
+$ source /mnt/home/rbrooks/ceph/venvs/mwlmc_fulldiscexp_venv/bin/activate
 ```
+![welcome plot](https://github.com/dc-broo3/oceanus/blob/8ae59dc931d4c5693507533af4493af27832f8a6/analysis/figures/plot_stream_coords.png)
