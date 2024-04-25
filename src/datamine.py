@@ -86,7 +86,7 @@ def galactic_coords(p, v):
 def write_pltoutputs_hdf5(outpath, filename, 
                          l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                          peris, apos,
-                         widths, lengths, lmc_sep,
+                         widths, lengths, track_deform, lmc_sep,
                          av_lon, av_lat, loc_veldis,
                          pole_b, pole_l,
                          pole_b_dis, pole_l_dis,
@@ -106,6 +106,7 @@ def write_pltoutputs_hdf5(outpath, filename,
                 
     hf.create_dataset('lengths', data=lengths)
     hf.create_dataset('widths', data=widths)
+    hf.create_dataset('track_deform', data=track_deform)
     hf.create_dataset('lmc_sep', data=lmc_sep)
     hf.create_dataset('av_lon', data=av_lon)
     hf.create_dataset('av_lat', data=av_lat)
@@ -128,7 +129,7 @@ def write_pltoutputs_hdf5(outpath, filename,
     
 l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los = [], [], [], [], [], [], []
 peris, apos = [], []
-widths, lengths, lmc_sep = [], [], []
+widths, lengths, track_deforms, lmc_sep = [], [], [], []
 av_lon, av_lat = [], []
 loc_veldis = []
 pole_b, pole_l = [], []
@@ -137,7 +138,7 @@ masses = []
 energy, Ls, Lzs = [], [], []
 
 path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
-potential = 'mq-MWhalo-full-MWdisc-full-LMC.hdf5' #'static-mwh-only.hdf5' #'Full-MWhalo-MWdisc-LMC.hdf5'
+potential =  'full-MWhalo-full-MWdisc-no-LMC.hdf5'#'Full-MWhalo-MWdisc-LMC.hdf5'  #'static-mwh-only.hdf5' 
 
 Nstreams = 1024 
 for i in range(Nstreams):
@@ -145,7 +146,7 @@ for i in range(Nstreams):
     with h5py.File(data_path,'r') as file:
         
         if i ==0:
-            filename_end = 'test_' + file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
+            filename_end = file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
         
         pos = np.array(file['stream_{}'.format(i)]['positions'])[-1]
         vel = np.array(file['stream_{}'.format(i)]['velocities'])[-1]
@@ -158,8 +159,9 @@ for i in range(Nstreams):
         apos.append(np.array(file['stream_{}'.format(i)]['apocenter']))
         lmc_sep.append(np.array(file['stream_{}'.format(i)]['lmc_sep']))
         
-        widths.append(np.array(file['stream_{}'.format(i)]['width']))
-        lengths.append(np.array(file['stream_{}'.format(i)]['length']))
+        widths.append(np.array(file['stream_{}'.format(i)]['widths']))
+        lengths.append(np.array(file['stream_{}'.format(i)]['lengths']))
+        track_deforms.append(np.array(file['stream_{}'.format(i)]['track_deform']))
         av_lon.append(np.array(file['stream_{}'.format(i)]['av_lon']))
         av_lat.append(np.array(file['stream_{}'.format(i)]['av_lat']))
         
@@ -181,7 +183,7 @@ out_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/
 write_pltoutputs_hdf5(out_path, filename_end,
                       l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                       peris, apos,
-                     widths, lengths, lmc_sep,
+                     widths, lengths, track_deforms, lmc_sep,
                      av_lon, av_lat, loc_veldis,
                      pole_b, pole_l,
                      pole_b_dis, pole_l_dis,

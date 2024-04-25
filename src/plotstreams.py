@@ -1,7 +1,6 @@
 from scipy.spatial.transform import Rotation
 import numpy as np
 import scipy
-import concurrent.futures
 import pathlib
 import h5py
 
@@ -270,66 +269,6 @@ def plot_stream_cartesian(streams, path, plotname, savefig=False):
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}'.format(plotname + '_xz'))
         
-def galactic_coords(p, v):
-    
-    galcen_v_sun = (11.1, 245, 7.3)*u.km/u.s
-    galcen_distance = 8.249*u.kpc
-    # positions = p + Model.expansion_centres(0.)[:3]
-    # velocities = v + Model.expansion_centre_velocities(0.)[:3]
-    
-    posvel_gc = SkyCoord(x=p[:,0]*u.kpc, y=p[:,1]*u.kpc, z=p[:,2]*u.kpc,
-                         v_x=v[:,0]*u.km/u.s, v_y=v[:,1]*u.km/u.s, v_z=v[:,2]*u.km/u.s ,
-                         frame='galactocentric', galcen_distance=galcen_distance, galcen_v_sun=galcen_v_sun)
-    posvel_galactic = posvel_gc.transform_to('galactic')
-    posvel_galactic_rc = gc.reflex_correct(posvel_galactic)
-    l, b, d = np.nanmedian(posvel_galactic_rc.l), np.nanmedian(posvel_galactic_rc.b), np.nanmedian(posvel_galactic_rc.distance)
-    pm_l_cosb, pm_b, rvs = np.nanmedian(posvel_galactic_rc.pm_l_cosb), np.nanmedian(posvel_galactic_rc.pm_b), np.nanmedian(posvel_galactic_rc.radial_velocity)
-    
-    sigma_rv = np.nanstd(posvel_galactic_rc.radial_velocity)
-    
-    return l.value, b.value, d.value, pm_l_cosb.value, pm_b.value, rvs.value, sigma_rv.value
-
-def lons_lats(pos, vel):
-    prog = gd.PhaseSpacePosition(pos[0] * u.kpc, vel[0] * u.km / u.s)
-    stream = gd.PhaseSpacePosition(pos[1:].T * u.kpc, vel[1:].T * u.km / u.s)
-    R1 = Rotation.from_euler("z", -prog.spherical.lon.degree, degrees=True)
-    R2 = Rotation.from_euler("y", prog.spherical.lat.degree, degrees=True)
-    R_prog0 = R2.as_matrix() @ R1.as_matrix()  
-
-    new_vxyz = R_prog0 @ prog.v_xyz
-    v_angle = np.arctan2(new_vxyz[2], new_vxyz[1])
-    R3 = Rotation.from_euler("x", -v_angle.to_value(u.degree), degrees=True)
-    R = (R3 * R2 * R1).as_matrix()
-
-    stream_rot = gd.PhaseSpacePosition(stream.data.transform(R))
-    stream_sph = stream_rot.spherical
-    lon = stream_sph.lon.wrap_at(180*u.deg).degree
-    lat = stream_sph.lat.degree
-    return lon, lat
-
-def local_veldis(lons, vfs):
-
-    # Compute percentiles
-    lower_value = np.nanpercentile(lons, 0.1)
-    upper_value = np.nanpercentile(lons, 99.9)
-    # Filter lons_mainbody
-    lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
-    vfs_mainbody = vfs[1:][(lons >= lower_value) & (lons <= upper_value)] #excludes progenitor [1:]
-    # Create bins
-    lon_bins = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50)
-    # Compute absolute velocity norms
-    vfs_absol = np.linalg.norm(vfs_mainbody, axis=1)
-    # Slice lons_mainbody into bins
-    bin_indices = np.digitize(lons_mainbody, lon_bins)
-    # Create a mask array
-    mask = np.zeros((len(lons_mainbody), len(lon_bins) - 1), dtype=bool)
-    for i in range(1, len(lon_bins)):
-        mask[:, i - 1] = (bin_indices == i)
-
-    # Calculate standard deviation for each bin
-    local_veldis = np.array([np.std(vfs_absol[m]) for m in mask.T])
-    return np.nanmedian(local_veldis)
-        
 def pole_hist(path, plotname, savefig=False):
     
     potentials = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', 
@@ -370,7 +309,7 @@ def radialphase_peris_veldis(galdist, pericenters, apocenters, sigmavs, mass,plo
     plt.sca(ax[0])
     
     x_range, xbins = (0, 1) , 20
-    y_range, ybins = (0, 40) , 15
+    y_range, ybins = (0, 50) , 20
     plot = plt.hexbin(f, sigmavs, cmap='magma',
                       gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
                       norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
@@ -380,19 +319,59 @@ def radialphase_peris_veldis(galdist, pericenters, apocenters, sigmavs, mass,plo
     plt.xlim(-0.05,1.05)
 
     plt.sca(ax[1])
-    x_range, xbins = (9, 26) , 20
-    y_range, ybins = (0, 40) , 15
+    x_range, xbins = (5, 25) , 20
+    y_range, ybins = (0, 50) , 20
     plot = plt.hexbin(pericenters, sigmavs, cmap='magma',
                       gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
                       norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2)) 
     plt.xlabel('$r_{p}$ [kpc]')
-    plt.xlim(5,30)
-    plt.ylim(0,30)
+    plt.xlim(1,26)
+    plt.ylim(0,50)
     
     cb = fig.colorbar(plot, ax=[ax[0], ax[1]],location='right', aspect=30, pad=0.01)
     cb.set_label('Number counts')
     cb.ax.tick_params(labelsize=12)
     
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
+    
+def peri_veldis_scatter(rlmc, veldis, peris, plotname, potential, savefig=False):
+    
+    fig, ax = plt.subplots(1,1, figsize=(5,3)) 
+    plot = plt.scatter(peris, veldis, c=np.nanmin(rlmc,axis=1), 
+                       cmap='viridis_r', edgecolor='k', rasterized=True,
+                     vmin=0, vmax=25)
+    
+    plt.xlabel(r'$r_p$ [kpc]')
+    plt.ylabel(r'$\sigma_v$ [km/s]')
+    plt.xlim(1,26)
+    plt.ylim(0,100)
+ 
+    cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
+    cb.set_label(r'Closest approach to LMC [kpc]')
+    cb.ax.tick_params(labelsize=12)
+
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
+    plt.close()
+    
+def peri_veldis_dist_scatter(veldis, peris, distance, plotname, potential, savefig=False):
+        
+    fig, ax = plt.subplots(1,1, figsize=(5,3)) 
+    plot = plt.scatter(peris, veldis, c=distance, 
+                       cmap='viridis_r', edgecolor='k', rasterized=True,
+                     vmin=0,)
+    
+    plt.xlabel(r'$r_p$ [kpc]')
+    plt.ylabel(r'$\sigma_v$ [km/s]')
+    plt.xlim(1,26)
+    plt.ylim(0,100)
+ 
+    cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
+    cb.set_label(r'$\bar{d}$ [kpc]')
+    cb.ax.tick_params(labelsize=12)
+
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
     plt.close()
@@ -411,12 +390,12 @@ def poledisp_peri(poledis_l, poledis_b, pericenters, mass, plotname, potential, 
 
     plt.xlabel(r'$\log_{10}(\sigma_{l,\mathrm{pole}})\,[^\circ]$')
     plt.xlim(np.log10(0.1),np.log10(300))
-    plt.ylim(9,26)
+    plt.ylim(1,26)
     plt.ylabel('$r_p$ [kpc]')
 
     plt.sca(ax[1])
     x_bins_log = np.logspace(np.log10(0.1), np.log10(50), 20)
-    y_range, ybins = (9, 26) , 20
+    y_range, ybins = (5, 25) , 20
     plot = plt.hexbin(np.log10(poledis_b), pericenters, cmap='magma',
                       gridsize=(x_bins_log.size, ybins),
                       norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
@@ -483,16 +462,16 @@ def mollewide_poles_distance(polel, poleb, distance, plotname, potential, savefi
 def width_length(width, length, mass, plotname, potential, savefig=False):
     
     fig, ax = plt.subplots(1,1, figsize=(5,3))
-    x_bins_log = np.logspace(np.log10(1e-2), np.log10(3e1), 25)
-    y_bins_log = np.logspace(np.log10(5e-1), np.log10(1e2), 25)
+    x_bins_log = np.logspace(np.log10(1e-2), np.log10(1e2), 30)
+    y_bins_log = np.logspace(np.log10(5e-1), np.log10(360), 30)
     plot = plt.hexbin(np.log10(width), np.log10(length), cmap='magma',
                       gridsize=(x_bins_log.size, y_bins_log.size),
                       norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
     plt.sca(ax)
     plt.xlabel('$\log_{10}(w)\,[^{\circ}]$')
-    plt.ylabel('$\log_{10}(l)$ [kpc]')
-    plt.xlim(np.log10(1e-2),np.log10(3e1))
-    plt.ylim(np.log10(5e-1),np.log10(1e2))
+    plt.ylabel('$\log_{10}(l)\,[^{\circ}]$')
+    plt.xlim(np.log10(1e-2),np.log10(1e2))
+    plt.ylim(np.log10(3),np.log10(360))
 
     cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
     cb.set_label('Number counts')
@@ -565,7 +544,7 @@ def rlmc_veldis(rlmc, veldis, plotname, potential, savefig=False):
     fig, ax = plt.subplots(1,1, figsize=(5,3)) 
     
     x_range, xbins = (0, 50) , 25
-    y_range, ybins = (0, 40) , 20
+    y_range, ybins = (0, 50) , 20
     plot = plt.hexbin(np.nanmin(rlmc,axis=1), veldis, cmap='magma',
                       gridsize=(xbins, ybins), extent=(x_range[0], x_range[1], y_range[0], y_range[1]),
                       norm=matplotlib.colors.LogNorm(vmin=1e0, vmax=1e2))
@@ -573,7 +552,7 @@ def rlmc_veldis(rlmc, veldis, plotname, potential, savefig=False):
     plt.xlabel(r'Closest approach to LMC [kpc]')
     plt.ylabel(r'$\sigma_v$ [km/s]')
     plt.xlim(0,49)
-    plt.ylim(0,31)
+    plt.ylim(0,50)
  
     cb = fig.colorbar(plot, ax=ax,location='right', aspect=30, pad=0.01)
     cb.set_label('Number counts')
@@ -582,7 +561,6 @@ def rlmc_veldis(rlmc, veldis, plotname, potential, savefig=False):
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/{}/{}'.format(potential, plotname + '_' + potential))
     plt.close()
-    
     
 def plt_1dhists(path, plotname, savefig=False):
     fig, ax = plt.subplots(2,3, figsize=(13,5.5))
@@ -602,23 +580,23 @@ def plt_1dhists(path, plotname, savefig=False):
             widths = np.array(file['widths'])
             loc_veldis = np.array(file['loc_veldis'])
             energies = np.array(file['energies'])
-            Ls = np.array(file['L'])
+            track_deform = np.array(file['track_deform'])
             Lzs = np.array(file['Lz'])
 
         # lengths
         plt.sca(ax[0,0])
-        h, bin_edges = np.histogram(lengths, bins=np.linspace(0, 30, 10))
+        h, bin_edges = np.histogram(lengths, bins=np.linspace(-1, 360, 10))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         plt.plot(bin_mids, h, label=labels[j])
-        plt.xlabel(r'$l\,[\mathrm{kpc}]$')
+        plt.xlabel(r'$l\,[^{\circ}]$')
         plt.ylabel('Counts')
-        plt.xlim(0,30)
+        plt.xlim(0, 360)
         plt.ylim(0.1,)
         plt.legend(frameon=False, ncol=4, fontsize=12, bbox_to_anchor=(3.6,1.35))
 
         #widths
         plt.sca(ax[1,0])
-        h, bin_edges = np.histogram(widths, bins=np.linspace(0, 3, 15))
+        h, bin_edges = np.histogram(widths, bins=np.linspace(-0., 3, 15))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         plt.plot(bin_mids, h)
         plt.xlabel(r'$w\,[^{\circ}]$')
@@ -628,33 +606,33 @@ def plt_1dhists(path, plotname, savefig=False):
 
         # velocity dispersion
         plt.sca(ax[0,1])
-        h, bin_edges = np.histogram(loc_veldis, bins=np.linspace(0, 20, 15))
+        h, bin_edges = np.histogram(loc_veldis, bins=np.linspace(-0, 50, 25))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         plt.plot(bin_mids, h)
         plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
         plt.ylabel('Counts')
-        plt.xlim(0,20)
+        plt.xlim(0,50)
+        plt.ylim(0.1,)
+        
+        # track deformation
+        plt.sca(ax[1,1])
+        h, bin_edges = np.histogram(track_deform, bins=np.linspace(-0., 10, 25))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        plt.plot(bin_mids, h)
+        plt.xlabel(r'$\bar{\delta}\,[^{\circ}]$')
+        plt.ylabel('Counts')
         plt.ylim(0.1,)
 
         # median energies
-        plt.sca(ax[1,1])
-        h, bin_edges = np.histogram(np.log10(-energies), bins=np.linspace(4, 5.5, 25))
+        plt.sca(ax[0,2])
+        h, bin_edges = np.histogram(np.log10(-energies), bins=np.linspace(4, 5.5, 30))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         plt.plot(bin_mids, h)
         plt.xlabel(r'$\log_{10}(\bar{E})\,[(\mathrm{km}\,\mathrm{s}^{-1})^2]$')
         plt.ylabel('Counts')
         plt.xlim(4,5.5)
         plt.ylim(0.1,)
-
-        # median L
-        plt.sca(ax[0,2])
-        h, bin_edges = np.histogram(Ls, bins=np.linspace(1500, 6500, 20))
-        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
-        plt.plot(bin_mids, h)
-        plt.xlabel(r'$L\,[\mathrm{km}\,\mathrm{s}^{-1}\,\mathrm{kpc}]$')
-        plt.ylabel('Counts')
-        plt.ylim(0.1,)
-
+        
         # median Lz
         plt.sca(ax[1,2])
         h, bin_edges = np.histogram(Lzs, bins=np.linspace(-6000, 6000, 30))
@@ -703,18 +681,21 @@ def plt_1dhists_quadrants(path, plotname, savefig=False):
             widths = np.array(file['widths'])
             loc_veldis = np.array(file['loc_veldis'])
             energies = np.array(file['energies'])
+            track_deforms = np.array(file['track_deform'])
             Ls = np.array(file['L'])
             Lzs = np.array(file['Lz'])
+            
+            # print(track_deforms)
             
         for m in range(len(masks)):
         
             # lengths
             plt.sca(ax[0,j])
-            h, bin_edges = np.histogram(lengths[masks[m]], bins=np.linspace(0, 30, 10))
+            h, bin_edges = np.histogram(lengths[masks[m]], bins=np.linspace(-1, 360, 10))
             bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
             plt.plot(bin_mids, h, label=quadrants[m])
-            plt.xlabel(r'$l\,[\mathrm{kpc}]$', fontsize=14)
-            plt.xlim(0,30)
+            plt.xlabel(r'$l\,[^{\circ}]$')
+            plt.xlim(0, 360)
             plt.ylim(0.1,)
             if j==0:
                 plt.legend(frameon=False,fontsize=10)
@@ -736,9 +717,17 @@ def plt_1dhists_quadrants(path, plotname, savefig=False):
             plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$', fontsize=14)
             plt.xlim(0,20)
             plt.ylim(0.1,)
+            
+            # track deforms
+            plt.sca(ax[3,j])
+            h, bin_edges = np.histogram(track_deforms[masks[m]], bins=np.linspace(-0., 10, 20))
+            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            plt.plot(bin_mids, h)
+            plt.xlabel(r'$\bar{\delta}\,[^{\circ}]$', fontsize=14)
+            plt.ylim(0.1,)
 
             # median energies
-            plt.sca(ax[3,j])
+            plt.sca(ax[4,j])
             h, bin_edges = np.histogram(np.log10(-energies)[masks[m]], bins=np.linspace(4, 5.5, 25))
             bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
             plt.plot(bin_mids, h)
@@ -746,13 +735,13 @@ def plt_1dhists_quadrants(path, plotname, savefig=False):
             plt.xlim(4,5.5)
             plt.ylim(0.1,)
 
-            # median L
-            plt.sca(ax[4,j])
-            h, bin_edges = np.histogram(Ls[masks[m]], bins=np.linspace(1500, 6500, 20))
-            bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
-            plt.plot(bin_mids, h)
-            plt.xlabel(r'$L\,[\mathrm{km}\,\mathrm{s}^{-1}\,\mathrm{kpc}]$', fontsize=14)
-            plt.ylim(0.1,)
+            # # median L
+            # plt.sca(ax[4,j])
+            # h, bin_edges = np.histogram(Ls[masks[m]], bins=np.linspace(0, 6500, 20))
+            # bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+            # plt.plot(bin_mids, h)
+            # plt.xlabel(r'$L\,[\mathrm{km}\,\mathrm{s}^{-1}\,\mathrm{kpc}]$', fontsize=14)
+            # plt.ylim(0.1,)
 
             # median Lz
             plt.sca(ax[5,j])
@@ -783,9 +772,8 @@ def plt_1dhists_quadrants(path, plotname, savefig=False):
 ### run the script
 ###--------------------------------------------------------------------------------
 
-path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/'
 # streams = list(['stream_0', 'stream_1','stream_2','stream_3','stream_4']) 
-# plot_stream_frames(streams, path, 'plot_stream_coords', True)
+# plot_stream_frames(streams, '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/', 'plot_stream_coords', True)
 # pole_hist(path, 'sinbpole-histogram', True)
 
 potentials_list = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', \
@@ -796,6 +784,7 @@ pot_folders = list(['static-mwh-only', 'rm-MWhalo-full-MWdisc-full-LMC', 'em-MWh
                   'md-MWhalo-full-MWdisc-full-LMC', 'mq-MWhalo-full-MWdisc-full-LMC', 'mdq-MWhalo-full-MWdisc-full-LMC',
                   'Full-MWhalo-MWdisc-LMC', 'full-MWhalo-full-MWdisc-no-LMC'])
 
+path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/'
 for (potential, folder) in zip(potentials_list, pot_folders):
     with h5py.File(path + potential,'r') as file:
             pot_folder = folder
@@ -816,6 +805,8 @@ for (potential, folder) in zip(potentials_list, pot_folders):
                  
     print('* Saving figures for potential: {}'.format(potential))     
     radialphase_peris_veldis(rgal, peris, apos, loc_veldis, masses, 'radialphase_peris_veldis', pot_folder, True)
+    peri_veldis_scatter(lmc_sep, loc_veldis, peris, 'peri_veldis_scatter', pot_folder, True)
+    peri_veldis_dist_scatter(loc_veldis, peris, rgal, 'peri_veldis_dist_scatter', pot_folder, savefig=True)
     poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
     poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
     mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
@@ -824,5 +815,5 @@ for (potential, folder) in zip(potentials_list, pot_folders):
     stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
     rlmc_veldis(lmc_sep, loc_veldis, 'rlmc_veldis', pot_folder, True)
 
-plt_1dhists('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists' , True)
-plt_1dhists_quadrants('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists-quad' , True)
+# plt_1dhists('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists' , True)
+# plt_1dhists_quadrants('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists-quad' , True)

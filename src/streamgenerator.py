@@ -6,6 +6,7 @@ from astropy.constants import G
 import gala.integrate as gi
 import gala.dynamics as gd
 import gala.coordinates as gc
+import gala.potential as gp
 from gala.units import galactic
 import os.path
 import sys
@@ -13,7 +14,6 @@ from argparse import ArgumentParser
 import pathlib
 
 from scipy.spatial.transform import Rotation
-
 
 from mwlmc import model as mwlmc_model
 Model = mwlmc_model.MWLMC()
@@ -120,7 +120,9 @@ def gala_F(t, w, mwdflag, mwhflag, lmcflag):
     t = t / 1e3  # Myr -> Gyr
     x0 = np.array(Model.expansion_centres(t))
     # disk
-    acc_disk = Model.mwd_fields(t, *(w[:3, :] - x0[:3, None]), mwdharmonicflag=mwdflag)[:, :3]
+    # acc_disk = Model.mwd_fields(t, *(w[:3, :] - x0[:3, None]), mwdharmonicflag=mwdflag)[:, :3]
+    MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
+    acc_disk = MiyamotoNagai.acceleration(w[:3, :] - x0[:3, None]).to((u.km**2/(u.s**2*u.kpc))).value.T
     # halo
     acc_halo = Model.mwhalo_fields(t, *(w[:3] - x0[3:6, None]), mwhharmonicflag=mwhflag)[:, :3]
     # lmc
@@ -261,9 +263,11 @@ def lagrange_cloud_strip_adT(params, overwrite):
     mwhflag, mwdflag, lmcflag, strip_rate, \
     static_mwh, static_mwd, lmc_switch = params
     
-    fullfile_path = pathlib.Path(outpath) / filename
+    # fullfile_path = pathlib.Path(outpath) / filename + '.hdf5'
+    fullfile_path = pathlib.Path(outpath) / pathlib.Path(filename + '.hdf5')
 
     if fullfile_path.exists() and not overwrite:
+        print("Skipping as already exists and do not want to overwrite...")
         return 
 
     new_G = G.to(u.kpc*(u.km/u.s)**2/u.Msun)
@@ -285,8 +289,8 @@ def lagrange_cloud_strip_adT(params, overwrite):
     if static_mwd==True:
         MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
         MWDctmp, MWDstmp = np.array(MWDctmp), np.array(MWDstmp)
-        # MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0], MWDstmp[:,0][0]
-        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0]*0, MWDstmp[:,0][0]*0
+        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0], MWDstmp[:,0][0] # Turn this on to get rigid monopole disc 
+        # MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0]*0, MWDstmp[:,0][0]*0 # Turn this on to get rid of disc altogether
         MWDctmp[:,1:], MWDstmp[:,1:] = MWDctmp[:,1:]*0, MWDstmp[:,1:]*0
         Model.install_disc_coefficients(MWDctmp,MWDstmp)
         #Some line of code here to check they have been set to zero and reinstalled.
@@ -375,11 +379,13 @@ def lagrange_cloud_strip_adT(params, overwrite):
         #-----------------------------------------------------------------------------------------------------
         x0 = np.array(Model.expansion_centres(t))
         # disk 
-        acc_disk = Model.mwd_fields(t, 
-                                    xs[:,0].value - x0[:3][0, None],
-                                    xs[:,1].value - x0[:3][1, None],
-                                    xs[:,2].value - x0[:3][2, None],
-                                    mwdharmonicflag=mwdflag)[:, :3]
+        # acc_disk = Model.mwd_fields(t, 
+        #                             xs[:,0].value - x0[:3][0, None],
+        #                             xs[:,1].value - x0[:3][1, None],
+        #                             xs[:,2].value - x0[:3][2, None],
+        #                             mwdharmonicflag=mwdflag)[:, :3]
+        MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
+        acc_disk = MiyamotoNagai.acceleration((xs - x0[:3]*u.kpc).T).to((u.km**2/(u.s**2*u.kpc))).value.T   
         # halo
         acc_halo = Model.mwhalo_fields(t, 
                                        xs[:,0].value - x0[3:6][0, None],
@@ -400,11 +406,13 @@ def lagrange_cloud_strip_adT(params, overwrite):
         t = t + dtmin
 
         x0 = np.array(Model.expansion_centres(t))
-        new_acc_disk = Model.mwd_fields(t, 
-                                    xs[:,0].value - x0[:3][0, None],
-                                    xs[:,1].value - x0[:3][1, None],
-                                    xs[:,2].value - x0[:3][2, None],
-                                    mwdharmonicflag=mwdflag)[:, :3]
+        # new_acc_disk = Model.mwd_fields(t, 
+        #                             xs[:,0].value - x0[:3][0, None],
+        #                             xs[:,1].value - x0[:3][1, None],
+        #                             xs[:,2].value - x0[:3][2, None],
+        #                             mwdharmonicflag=mwdflag)[:, :3]
+        MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
+        new_acc_disk = MiyamotoNagai.acceleration((xs - x0[:3]*u.kpc).T).to((u.km**2/(u.s**2*u.kpc))).value.T  
         # halo
         new_acc_halo = Model.mwhalo_fields(t, 
                                        xs[:,0].value - x0[3:6][0, None],
@@ -438,10 +446,10 @@ def lagrange_cloud_strip_adT(params, overwrite):
         xs_data[i] -= disk_x0
         vs_data[i] -= disk_v0
         
-    # Save only every 5000th time snapshot (10 total saved) - flipping to slice properly, flip back after
-    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::5000], axis=0)
-    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::5000], axis=0)
-    ts_snaps = np.flip(np.flip(ts, axis=0)[::5000])
+    # Save only every 500th/5000th time snapshot (10 total saved for dt=1/0.1Myr) - flipping to slice properly, flip back after
+    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::500], axis=0)
+    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::500], axis=0)
+    ts_snaps = np.flip(np.flip(ts, axis=0)[::500])
     
     print("calculating energies, angular momenta, velocity dispersion, LMC separation...")
     Es = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
@@ -601,7 +609,10 @@ def harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, mwh_static):
         
     elif mwhflag==0 and mwdflag==0 and lmcflag==0:
         label = 'static-mwh-only'
-      
+        
+    elif mwhflag==63 and mwdflag==0 and lmcflag==63:
+        label = 'full-mwh-no-mwd-full-lmc'  
+         
     return label
     
 #-----------------------------------------------------------------------------------------    

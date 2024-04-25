@@ -64,11 +64,12 @@ def read_pot_params(paramfile):
            haloflag, discflag, lmcflag, strip_rate, static_mwh, mwd_switch, lmc_switch]
 
 def F_rigid(t, w, m200, c200):
-        origin_halo = np.array(Model.expansion_centres(t/1e3))[3:6]
-        pot = gp.NFWPotential.from_M200_c(M200=m200, c=c200, units=galactic, origin=origin_halo)   
+        origins = np.array(Model.expansion_centres(t/1e3))
+        pot = gp.NFWPotential.from_M200_c(M200=m200, c=c200, units=galactic, origin=origins[3:6])
+        # disk_pot = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=origins[:3])
 
         wdot = np.zeros_like(w)
-        wdot[3:] = pot.acceleration(w[:3]).value    
+        wdot[3:] = pot.acceleration(w[:3]).value  # need to do - origins[3:6] ? and + disk_pot.acceleratiion(w[:3] - origins[:3]) ?
         wdot[:3] = w[3:]
         return wdot
 
@@ -146,11 +147,12 @@ def make_ics(params_mass_scale):
 def streamparams(ics, mass_scales, peris, apos):
     
     exts = ["static-mwh-only","rm-mwh-full-mwd-full-lmc", "em-mwh-full-mwd-full-lmc", "md-mwh-full-mwd-full-lmc", \
-          "mq-mwh-full-mwd-full-lmc", "mdq-mwh-full-mwd-full-lmc",  "full-mwh-full-mwd-full-lmc", "full-mwh-full-mwd-no-lmc"]
+          "mq-mwh-full-mwd-full-lmc", "mdq-mwh-full-mwd-full-lmc",  "full-mwh-full-mwd-full-lmc", "full-mwh-full-mwd-no-lmc", 
+           "full-mwh-no-mwd-full-lmc"]
     
     gens = ["gen-params-static-mwh-only.yaml", "gen-params-rm-mwh-mwd-lmc.yaml", "gen-params-em-mwh-mwd-lmc.yaml", \
             "gen-params-md-mwh-mwd-lmc.yaml", "gen-params-mq-mwh-mwd-lmc.yaml", "gen-params-mdq-mwh-mwd-lmc.yaml", \
-            "gen-params-full-mwh-mwd-lmc.yaml", "gen-params-full-mwh-mwd-no-lmc.yaml"]
+            "gen-params-full-mwh-mwd-lmc.yaml", "gen-params-full-mwh-mwd-no-lmc.yaml", "gen-params-full-mwh-no-mwd-full-lmc.yaml"]
     
     path = "/mnt/ceph/users/rbrooks/oceanus/ics/generation-files/"
     
