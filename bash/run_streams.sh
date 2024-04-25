@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#SBATCH --job-name=oceanus
-
 id=$1
 shift
 cd /mnt/home/rbrooks/ceph/oceanus/src/

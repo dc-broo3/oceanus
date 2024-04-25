@@ -2,8 +2,8 @@
 
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=rbrooks@flatironinstitute.org
-#SBATCH --time=00:10:00
-#SBATCH --job-name=oceanus
+#SBATCH --time=00:15:00
+#SBATCH --job-name=oceanus-datamine
 #SBATCH -N1 --ntasks-per-node=1
 #SBATCH -e stderr.txt
 #SBATCH -o stdout.txt
@@ -15,6 +15,7 @@ module load gsl
 module load openmpi/4.0.7
 module load hdf5
 module load python
+module load texlive
 
 echo
 echo "Running on hosts: $SLURM_NODELIST"
@@ -26,8 +27,5 @@ echo
 VENVDIR=/mnt/home/rbrooks/ceph/venvs
 source $VENVDIR/mwlmc_fulldiscexp_venv/bin/activate
 
-pipeline=/mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py
-param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/static-mw.yaml
-# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/mdq-mwh-full-mwd-full-lmc.yaml
-#param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/full-mwh-full-mwd-no-lmc.yaml
-python3 $pipeline -o -f $param
+pipeline=/mnt/home/rbrooks/ceph/oceanus/src/datamine.py
+python3 $pipeline

@@ -1,0 +1,1 @@
+#DISBATCH REPEAT 1024 start 0 /mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/full-mwh-full-mwd-full-lmc/param_${DISBATCH_REPEAT_INDEX}.yaml
