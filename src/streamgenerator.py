@@ -39,9 +39,11 @@ def plummer_force(r, m, b):
     force = -dpot_dr
     return force 
 
-def num_summedforces(t, progxs, mwdharmonicflag, mwhharmonicflag, lmcharmonicflag):
+def num_summedforces(t, progxs, mwdharmonicflag, mwhharmonicflag, lmcharmonicflag, motion):
     
     x0 = np.array(Model.expansion_centres(t))
+    if motion == False:
+        x0 *= 0 
     # disk 
     acc_disk = Model.mwd_fields(t, 
                                 progxs[0, None].value - x0[:3][0, None],
@@ -65,7 +67,7 @@ def num_summedforces(t, progxs, mwdharmonicflag, mwhharmonicflag, lmcharmonicfla
     
     return accs
 
-def numerical_forceDerivs(positions, t, mwhflag, mwdflag, lmcflag, epsilon=1e-4):
+def numerical_forceDerivs(positions, t, mwhflag, mwdflag, lmcflag, motion, epsilon=1e-4):
     
     """
     numerical_forceDerivs - takes the positions for the mock stream progenitor and returns the derivatives of the forces for each position 
@@ -77,6 +79,7 @@ def numerical_forceDerivs(positions, t, mwhflag, mwdflag, lmcflag, epsilon=1e-4)
     - mwhflag: flag to set which mw halo expansion orders to be non-zero.
     - mwdflag: flag to set which mw disc expansion orders to be non-zero.
     - lmcflag: flag to set which lmc halo expansion orders to be non-zero.
+    - motion: flag to allow motion of the MW disc and halo.
     - epsilon: (optional) The small value away from each position used find the derivative in kpc. Default is 0.01pc
     
     Retuns
@@ -97,13 +100,13 @@ def numerical_forceDerivs(positions, t, mwhflag, mwdflag, lmcflag, epsilon=1e-4)
     positions_dy = (positions + np.array([0.,epsilon,0.])*u.kpc )
     positions_dz = (positions + np.array([0.,0.,epsilon])*u.kpc )
     
-    fxx_yx_zx = (num_summedforces(t, positions_dx, mwdflag, mwhflag, lmcflag) - num_summedforces(t, positions, mwdflag, mwhflag, lmcflag) ) \
+    fxx_yx_zx = (num_summedforces(t, positions_dx, mwdflag, mwhflag, lmcflag, motion) - num_summedforces(t, positions, mwdflag, mwhflag, lmcflag, motion) ) \
                     / np.linalg.norm(positions_dx - positions)
         
-    fxy_yy_zy = (num_summedforces(t, positions_dy, mwdflag, mwhflag, lmcflag) - num_summedforces(t, positions, mwdflag, mwhflag, lmcflag) ) \
+    fxy_yy_zy = (num_summedforces(t, positions_dy, mwdflag, mwhflag, lmcflag, motion) - num_summedforces(t, positions, mwdflag, mwhflag, lmcflag, motion) ) \
                     / np.linalg.norm(positions_dy - positions)
         
-    fxz_yz_zz = (num_summedforces(t, positions_dz, mwdflag, mwhflag, lmcflag) - num_summedforces(t, positions, mwdflag, mwhflag, lmcflag) ) \
+    fxz_yz_zz = (num_summedforces(t, positions_dz, mwdflag, mwhflag, lmcflag, motion) - num_summedforces(t, positions, mwdflag, mwhflag, lmcflag, motion) ) \
                     / np.linalg.norm(positions_dz - positions)
         
     Hess = np.zeros((1, 3, 3))
@@ -116,13 +119,15 @@ def numerical_forceDerivs(positions, t, mwhflag, mwdflag, lmcflag, epsilon=1e-4)
     
     return d2Phi_d2r.value*(u.km**2/(u.s**2*u.kpc**2))
 
-def gala_F(t, w, mwdflag, mwhflag, lmcflag):
+def gala_F(t, w, mwdflag, mwhflag, lmcflag, motion):
     t = t / 1e3  # Myr -> Gyr
     x0 = np.array(Model.expansion_centres(t))
+    if motion==False:
+        x0 *= 0 
     # disk
-    # acc_disk = Model.mwd_fields(t, *(w[:3, :] - x0[:3, None]), mwdharmonicflag=mwdflag)[:, :3]
-    MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
-    acc_disk = MiyamotoNagai.acceleration(w[:3, :] - x0[:3, None]).to((u.km**2/(u.s**2*u.kpc))).value.T
+    acc_disk = Model.mwd_fields(t, *(w[:3, :] - x0[:3, None]), mwdharmonicflag=mwdflag)[:, :3]
+    # MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
+    # acc_disk = MiyamotoNagai.acceleration(w[:3, :] - x0[:3, None]).to((u.km**2/(u.s**2*u.kpc))).value.T
     # halo
     acc_halo = Model.mwhalo_fields(t, *(w[:3] - x0[3:6, None]), mwhharmonicflag=mwhflag)[:, :3]
     # lmc
@@ -133,25 +138,31 @@ def gala_F(t, w, mwdflag, mwhflag, lmcflag):
     return np.vstack((w[3:], accs.T))
 
 
-def gala_rewind(Tbegin, Tend, dt, w, mwdflag, mwhflag, lmcflag):
+def gala_rewind(Tbegin, Tend, dt, w, mwdflag, mwhflag, lmcflag, motion):
     
-    integrator = gi.LeapfrogIntegrator(gala_F, func_units=galactic, func_args=(mwdflag, mwhflag, lmcflag,))
-    # integrator = gi.Ruth4Integrator(gala_F, func_units=galactic, func_args=(mwdflag, mwhflag, lmcflag,))
+    integrator = gi.LeapfrogIntegrator(gala_F, func_units=galactic, func_args=(mwdflag, mwhflag, lmcflag, motion))
+    # integrator = gi.Ruth4Integrator(gala_F, func_units=galactic, func_args=(mwdflag, mwhflag, lmcflag, motion))
     
     mwd_x0 = np.array(Model.expansion_centres(0.)[:3])*u.kpc 
     mwd_v0 = np.array(Model.expansion_centre_velocities(0.)[:3])*(u.km/u.s) 
+    if motion==False:
+        mwd_x0 *= 0
+        mwd_v0 *= 0
     w0 = gd.PhaseSpacePosition(pos=w.xyz + mwd_x0,
                                vel=(w.v_xyz.to(u.km/u.s) + mwd_v0).to(u.kpc/u.Myr) )
     orbit = integrator.run(w0, dt=-dt*u.Myr, t1=Tend*u.Gyr, t2=Tbegin*u.Gyr)
     # subtract these off
     disk_x0 = np.array([Model.expansion_centres(t)[:3] for t in orbit.t.to_value(u.Gyr)]) 
     disk_v0 = np.array([Model.expansion_centre_velocities(t)[:3] for t in orbit.t.to_value(u.Gyr)]) 
+    if motion==False:
+        disk_x0 *= 0
+        disk_v0 *= 0
     pos=orbit.xyz - disk_x0.T*u.kpc,
     vel=orbit.v_xyz.to(u.km/u.s) - disk_v0.T*u.km/u.s,
     t=orbit.t
     return pos[0].to(u.kpc), vel[0].to(u.km/u.s), t.to(u.Gyr)
 
-def energies_angmom(t, xs, vs, mwdflag, mwhflag, lmcflag):
+def energies_angmom(t, xs, vs, mwdflag, mwhflag, lmcflag, motion):
     
     """
     calculate the energies and angular momenta of particles for a given time snapshot.
@@ -160,6 +171,8 @@ def energies_angmom(t, xs, vs, mwdflag, mwhflag, lmcflag):
     Ek = (.5 * np.linalg.norm(vs, axis=1)**2) * (u.km/u.s)**2
     # Potential energy
     x0 = np.array(Model.expansion_centres(t))
+    if motion==False:
+        x0 *= 0 
     pot_disk = Model.mwd_fields(t, 
                                 xs[:,0] - x0[:3][0],
                                 xs[:,1] - x0[:3][1],
@@ -180,8 +193,9 @@ def energies_angmom(t, xs, vs, mwdflag, mwhflag, lmcflag):
     # Angular momentum
     L = np.linalg.norm(np.cross(xs, vs), axis=1) * (u.kpc*u.km/u.s)
     Lz = np.cross(xs[:,0:2], vs[:,0:2]) * (u.kpc*u.km/u.s)
+    Lx = np.cross(xs[:,1:], vs[:,1:]) * (u.kpc*u.km/u.s)
     
-    return E, L, Lz
+    return E, L, Lz, Lx
 
 def orbpole(xs,vs):
     uu = np.cross(xs, vs, axis=1)
@@ -261,7 +275,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     inpath, snapname, outpath, filename, \
     fc, Mprog, a_s, pericenter, apocenter, Tbegin, Tfinal, dtmin, \
     mwhflag, mwdflag, lmcflag, strip_rate, \
-    static_mwh, static_mwd, lmc_switch = params
+    static_mwh, static_mwd, lmc_switch, motion = params
     
     # fullfile_path = pathlib.Path(outpath) / filename + '.hdf5'
     fullfile_path = pathlib.Path(outpath) / pathlib.Path(filename + '.hdf5')
@@ -289,8 +303,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     if static_mwd==True:
         MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
         MWDctmp, MWDstmp = np.array(MWDctmp), np.array(MWDstmp)
-        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0], MWDstmp[:,0][0] # Turn this on to get rigid monopole disc 
-        # MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0]*0, MWDstmp[:,0][0]*0 # Turn this on to get rid of disc altogether
+        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0], MWDstmp[:,0][0] # Turn this on to get static monopole disc 
         MWDctmp[:,1:], MWDstmp[:,1:] = MWDctmp[:,1:]*0, MWDstmp[:,1:]*0
         Model.install_disc_coefficients(MWDctmp,MWDstmp)
         #Some line of code here to check they have been set to zero and reinstalled.
@@ -309,7 +322,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     
     w0 = gd.PhaseSpacePosition.from_w(fc.T, units=galactic)
     print('rewinding progenitor...')
-    prog_orbit = gala_rewind(Tbegin, Tfinal, dtmin*u.Gyr.to(u.Myr), w0, mwdflag, mwhflag, lmcflag)
+    prog_orbit = gala_rewind(Tbegin, Tfinal, dtmin*u.Gyr.to(u.Myr), w0, mwdflag, mwhflag, lmcflag, motion)
     rewind_xs = prog_orbit[0].T #unpack tuple
     rewind_vs = prog_orbit[1].T #unpack tuple
     rewind_ts = prog_orbit[2]
@@ -323,7 +336,10 @@ def lagrange_cloud_strip_adT(params, overwrite):
     
     print('forward integrating...')
     disk_xf = np.array(Model.expansion_centres(t)[:3]) 
-    disk_vf = np.array(Model.expansion_centre_velocities(t)[:3]) 
+    disk_vf = np.array(Model.expansion_centre_velocities(t)[:3])
+    if motion==False:
+        disk_xf *= 0 
+        disk_vf *= 0 
     xs = np.array(prog_ic[:,0:3])*u.kpc + disk_xf*u.kpc
     vs = np.array(prog_ic[:,3:6])*(u.km/u.s) + disk_vf*(u.km/u.s)
     
@@ -338,7 +354,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
         L_prog = np.linalg.norm(np.cross(prog_xs[0:3], prog_vs[0:3]))
         Omega_prog = L_prog*Lunits / (r_prog*u.kpc)**2
         r_hat = prog_xs[0:3]/r_prog
-        num_d2Phi_dr2 = numerical_forceDerivs(prog_xs.reshape(3,), t, mwhflag, mwdflag, lmcflag)
+        num_d2Phi_dr2 = numerical_forceDerivs(prog_xs.reshape(3,), t, mwhflag, mwdflag, lmcflag, motion)
 
         # Calculate tidal radius
         mass_frac = 1 - (np.abs(Tbegin) - np.abs(t))/np.abs(Tbegin)
@@ -378,14 +394,16 @@ def lagrange_cloud_strip_adT(params, overwrite):
         # LEAPFROG INTEGRATION 
         #-----------------------------------------------------------------------------------------------------
         x0 = np.array(Model.expansion_centres(t))
+        if motion==False:
+            x0 *= 0  
         # disk 
-        # acc_disk = Model.mwd_fields(t, 
-        #                             xs[:,0].value - x0[:3][0, None],
-        #                             xs[:,1].value - x0[:3][1, None],
-        #                             xs[:,2].value - x0[:3][2, None],
-        #                             mwdharmonicflag=mwdflag)[:, :3]
-        MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
-        acc_disk = MiyamotoNagai.acceleration((xs - x0[:3]*u.kpc).T).to((u.km**2/(u.s**2*u.kpc))).value.T   
+        acc_disk = Model.mwd_fields(t, 
+                                    xs[:,0].value - x0[:3][0, None],
+                                    xs[:,1].value - x0[:3][1, None],
+                                    xs[:,2].value - x0[:3][2, None],
+                                    mwdharmonicflag=mwdflag)[:, :3]
+        # MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
+        # acc_disk = MiyamotoNagai.acceleration((xs - x0[:3]*u.kpc).T).to((u.km**2/(u.s**2*u.kpc))).value.T   
         # halo
         acc_halo = Model.mwhalo_fields(t, 
                                        xs[:,0].value - x0[3:6][0, None],
@@ -406,13 +424,15 @@ def lagrange_cloud_strip_adT(params, overwrite):
         t = t + dtmin
 
         x0 = np.array(Model.expansion_centres(t))
-        # new_acc_disk = Model.mwd_fields(t, 
-        #                             xs[:,0].value - x0[:3][0, None],
-        #                             xs[:,1].value - x0[:3][1, None],
-        #                             xs[:,2].value - x0[:3][2, None],
-        #                             mwdharmonicflag=mwdflag)[:, :3]
-        MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
-        new_acc_disk = MiyamotoNagai.acceleration((xs - x0[:3]*u.kpc).T).to((u.km**2/(u.s**2*u.kpc))).value.T  
+        if motion==False:
+            x0 *= 0
+        new_acc_disk = Model.mwd_fields(t, 
+                                    xs[:,0].value - x0[:3][0, None],
+                                    xs[:,1].value - x0[:3][1, None],
+                                    xs[:,2].value - x0[:3][2, None],
+                                    mwdharmonicflag=mwdflag)[:, :3]
+        # MiyamotoNagai = gp.MiyamotoNagaiPotential(6.8e10*u.Msun, 3*u.kpc, 0.28*u.kpc, units=galactic, origin=x0[:3])
+        # new_acc_disk = MiyamotoNagai.acceleration((xs - x0[:3]*u.kpc).T).to((u.km**2/(u.s**2*u.kpc))).value.T  
         # halo
         new_acc_halo = Model.mwhalo_fields(t, 
                                        xs[:,0].value - x0[3:6][0, None],
@@ -443,18 +463,22 @@ def lagrange_cloud_strip_adT(params, overwrite):
             
         disk_x0 = np.array(Model.expansion_centres(ts[i])[:3])
         disk_v0 = np.array(Model.expansion_centre_velocities(ts[i])[:3]) 
+        if motion==False:
+            disk_x0 *= 0
+            disk_v0 *= 0
         xs_data[i] -= disk_x0
         vs_data[i] -= disk_v0
         
-    # Save only every 500th/5000th time snapshot (10 total saved for dt=1/0.1Myr) - flipping to slice properly, flip back after
-    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::500], axis=0)
-    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::500], axis=0)
-    ts_snaps = np.flip(np.flip(ts, axis=0)[::500])
+    # Save only every 500th/1000th/5000th time snapshot (10 total saved for dt=1/0.5/0.1Myr) - flipping to slice properly, flip back after
+    xs_snaps = np.flip(np.flip(xs_data, axis=0)[::1000], axis=0)
+    vs_snaps = np.flip(np.flip(vs_data, axis=0)[::1000], axis=0)
+    ts_snaps = np.flip(np.flip(ts, axis=0)[::1000])
     
     print("calculating energies, angular momenta, velocity dispersion, LMC separation...")
     Es = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     Ls = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     Lzs = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
+    Lxs = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     
     lons, lats = lons_lats(xs_snaps[-1], vs_snaps[-1])
     sigma_v = local_veldis(lons, vs_snaps[-1])
@@ -467,16 +491,16 @@ def lagrange_cloud_strip_adT(params, overwrite):
     gbs  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     
     for i in range(len(xs_snaps)):
-        Es[i], Ls[i], Lzs[i] = energies_angmom(ts_snaps[i], xs_snaps[i], vs_snaps[i], mwdflag, mwhflag, lmcflag)
+        Es[i], Ls[i], Lzs[i], Lxs[i], = energies_angmom(ts_snaps[i], xs_snaps[i], vs_snaps[i], mwdflag, mwhflag, lmcflag, motion)
         lmc_sep[i] = np.linalg.norm(Model.expansion_centres(ts_snaps[i])[6:9]) - np.linalg.norm(xs_snaps[i], axis=1)
         gls[i], gbs[i] = orbpole(xs_snaps[i], vs_snaps[i])
     
     print("calculating LMC closest approach...")
     lmc_close_sep = np.nanmin(lmc_sep, axis=0)
         
-    pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh)    
+    pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh, motion)    
     write_stream_hdf5(outpath, filename, xs_snaps, vs_snaps, ts2,
-                      Es, Ls, Lzs, sigma_v, 
+                      Es, Ls, Lzs, Lxs, sigma_v, 
                       length, width, track_deform, med_lon, med_lat,
                       lmc_close_sep, gls, gbs,
                       pot_label, fc, Mprog, a_s, 
@@ -505,7 +529,7 @@ def readparams(paramfile):
     lmcflag = d["lmcflag"]
     discflag = d["discflag"]
     strip_rate = d["strip_rate"]
-    # discframe = d["discframe"]
+    motion = d["motion"]
     static_mwh = d["static_mwh"]
     static_mwd = d["mwd_switch"]
     lmc_switch = d["lmc_switch"]
@@ -526,10 +550,10 @@ def readparams(paramfile):
     assert type(strip_rate)==int, "strip_rate parameter must be an int"
 
     return [inpath, snapname, outpath, outname, prog_ics ,prog_mass, prog_scale, pericenter, apocenter, Tbegin, Tfinal, dtmin, 
-            haloflag, discflag, lmcflag, strip_rate, static_mwh, static_mwd, lmc_switch]
+            haloflag, discflag, lmcflag, strip_rate, static_mwh, static_mwd, lmc_switch, motion]
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
-                      energies, Ls, Lzs, sigma_v, 
+                      energies, Ls, Lzs, Lxs, sigma_v, 
                       length, width, track_deform, med_lon, med_lat,
                       lmc_sep, gls, gbs,
                       potential, progics, progmass, progscale, 
@@ -549,6 +573,7 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('energies', data=energies)
     hf.create_dataset('L', data=Ls)
     hf.create_dataset('Lz', data=Lzs)
+    hf.create_dataset('Lx', data=Lzs)
     hf.create_dataset('loc_veldis', data=sigma_v)
     hf.create_dataset('lengths', data=length)
     hf.create_dataset('widths', data=width)
@@ -584,7 +609,7 @@ def fill_with_nans_1d(arr, m):
         filled_arr[:n] = arr
         return filled_arr
     
-def harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, mwh_static):
+def harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, mwh_static, motion):
     
     if mwhflag==0 and mwh_static==True and mwdflag==63 and lmcflag==63:
         label = 'rm-MWhalo-full-MWdisc-full-LMC'
@@ -602,13 +627,16 @@ def harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, mwh_static):
         label = 'mdq-MWhalo-full-MWdisc-full-LMC'
         
     elif mwhflag==63 and mwdflag==63 and lmcflag==63:
-        label = 'Full-MWhalo-MWdisc-LMC'
+        label = 'full-MWhalo-full-MWdisc-full-LMC'
         
     elif mwhflag==63 and mwdflag==63 and lmcflag==0:
         label = 'full-MWhalo-full-MWdisc-no-LMC'
         
-    elif mwhflag==0 and mwdflag==0 and lmcflag==0:
-        label = 'static-mwh-only'
+    elif mwhflag==0 and mwdflag==0 and lmcflag==0 and motion==True:
+        label = 'static-mw'
+        
+    elif mwhflag==0 and mwdflag==0 and lmcflag==0 and motion==False:
+        label = 'rigid-mw'
         
     elif mwhflag==63 and mwdflag==0 and lmcflag==63:
         label = 'full-mwh-no-mwd-full-lmc'  

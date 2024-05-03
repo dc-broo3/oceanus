@@ -784,7 +784,8 @@ pot_folders = list(['static-mwh-only', 'rm-MWhalo-full-MWdisc-full-LMC', 'em-MWh
                   'md-MWhalo-full-MWdisc-full-LMC', 'mq-MWhalo-full-MWdisc-full-LMC', 'mdq-MWhalo-full-MWdisc-full-LMC',
                   'Full-MWhalo-MWdisc-LMC', 'full-MWhalo-full-MWdisc-no-LMC'])
 
-path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/'
+# path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/'
+path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/1024-dthalfMyr-10rpmin-75ramax/'
 for (potential, folder) in zip(potentials_list, pot_folders):
     with h5py.File(path + potential,'r') as file:
             pot_folder = folder
@@ -793,10 +794,12 @@ for (potential, folder) in zip(potentials_list, pot_folders):
             apos = np.array(file['apocenter'])
             loc_veldis = np.array(file['loc_veldis'])
             masses = np.array(file['mass'])
-            pole_l_dis = np.array(file['sigma_pole_l'])
-            pole_l = np.array(file['pole_l'])
-            pole_b_dis = np.array(file['sigma_pole_b'])
-            pole_b = np.array(file['pole_b'])
+            
+            pole_l = np.array(file['pole_l'])[:,-1]
+            pole_l_dis =np.nanstd(pole_l, axis=1)
+            pole_b = np.array(file['pole_b'])[:,-1]
+            pole_b_dis = np.nanstd(pole_b, axis=1)
+        
             widths = np.array(file['widths'])
             lengths = np.array(file['lengths'])
             av_lon = np.array(file['av_lon'])
@@ -809,7 +812,7 @@ for (potential, folder) in zip(potentials_list, pot_folders):
     peri_veldis_dist_scatter(loc_veldis, peris, rgal, 'peri_veldis_dist_scatter', pot_folder, savefig=True)
     poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
     poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
-    mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
+    # mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
     width_length(widths, lengths, masses, 'width_length', pot_folder, True)
     av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
     stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)

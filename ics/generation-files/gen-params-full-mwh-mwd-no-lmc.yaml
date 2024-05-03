@@ -3,7 +3,7 @@ inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/full-mwh-full-mwd-no-lmc"
 outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/full-mwh-full-mwd-no-lmc/"
 Tbegin : -5.0
 Tfinal :  0.  
-dtmin  : 0.001
+dtmin  : 0.0005
 strip_rate : 2
 haloflag : 63
 lmcflag : 0
@@ -11,5 +11,6 @@ discflag : 63
 static_mwh : False
 mwd_switch : False
 lmc_switch: True
+motion: True
 ...
 

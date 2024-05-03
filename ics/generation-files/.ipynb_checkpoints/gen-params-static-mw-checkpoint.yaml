@@ -1,0 +1,16 @@
+---
+inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/static-mw" 
+outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/static-mw/"
+Tbegin : -5.0
+Tfinal :  0.  
+dtmin  : 0.0005
+strip_rate : 2
+haloflag : 0
+lmcflag : 0
+discflag : 0
+static_mwh : True
+mwd_switch : True
+lmc_switch: True
+motion: True
+...
+
