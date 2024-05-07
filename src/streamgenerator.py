@@ -165,28 +165,31 @@ def gala_rewind(Tbegin, Tend, dt, w, mwdflag, mwhflag, lmcflag, motion):
 def energies_angmom(t, xs, vs, mwdflag, mwhflag, lmcflag, motion):
     
     """
-    calculate the energies and angular momenta of particles for a given time snapshot.
+    calculate the energies and angular momenta of particles for a given time snapshot. Galactocentric frame.
     """
     # Kinetic energy
     Ek = (.5 * np.linalg.norm(vs, axis=1)**2) * (u.km/u.s)**2
     # Potential energy
     x0 = np.array(Model.expansion_centres(t))
-    if motion==False:
+    if motion == False:
         x0 *= 0 
+    
+    x_lmc_GC = x0[6:9] - x0[:3]
+    
     pot_disk = Model.mwd_fields(t, 
-                                xs[:,0] - x0[:3][0],
-                                xs[:,1] - x0[:3][1],
-                                xs[:,2] - x0[:3][2],
+                                xs[:,0],
+                                xs[:,1],
+                                xs[:,2],
                                 mwdflag)[:,4]
     pot_halo = Model.mwhalo_fields(t, 
-                                   xs[:,0] - x0[3:6][0],
-                                   xs[:,1] - x0[3:6][1],
-                                   xs[:,2] - x0[3:6][2],
+                                   xs[:,0],
+                                   xs[:,1],
+                                   xs[:,2],
                                    mwhflag)[:,4]
     pot_lmc = Model.lmc_fields(t, 
-                               xs[:,0] - x0[6:9][0],
-                               xs[:,1] - x0[6:9][1],
-                               xs[:,2] - x0[6:9][2],
+                               xs[:,0] - x_lmc_GC[0],
+                               xs[:,1] - x_lmc_GC[1],
+                               xs[:,2] - x_lmc_GC[2],
                                lmcflag)[:,4]
     Ep = (pot_disk + pot_halo + pot_lmc) * (u.km/u.s)**2
     E = Ek + Ep
