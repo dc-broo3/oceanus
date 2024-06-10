@@ -87,10 +87,10 @@ def write_pltoutputs_hdf5(outpath, filename,
                          l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                          peris, apos,
                          widths, lengths, track_deform, lmc_sep,
-                         av_lon, av_lat, loc_veldis,
+                         lons, lats, av_lon, av_lat, loc_veldis,
                          pole_b, pole_l,
                          pole_b_dis, pole_l_dis,
-                         masses, energy, Ls, Lzs):
+                         masses, energy, Ekinetic, Ls, Lzs):
     print("* Writing data for potential {}".format(filename))
     hf = h5py.File(outpath + filename + ".hdf5", 'w')
     hf.create_dataset('l_gc', data=l_gc)
@@ -108,6 +108,8 @@ def write_pltoutputs_hdf5(outpath, filename,
     hf.create_dataset('widths', data=widths)
     hf.create_dataset('track_deform', data=track_deform)
     hf.create_dataset('lmc_sep', data=lmc_sep)
+    hf.create_dataset('lons', data=lons)
+    hf.create_dataset('lats', data=lats)
     hf.create_dataset('av_lon', data=av_lon)
     hf.create_dataset('av_lat', data=av_lat)
     hf.create_dataset('loc_veldis', data=loc_veldis)
@@ -119,6 +121,7 @@ def write_pltoutputs_hdf5(outpath, filename,
                       
     hf.create_dataset('mass', data=masses)           
     hf.create_dataset('energies', data=energy)
+    hf.create_dataset('Eks', data=Ekinetic)
     hf.create_dataset('L', data=Ls)
     hf.create_dataset('Lz', data=Lzs)
     hf.close()
@@ -130,15 +133,20 @@ def write_pltoutputs_hdf5(outpath, filename,
 l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los = [], [], [], [], [], [], []
 peris, apos = [], []
 widths, lengths, track_deforms, lmc_sep = [], [], [], []
+lons, lats = [], []
 av_lon, av_lat = [], []
 loc_veldis = []
 pole_b, pole_l = [], []
 pole_b_dis, pole_l_dis = [], []
 masses = []
-energy, Ls, Lzs = [], [], []
+energy, Eks, Ls, Lzs = [], [], [], []
 
-path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/'
-potential =  'full-MWhalo-full-MWdisc-no-LMC.hdf5'#'Full-MWhalo-MWdisc-LMC.hdf5'  #'static-mwh-only.hdf5' 
+path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/1024-dthalfMyr-5kpcrpmin/'
+# potential = 'rm-MWhalo-full-MWdisc-full-LMC.hdf5' 
+potential = 'static-mw.hdf5'
+# potential = 'Full-MWhalo-MWdisc-LMC.hdf5' 
+# potential = 'full-MWhalo-full-MWdisc-no-LMC.hdf5' 
+
 
 Nstreams = 1024 
 for i in range(Nstreams):
@@ -165,26 +173,31 @@ for i in range(Nstreams):
         av_lon.append(np.array(file['stream_{}'.format(i)]['av_lon']))
         av_lat.append(np.array(file['stream_{}'.format(i)]['av_lat']))
         
-        lons, lats = lons_lats(pos, vel)
-        loc_veldis.append(local_veldis(lons, vel))
+        lon, lat = lons_lats(pos, vel)
+        lons.append(lon) 
+        lats.append(lat)
+        loc_veldis.append(local_veldis(lon, vel))
         
-        pole_b.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
-        pole_l.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
-        pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])[-1]))
-        pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])[-1]))
+        pole_b.append(np.array(file['stream_{}'.format(i)]['pole_b']))
+        pole_l.append(np.array(file['stream_{}'.format(i)]['pole_l']))
+        pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])))
+        pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])))
         
         masses.append(np.array(file['stream_{}'.format(i)]['progenitor-mass']))
-        energy.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['energies'])[-1]))
-        Ls.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['L'])[-1]))
-        Lzs.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['Lz'])[-1]))
+        energy.append(np.array(file['stream_{}'.format(i)]['energies'])[-1, 0])
+        Ls.append(np.array(file['stream_{}'.format(i)]['L'])[-1, 0])
+        Lzs.append(np.array(file['stream_{}'.format(i)]['Lz'])[-1, 0])
+        
+        Ek_prog = (.5 * np.linalg.norm(vel[0], axis=0)**2)
+        Eks.append(Ek_prog)
            
-out_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/'
+out_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/1024-dthalfMyr-5kpcrpmin/'
 
 write_pltoutputs_hdf5(out_path, filename_end,
                       l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                       peris, apos,
                      widths, lengths, track_deforms, lmc_sep,
-                     av_lon, av_lat, loc_veldis,
+                     lons, lats, av_lon, av_lat, loc_veldis,
                      pole_b, pole_l,
                      pole_b_dis, pole_l_dis,
-                     masses, energy, Ls, Lzs)
+                     masses, energy, Eks, Ls, Lzs)
