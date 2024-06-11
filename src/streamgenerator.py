@@ -232,8 +232,8 @@ def lons_lats(pos, vel):
 
 def local_veldis(lons, vfs):
     # Compute percentiles
-    lower_value = np.nanpercentile(lons, 0.1)
-    upper_value = np.nanpercentile(lons, 99.9)
+    lower_value = np.nanpercentile(lons, 5)
+    upper_value = np.nanpercentile(lons, 95)
     # Filter lons_mainbody
     lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
     vfs_mainbody = vfs[1:][(lons >= lower_value) & (lons <= upper_value)] #excludes progenitor [1:]
@@ -254,8 +254,8 @@ def local_veldis(lons, vfs):
 
 def widths_deforms(lons, lats):
     # Compute percentiles
-    lower_value = np.nanpercentile(lons, 0.1)
-    upper_value = np.nanpercentile(lons, 99.9)
+    lower_value = np.nanpercentile(lons, 5)
+    upper_value = np.nanpercentile(lons, 95)
     # Filter lons_mainbody
     lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
     lats_mainbody = lats[(lons >= lower_value) & (lons <= upper_value)] 
@@ -273,6 +273,50 @@ def widths_deforms(lons, lats):
     track_deforms = np.array([np.abs(np.nanmedian(lats_mainbody[m])) for m in mask.T])
     return np.nanmedian(local_width), np.nanmedian(track_deforms)
 
+def pm_misalignment(lons, xfs, vfs):
+    
+    # Compute percentiles
+    lower_value = np.nanpercentile(lons, 5)
+    upper_value = np.nanpercentile(lons, 95)
+    
+    # Filter away outlier particles
+    lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
+    xfs_mainbody = xfs[1:][(lons >= lower_value) & (lons <= upper_value)] 
+    vfs_mainbody = vfs[1:][(lons >= lower_value) & (lons <= upper_value)] 
+    
+    # Create bins
+    lon_bins = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50)
+    
+    # Compute angular momentum vectors and normalise
+    L = np.cross(xfs_mainbody, vfs_mainbody, axis=1)
+    Lmag = np.linalg.norm(L, axis=1)
+    L_norm = L.T/Lmag
+    
+    # Slice lons_mainbody into bins
+    bin_indices = np.digitize(lons_mainbody, lon_bins)
+    # Create a mask array for lon bins
+    mask = np.zeros((len(lons_mainbody), len(lon_bins) - 1), dtype=bool)
+    for i in range(1, len(lon_bins)):
+        mask[:, i - 1] = (bin_indices == i)
+
+    # Calculate median angular momentum vector and pole track vector for each bin
+    Lnorm_bins = np.array([np.nanmedian(L_norm.T[m], axis=0) for m in mask.T])[1:]
+    
+    xs_bins = np.array([np.nanmedian(xfs_mainbody[m], axis=0) for m in mask.T])
+    J_bins = np.array([np.cross(xs_bins[i], xs_bins[i+1]) for i in range(len(xs_bins) - 1)])
+    Jmag_bins = np.linalg.norm(J_bins, axis=1)
+    Jnorm_bins = (J_bins.T / Jmag_bins).T
+
+    #Calculate the angluar separation by the dot product and arccos()
+    L_dot_J_bins = np.einsum('ij,ij->i', Jnorm_bins, Lnorm_bins) 
+    
+    pm_angles_rad = np.arccos(L_dot_J_bins) * u.rad
+    pm_angles_deg = pm_angles_rad.to(u.deg)
+    
+    med_pm_angle = np.nanmedian(pm_angles_deg)
+    
+    return med_pm_angle
+
 def lagrange_cloud_strip_adT(params, overwrite):  
     
     inpath, snapname, outpath, filename, \
@@ -280,13 +324,16 @@ def lagrange_cloud_strip_adT(params, overwrite):
     mwhflag, mwdflag, lmcflag, strip_rate, \
     static_mwh, static_mwd, lmc_switch, motion = params
     
+    print("Parameters present!")
     # fullfile_path = pathlib.Path(outpath) / filename + '.hdf5'
     fullfile_path = pathlib.Path(outpath) / pathlib.Path(filename + '.hdf5')
 
     if fullfile_path.exists() and not overwrite:
         print("Skipping as already exists and do not want to overwrite...")
         return 
-
+    
+    print("Begining stream generation process...")
+    
     new_G = G.to(u.kpc*(u.km/u.s)**2/u.Msun)
     Lunits = (u.kpc*u.km)/u.s
     lambda_source = 1. # the multiplier of how far away from the tidal radius to strip from.
@@ -299,6 +346,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
         MWHcoeffs[:,0] = MWHcoeffs[:,0][0] 
         MWHcoeffs[:,1:] = MWHcoeffs[:,1:]*0
         Model.install_mw_coefficients(MWHcoeffs)
+        print("MWH has been set to rigid!")
         #Some line of code here to check they have been set to zero and reinstalled
         _, MWHcoeffs = Model.return_mw_coefficients()
         assert np.allclose(np.array(MWHcoeffs)[:,1:],0)==True, "MW halo coefficients need to be set to zero"
@@ -306,9 +354,10 @@ def lagrange_cloud_strip_adT(params, overwrite):
     if static_mwd==True:
         MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
         MWDctmp, MWDstmp = np.array(MWDctmp), np.array(MWDstmp)
-        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0], MWDstmp[:,0][0] # Turn this on to get static monopole disc 
-        MWDctmp[:,1:], MWDstmp[:,1:] = MWDctmp[:,1:]*0, MWDstmp[:,1:]*0
+        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0]*0, MWDstmp[:,0][0]*0 # Turn this on to get static monopole disc 
+        MWDctmp[:,1:], MWDstmp[:,1:] = MWDctmp[:,1:], MWDstmp[:,1:]
         Model.install_disc_coefficients(MWDctmp,MWDstmp)
+        print("MWD has been set to rigid!")
         #Some line of code here to check they have been set to zero and reinstalled.
         MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
         assert np.allclose(np.array(MWDctmp)[:,1:],0)==True, "MW disc coefficients (c) need to be set to zero"
@@ -319,6 +368,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
         LMCcoeffs = np.array(LMCcoeffs)
         LMCcoeffs *= 0 
         Model.install_lmc_coefficients(LMCcoeffs)
+        print("LMC has been turned off!")
         #Some line of code here to check they have been set to zero and reinstalled.
         _, LMCcoeffs = Model.return_lmc_coefficients()
         assert np.allclose(np.array(LMCcoeffs),0)==True, "LMC coefficients need to be set to zero"
@@ -462,6 +512,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     vs_data = vs_data[~mask]
     ts2 = np.repeat(ts, strip_rate)
 
+    print("Correcting inertial frame positions and velocities to Galactocentric frame...")
     for i in range(len(xs_data)):
             
         disk_x0 = np.array(Model.expansion_centres(ts[i])[:3])
@@ -487,7 +538,8 @@ def lagrange_cloud_strip_adT(params, overwrite):
     sigma_v = local_veldis(lons, vs_snaps[-1])
     length = np.nanpercentile(lons, 95) - np.nanpercentile(lons, 5)
     width, track_deform = widths_deforms(lons, lats)
-    med_lon, med_lat = np.nanmedian(lons), np.nanmedian(lats)
+    pm_angle = pm_misalignment(lons, xs_snaps[-1], vs_snaps[-1])
+    # med_lon, med_lat = np.nanmedian(lons), np.nanmedian(lats)
     
     lmc_sep = np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
     gls  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
@@ -498,13 +550,13 @@ def lagrange_cloud_strip_adT(params, overwrite):
         lmc_sep[i] = np.linalg.norm(Model.expansion_centres(ts_snaps[i])[6:9]) - np.linalg.norm(xs_snaps[i], axis=1)
         gls[i], gbs[i] = orbpole(xs_snaps[i], vs_snaps[i])
     
-    print("calculating LMC closest approach...")
+    print("calculating LMC closest approach over all particles (and times)...")
     lmc_close_sep = np.nanmin(lmc_sep, axis=0)
         
     pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh, motion)    
     write_stream_hdf5(outpath, filename, xs_snaps, vs_snaps, ts2,
                       Es, Ls, Lzs, Lxs, sigma_v, 
-                      length, width, track_deform, med_lon, med_lat,
+                      length, width, track_deform, pm_angle,
                       lmc_close_sep, gls, gbs,
                       pot_label, fc, Mprog, a_s, 
                       pericenter, apocenter)
@@ -513,6 +565,8 @@ def readparams(paramfile):
     """
     Read in the stream model parameters
     """
+    
+    print("Opening parameter yaml file...")
     with open(paramfile) as f:
         d = yaml.safe_load(f)
 
@@ -537,6 +591,7 @@ def readparams(paramfile):
     static_mwd = d["mwd_switch"]
     lmc_switch = d["lmc_switch"]
 
+    #change to is instance?
     assert type(inpath)==str, "inpath parameter  must be a string"
     assert type(snapname)==str, "snapname parameter must be a string"
     assert type(outpath)==str, "outpath parameter must be a string"
@@ -551,13 +606,15 @@ def readparams(paramfile):
     assert type(lmcflag)==int, "lmcflag parameter must be an int"
     assert type(discflag)==int, "discflag parameter must be an int"
     assert type(strip_rate)==int, "strip_rate parameter must be an int"
+    
+    print("Read yaml contents and returning function...")
 
     return [inpath, snapname, outpath, outname, prog_ics ,prog_mass, prog_scale, pericenter, apocenter, Tbegin, Tfinal, dtmin, 
             haloflag, discflag, lmcflag, strip_rate, static_mwh, static_mwd, lmc_switch, motion]
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
                       energies, Ls, Lzs, Lxs, sigma_v, 
-                      length, width, track_deform, med_lon, med_lat,
+                      length, width, track_deform, pm_angles,
                       lmc_sep, gls, gbs,
                       potential, progics, progmass, progscale, 
                       pericenter, apocenter):
@@ -581,8 +638,9 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('lengths', data=length)
     hf.create_dataset('widths', data=width)
     hf.create_dataset('track_deform', data=track_deform)
-    hf.create_dataset('av_lon', data=med_lon)
-    hf.create_dataset('av_lat', data=med_lat)
+    hf.create_dataset('pm_misalignment', data=pm_angles) 
+    # hf.create_dataset('av_lon', data=med_lon)
+    # hf.create_dataset('av_lat', data=med_lat)
     hf.create_dataset('lmc_sep', data=lmc_sep)
     hf.create_dataset('pole_l', data=gls)
     hf.create_dataset('pole_b', data=gbs)
