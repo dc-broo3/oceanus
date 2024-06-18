@@ -776,11 +776,11 @@ def plt_1dhists_quadrants(path, plotname, savefig=False):
 # plot_stream_frames(streams, '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/', 'plot_stream_coords', True)
 # pole_hist(path, 'sinbpole-histogram', True)
 
-potentials_list = list(['static-mwh-only.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', \
+potentials_list = list(['rigid-mw.hdf5','static-mw.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5', \
                    'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5', \
                    'Full-MWhalo-MWdisc-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5'])
 
-pot_folders = list(['static-mwh-only', 'rm-MWhalo-full-MWdisc-full-LMC', 'em-MWhalo-full-MWdisc-full-LMC',
+pot_folders = list(['rigid-mw', 'static-mw', 'rm-MWhalo-full-MWdisc-full-LMC', 'em-MWhalo-full-MWdisc-full-LMC',
                   'md-MWhalo-full-MWdisc-full-LMC', 'mq-MWhalo-full-MWdisc-full-LMC', 'mdq-MWhalo-full-MWdisc-full-LMC',
                   'Full-MWhalo-MWdisc-LMC', 'full-MWhalo-full-MWdisc-no-LMC'])
 
@@ -810,13 +810,13 @@ for (potential, folder) in zip(potentials_list, pot_folders):
     radialphase_peris_veldis(rgal, peris, apos, loc_veldis, masses, 'radialphase_peris_veldis', pot_folder, True)
     peri_veldis_scatter(lmc_sep, loc_veldis, peris, 'peri_veldis_scatter', pot_folder, True)
     peri_veldis_dist_scatter(loc_veldis, peris, rgal, 'peri_veldis_dist_scatter', pot_folder, savefig=True)
-    poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
-    poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
+    # poledisp_peri(pole_l_dis, pole_b_dis, peris, masses, 'poledisp_peri', pot_folder, True)
+    # poledisp_distance(pole_l_dis, pole_b_dis, rgal, masses, 'poledisp_distance', pot_folder, True)
     # mollewide_poles_distance(pole_l, pole_b, rgal, 'mollewide_poles_distance', pot_folder, True)
-    width_length(widths, lengths, masses, 'width_length', pot_folder, True)
-    av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
-    stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
-    rlmc_veldis(lmc_sep, loc_veldis, 'rlmc_veldis', pot_folder, True)
+    # width_length(widths, lengths, masses, 'width_length', pot_folder, True)
+    # av_lon_lat(av_lon, av_lat, masses, 'av_lon_lat', pot_folder, True)
+    # stellarmass_veldis(masses, loc_veldis, 'stellarmass_veldis', pot_folder, True)
+    # rlmc_veldis(lmc_sep, loc_veldis, 'rlmc_veldis', pot_folder, True)
 
 # plt_1dhists('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists' , True)
 # plt_1dhists_quadrants('/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/', '1d-hists-quad' , True)

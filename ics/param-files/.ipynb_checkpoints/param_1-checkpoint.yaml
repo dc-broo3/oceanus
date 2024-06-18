@@ -1,19 +1,25 @@
----
-# AN GD-1 like initial conditions
-inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/param-files/"
-snapname : "param_1"
-outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/"
-outname : "stream_1"
-Tbegin : -3.
-Tfinal :  0.  
-dtmin  : 0.002
-prog_mass : 20000.0
-prog_scale : 0.005
-prog_ics : [ -12.74302709,   -0.65193598,    5.95016371,  -76.71109844, -213.0667057 , -101.23881431]
-strip_rate : 4
-haloflag : 63
-lmcflag : 63
-discflag : 63
-discframe : False
-static_mwh : False
-...
+Tbegin: -5.0
+Tfinal: 0.0
+apocenter: 0.7908724260436665
+discflag: 63
+discframe: false
+dtmin: 0.001
+haloflag: 63
+inpath: /mnt/home/rbrooks/ceph/oceanus/ics/full-mwh-full-mwd-full-lmc
+lmc_switch: false
+lmcflag: 63
+outname: stream_1
+outpath: /mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/full-mwh-full-mwd-full-lmc
+pericenter: 0.7908724260436665
+prog_ics:
+- 2.678322212235837
+- -3.385172547149819
+- 5.707762110484918
+- 0.06936115210752004
+- -0.0926133298399177
+- 0.2234416336166898
+prog_mass: 16668.1410903789
+prog_scale: 0.05240512069077469
+snapname: param_1
+static_mwh: false
+strip_rate: 4

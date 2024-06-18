@@ -24,11 +24,10 @@ savefig.format : pdf
 savefig.bbox : tight
 savefig.dpi : 200
 
-image.cmap   : viridis        
-axes.prop_cycle: cycler('color', ['CC6677', '332288', 'DDCC77', '117733', '88CCEE', '882255', '44AA99', '999933', 'AA4499'])
+image.cmap   : magma        
+#axes.prop_cycle: cycler('color',['EE7733', '0077BB', '33BBEE', 'EE3377', 'CC3311', '009988', '44AA99', '999933', 'AA4499', 'BBBBBB'])
+#axes.prop_cycle: cycler('color',['CC6677', '332288', 'DDCC77', '117733', '88CCEE', '882255', '44AA99', '999933', 'AA4499'])
 
-
-
-#['4477AA', 'EE6677', '228833', 'CCBB44', '66CCEE', 'AA3377', 'BBBBBB']
+axes.prop_cycle: cycler('color', ['AE76A3', '1965B0', '7BAFDE', '4EB265', 'F7F056', 'E8601C', 'DC050C', '72190E'])
 
 hist.bins: 20

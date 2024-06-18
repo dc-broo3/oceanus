@@ -17,9 +17,7 @@ from scipy.spatial.transform import Rotation
 
 from mwlmc import model as mwlmc_model
 Model = mwlmc_model.MWLMC()
-
-gyr = 1*u.Gyr
-km = 1*u.km
+print("mwlmc Model successfully loaded!")
 
 def plummer_force(r, m, b):
     """
@@ -354,8 +352,8 @@ def lagrange_cloud_strip_adT(params, overwrite):
     if static_mwd==True:
         MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
         MWDctmp, MWDstmp = np.array(MWDctmp), np.array(MWDstmp)
-        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0]*0, MWDstmp[:,0][0]*0 # Turn this on to get static monopole disc 
-        MWDctmp[:,1:], MWDstmp[:,1:] = MWDctmp[:,1:], MWDstmp[:,1:]
+        MWDctmp[:,0], MWDstmp[:,0] = MWDctmp[:,0][0], MWDstmp[:,0][0] # Turn this on to get static monopole disc 
+        MWDctmp[:,1:], MWDstmp[:,1:] = MWDctmp[:,1:]*0, MWDstmp[:,1:]*0
         Model.install_disc_coefficients(MWDctmp,MWDstmp)
         print("MWD has been set to rigid!")
         #Some line of code here to check they have been set to zero and reinstalled.

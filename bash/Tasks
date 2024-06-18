@@ -1,2 +1,0 @@
-source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/param-files/param_0.yaml 
-source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/param-files/param_1.yaml 

@@ -132,6 +132,7 @@ def make_ics(params_mass_scale):
     mass_scales = rng.choice(cut_mass_scales, size=Nsample)
     
     cut_xv = xv[peri_mask & apo_mask]
+    print("The number of streams passing critera: {}".format(len(cut_xv)))
     prog_ics = rng.choice(cut_xv, size=Nsample)
     
     print("re-finding pericenters and apocenters of cut sample...")
