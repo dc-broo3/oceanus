@@ -15,9 +15,11 @@ import pathlib
 
 from scipy.spatial.transform import Rotation
 
+print("loading mwlmc model...")
 from mwlmc import model as mwlmc_model
+print("mwlmc_model has been called...")
 Model = mwlmc_model.MWLMC()
-print("mwlmc Model successfully loaded!")
+print("mwlmc model successfully loaded and set!")
 
 def plummer_force(r, m, b):
     """
