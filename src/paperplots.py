@@ -110,7 +110,7 @@ def plot_metric_QUAD(ax, indices_in_bins, metric, threshold, y_label, title, col
 
     ax.set_xlabel(r'$E\,[10^{4}\,(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=12)
     ax.set_ylabel(y_label, fontsize=12)
-    ax.set_xlim(-9.99, -4.51)
+    ax.set_xlim(-9.99, -4.01)
     ax.set_ylim(-0.02, 1.02)
     ax.set_title(title, fontsize=14)
     if mask_idx==0:
@@ -118,7 +118,13 @@ def plot_metric_QUAD(ax, indices_in_bins, metric, threshold, y_label, title, col
         secax.set_xlabel('Galactocentric radius [kpc]', color='grey', fontsize=12) 
         secax.tick_params(axis='x',which='both', colors='grey')
 
-
+t_init=-5 #Gyr
+rs = np.linspace(1, 500, 500)
+rs_zeros = np.zeros(shape=(500,))
+mwh_sph_pot = Model.mwhalo_fields(t_init, rs, rs_zeros, rs_zeros, 0)[:,4]/1e4 #divided by 10^4
+interp_E_to_r = interp1d(mwh_sph_pot, rs, kind='cubic', fill_value="extrapolate")
+interp_r_to_E = interp1d(rs, mwh_sph_pot, kind='cubic', fill_value="extrapolate")
+        
 ###--------------------------------------------------------------------------------------------
 ### Plotting functions.
 ###--------------------------------------------------------------------------------------------
@@ -239,7 +245,7 @@ def fig3(path, plotname, savefig=False):
 
         # lengths
         plt.sca(ax[0,0])
-        h, bin_edges = np.histogram(lengths, bins=np.linspace(-1, 360, 100))
+        h, bin_edges = np.histogram(lengths, bins=np.linspace(-1, 360, 150))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
             plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
@@ -250,7 +256,7 @@ def fig3(path, plotname, savefig=False):
         plt.xlabel(r'$l_{\mathrm{stream}}\,[^{\circ}]$')
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
         plt.xlim(0, 360)
-        plt.ylim(0,16394)
+        plt.ylim(1,16394)
         plt.xscale('log')
         plt.title('Length')
 
@@ -269,7 +275,7 @@ def fig3(path, plotname, savefig=False):
         plt.xlabel(r'$w\,[^{\circ}]$')
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
         plt.xlim(0,)
-        plt.ylim(0,16394)
+        plt.ylim(1,16394)
         plt.xscale('log')
         plt.title('Width')
 
@@ -288,7 +294,7 @@ def fig3(path, plotname, savefig=False):
         plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
         plt.xlim(0,20)
-        plt.ylim(0,16394)
+        plt.ylim(1,16394)
         plt.xscale('log')
         plt.title('Local velocity dispersion')
         
@@ -307,7 +313,7 @@ def fig3(path, plotname, savefig=False):
         plt.xlabel(r'$\bar{\delta}\,[^{\circ}]$')
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
         plt.xlim(0.,)
-        plt.ylim(0,16394)
+        plt.ylim(1,16394)
         plt.xscale('log')
         plt.title('Deviation from Great Circle')
     
@@ -325,7 +331,7 @@ def fig3(path, plotname, savefig=False):
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
         plt.xlim(0.09, 11)
         plt.xscale('log')
-        plt.ylim(0,16394)
+        plt.ylim(1,16394)
         plt.title('Asymmetry')
         
         # pm angle
@@ -345,12 +351,12 @@ def fig3(path, plotname, savefig=False):
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
         plt.xlim(0.8,90)
         plt.xscale('log')
-        plt.ylim(0,16394)
+        plt.ylim(1,16394)
         plt.title('Proper motion misalignment')
         
         # median l pole spread
         plt.sca(ax[2,0])
-        h, bin_edges = np.histogram(l_pole_std, bins=np.linspace(0, 10, 500))
+        h, bin_edges = np.histogram(l_pole_std, bins=np.logspace(-2, 2, 100))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
             plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
@@ -358,18 +364,18 @@ def fig3(path, plotname, savefig=False):
             plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
         else:
             plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
-        plt.vlines(2, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.vlines(1, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
         
         plt.xlabel(r'$\sigma_{l^{\prime},\,{\mathrm{pole}}}[^{\circ}]$')
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
-        plt.xlim(0.02,10)
-        plt.ylim(0,16394)
+        plt.xlim(0.05,150)
+        plt.ylim(1,16394)
         plt.xscale('log')
         plt.title('Longitudinal pole spread')
         
         # median b pole spread
         plt.sca(ax[2,1])
-        h, bin_edges = np.histogram(b_pole_std, bins=np.linspace(0, 180, 800))
+        h, bin_edges = np.histogram(b_pole_std, bins=np.logspace(-2, 2, 100))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
             plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
@@ -377,12 +383,12 @@ def fig3(path, plotname, savefig=False):
             plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
         else:
             plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
-        plt.vlines(2, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.vlines(1, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
         
         plt.xlabel(r'$\sigma_{b^{\prime},\,{\mathrm{pole}}}[^{\circ}]$')
         plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
-        plt.xlim(0.2,180)
-        plt.ylim(0,16394)
+        plt.xlim(0.05,150)
+        plt.ylim(1,16394)
         plt.xscale('log')
         plt.title('Latitudinal pole spread')
         plt.legend(frameon=False, ncol=1, fontsize=12, bbox_to_anchor=(1.1,1.15))
@@ -415,10 +421,10 @@ def fig4(path_data, pots, pot_labels, plotname, savefig=False):
             b_pole = np.array(file['pole_b'])[:,t_idx]
         
             poles =  np.stack((l_pole, b_pole))
-        rot_pole = np.array([rotation_matrix_lmc @ poles[:,i] for i in range(len(l_pole))])
+        rot_pole = np.array([rotation_matrix_disc @ poles[:,i] for i in range(len(l_pole))])
         l_pole_std, b_pole_std = np.nanstd(rot_pole[:,0],axis=1), np.nanstd(rot_pole[:,1],axis=1)
 
-        E_bins = np.delete(np.linspace(-11, -4, 8), 1)
+        E_bins = np.linspace(-11, -3, 15)
         hist, bins = np.histogram(energies / 1e4, E_bins)
 
         bin_mids = [(E_bins[i] + E_bins[i + 1]) / 2 for i in range(len(E_bins) - 1)]
@@ -459,7 +465,7 @@ def fig4(path_data, pots, pot_labels, plotname, savefig=False):
         
             plt.xlabel(r'$E\,[10^{4}\,(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=12)
             plt.ylabel(y_label, fontsize=12)
-            plt.xlim(-9.99, -4.51)
+            plt.xlim(-9.99,-4.01)
             plt.ylim(-0.02, 1.02)
             plt.title(title, fontsize=14, fontweight='bold')
             
@@ -479,10 +485,10 @@ def fig4(path_data, pots, pot_labels, plotname, savefig=False):
         plot_metric(axs[0, 1], pm_ang, 10, r'$f\left(E\,;\,\bar{\vartheta} > 10^{\circ} \right)$', 'Proper motion misalignment')
 
         plt.sca(axs[1, 0])
-        plot_metric(axs[1, 0], l_pole_std, 2, r'$f\left(E\,;\,\sigma_{l^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Longitudinal pole spread')
+        plot_metric(axs[1, 0], l_pole_std, 1, r'$f\left(E\,;\,\sigma_{l^{\prime},\,\mathrm{pole}} > 1^{\circ} \right)$', 'Longitudinal pole spread')
 
         plt.sca(axs[1, 1])
-        plot_metric(axs[1, 1], b_pole_std, 2, r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Latitudinal pole spread')
+        plot_metric(axs[1, 1], b_pole_std, 1, r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 1^{\circ} \right)$', 'Latitudinal pole spread')
         
         plt.sca(axs[2, 0])
         plot_metric(axs[2, 0], widths, 0.5, r'$f\left(E\,;\,w > 0.5^{\circ} \right)$', 'Width')
@@ -525,10 +531,10 @@ def fig5(path_data, potl, pot_name, labels, plotname, savefig=False):
 
         poles = np.stack((l_pole, b_pole))
     print("Data read...")    
-    rot_pole = np.array([rotation_matrix_lmc @ poles[:, i] for i in range(len(l_pole))])
+    rot_pole = np.array([rotation_matrix_disc @ poles[:, i] for i in range(len(l_pole))])
     l_pole_std, b_pole_std = np.nanstd(rot_pole[:, 0], axis=1), np.nanstd(rot_pole[:, 1], axis=1)
     
-    wrapped_l_gc = np.where(l_gc >= 180, l_gc - 360, l_gc)
+    wrapped_l_gc = -np.where(l_gc >= 180, l_gc - 360, l_gc)
             
     mask_q1 = ((wrapped_l_gc > -180) & (wrapped_l_gc < 0) & (b_gc > 0) & (b_gc < 90))
     mask_q2 = ((wrapped_l_gc > 0) & (wrapped_l_gc < 180) & (b_gc > 0) & (b_gc < 90))
@@ -536,7 +542,7 @@ def fig5(path_data, potl, pot_name, labels, plotname, savefig=False):
     mask_q4 = ((wrapped_l_gc > 0) & (wrapped_l_gc < 180) & (b_gc > -90) & (b_gc < 0))
     masks = [mask_q1, mask_q2, mask_q3, mask_q4]
 
-    E_bins = np.delete(np.linspace(-11, -4, 8), 1)
+    E_bins = np.linspace(-11, -3, 15)
     bin_mids = [(E_bins[i] + E_bins[i + 1]) / 2 for i in range(len(E_bins) - 1)]
 
     # Define the colors for each quadrant
@@ -567,12 +573,12 @@ def fig5(path_data, potl, pot_name, labels, plotname, savefig=False):
                     r'$f\left(E\,;\,\bar{\vartheta} > 10^{\circ} \right)$', 'Proper motion misalignment',
                     colors, labels, bin_mids, m)
         
-        plot_metric_QUAD(ax[1, 0], indices_in_bins, l_pole_std[masks[m]], 2,
-                    r'$f\left(E\,;\,\sigma_{l^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Longitudinal pole spread',
+        plot_metric_QUAD(ax[1, 0], indices_in_bins, l_pole_std[masks[m]], 1,
+                    r'$f\left(E\,;\,\sigma_{l^{\prime},\,\mathrm{pole}} > 1^{\circ} \right)$', 'Longitudinal pole spread',
                     colors, labels, bin_mids, m)
         
-        plot_metric_QUAD(ax[1, 1], indices_in_bins, b_pole_std[masks[m]], 2,
-                    r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Latitudinal pole spread',
+        plot_metric_QUAD(ax[1, 1], indices_in_bins, b_pole_std[masks[m]], 1,
+                    r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 1^{\circ} \right)$', 'Latitudinal pole spread',
                     colors, labels, bin_mids, m)
         
         plot_metric_QUAD(ax[2, 0], indices_in_bins, widths[masks[m]], 0.5,
@@ -598,9 +604,9 @@ def fig5(path_data, potl, pot_name, labels, plotname, savefig=False):
         quad.set_alpha(0.2)
 
     lmc_l_gc_wrap = np.where(lmc_l_gc >= 180, lmc_l_gc - 360, lmc_l_gc)
-    plt.scatter((lmc_l_gc_wrap[-1]) * u.deg.to(u.rad), lmc_b_gc[-1] * u.deg.to(u.rad), s=100,
+    plt.scatter((-lmc_l_gc_wrap[-1]) * u.deg.to(u.rad), lmc_b_gc[-1] * u.deg.to(u.rad), s=100,
                 edgecolors='k', facecolor='orange', marker='*', rasterized=True, zorder=2)
-    sc = plt.scatter((lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
+    sc = plt.scatter((-lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
                      s=5, c=lmc_dist_gc, cmap='Greys_r', norm=LogNorm(vmin=45, vmax=750), lw=0, zorder=1)
     cb=plt.colorbar(sc,location='bottom', aspect=30, pad=0.1, shrink=.6)
     cb.set_label(r'$\mathbf{r}_{\mathrm{LMC}}\,[\mathrm{kpc}]$')
@@ -612,6 +618,9 @@ def fig5(path_data, potl, pot_name, labels, plotname, savefig=False):
     mollweide_ax.annotate('Q4', (4*np.pi/6, -np.pi/8))
     
     mollweide_ax.tick_params( labelsize=8)
+    
+    x_labels = mollweide_ax.get_xticks() * 180/np.pi
+    mollweide_ax.set_xticklabels(['{:.0f}'.format(-label) + r'$^{\circ}$' for label in x_labels])
     
     ax[2, 0].legend(frameon=False, ncol=1, fontsize=10)
     
@@ -639,8 +648,8 @@ potentials_fig1b = list(['md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-
 labels_fig1b = list(['Monopole + Dipole \n \& LMC', 'Monopole + Quadrupole \n \& LMC', 'Monopole + Dipole \n + Quadrupole \& LMC', \
                'Full Expansion \n(no LMC)', 'Full Expansion \n \& LMC'])
 
-fig1(streams_fig1, fig1_data_path, potentials_fig1a, labels_fig1a, fs_fig1a, plotname_fig1a, True)
-fig1(streams_fig1, fig1_data_path, potentials_fig1b, labels_fig1b, fs_fig1b, plotname_fig1b, True)
+# fig1(streams_fig1, fig1_data_path, potentials_fig1a, labels_fig1a, fs_fig1a, plotname_fig1a, True)
+# fig1(streams_fig1, fig1_data_path, potentials_fig1b, labels_fig1b, fs_fig1b, plotname_fig1b, True)
 
 
 data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/16384-dt1Myr/'
@@ -648,20 +657,20 @@ data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files
 ### Figure 3
 print("Plotting figure 3...")
 plotname_fig3 = 'fig3' 
-fig3(data_path, plotname_fig3, True)
+# fig3(data_path, plotname_fig3, True)
 
 ### Figure 4
 print("Plotting figure 4...")
 potentials_fig4 = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
                'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
-                'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'Full-MWhalo-MWdisc-LMC.hdf5'])
+                'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
 labels_fig4 = list(['Rigid MW without motion (no LMC)', 'Rigid MW + motion (no LMC)', 'Rigid Monopole \& LMC', 'Evolving Monopole \& LMC', \
        'Monopole + Dipole \& LMC', 'Monopole + Quadrupole \& LMC', 'Monopole + Dipole + Quadrupole \& LMC', 'Full Expansion (no LMC)', 'Full Expansion \& LMC'])
-fig4(data_path, potentials_fig4, labels_fig4, 'fig4', True)
+# fig4(data_path, potentials_fig4, labels_fig4, 'fig4', True)
 
 ### Figure 5
 print("Plotting figure 5...")
-potential_fig5 = 'Full-MWhalo-MWdisc-LMC.hdf5'
+potential_fig5 = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
 potential_name_fig5 = 'Full Expansion \& LMC'
 labels_fig5 = list(['Q1','Q2','Q3','Q4'])
 fig5(data_path, potential_fig5, potential_name_fig5, labels_fig5, 'fig5', True)

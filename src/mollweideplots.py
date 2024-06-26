@@ -119,7 +119,7 @@ def mollweide(l, b, bmin, bmax, title="", nside=24, smooth=1, q=[0], sub=421, **
       sub=sub,
       xlabel="Galactic Longitude (l) ",
       ylabel="Galactic Latitude (b)",
-      flip='geo',
+      flip='astro',
       cb_orientation="horizontal",
       min=bmin,
       max=bmax,
@@ -180,7 +180,7 @@ def mollewide_gc(path_data, pots, cbar, pot_labels, plotname, savefig=False):
         lmc_l_gc, lmc_b_gc, *_ = galactic_coords(np.array(lmc_xs), np.array(lmc_vs))
         
         if cbar=='veldis':
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
                            c=loc_veldis, cmap='magma_r', s=.5,rasterized=True, vmin=0,vmax=20,  zorder=1)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[i] for i in pltidx], location='right', aspect=40, pad=0.05, shrink=.5)
@@ -188,7 +188,7 @@ def mollewide_gc(path_data, pots, cbar, pot_labels, plotname, savefig=False):
                 cb.set_label(r'$\sigma_{v, \mathrm{loc}}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
 
         elif cbar=='pms':
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
                            c=pm_ang, cmap='magma_r', s=.5,rasterized=True, vmin=0,vmax=90,  zorder=1)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[i] for i in pltidx], location='right', aspect=40, pad=0.05, shrink=.5)
@@ -196,7 +196,7 @@ def mollewide_gc(path_data, pots, cbar, pot_labels, plotname, savefig=False):
                 cb.set_label(r'$\bar{\vartheta}\,[^{\circ}]$')
             
         elif cbar=='deviation':
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
                            c=track_deform, cmap='magma_r', s=.5,rasterized=True, vmin=0,vmax=10,  zorder=1)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[i] for i in pltidx], location='right', aspect=40, pad=0.05, shrink=.5)
@@ -204,7 +204,7 @@ def mollewide_gc(path_data, pots, cbar, pot_labels, plotname, savefig=False):
                 cb.set_label(r'$\bar{\delta}\,[^{\circ}]$')
                 
         elif cbar=='widths':
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), b_gc*u.deg.to(u.rad), 
                            c=widths, cmap='magma_r', s=.5,rasterized=True, vmin=0,vmax=3,  zorder=1)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[i] for i in pltidx], location='right', aspect=40, pad=0.05, shrink=.5)
@@ -213,15 +213,20 @@ def mollewide_gc(path_data, pots, cbar, pot_labels, plotname, savefig=False):
         
         lmc_l_gc_wrap = np.where(lmc_l_gc >= 180, lmc_l_gc - 360, lmc_l_gc)
 
-        plt.scatter(lmc_l_gc_wrap[-1]*u.deg.to(u.rad), lmc_b_gc[-1]*u.deg.to(u.rad), s=100,  zorder=2,
+        plt.scatter(-lmc_l_gc_wrap[-1]*u.deg.to(u.rad), lmc_b_gc[-1]*u.deg.to(u.rad), s=100,  zorder=2,
                             edgecolors='k', facecolor='lightgrey',marker='*', label='LMC', rasterized=True)
   
-        plt.scatter((lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
+        plt.scatter((-lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
                      s=5,c='lightgrey', zorder=1)
 
         plt.title(labels[j], loc='left', fontsize=10)
         if j ==0:
             plt.legend(frameon=False, fontsize=7, loc='upper right')
+        
+     # Flip lon labels
+    for axs in ax.flat:
+        x_labels = axs.get_xticks() * 180/np.pi
+        axs.set_xticklabels(['{:.0f}'.format(-label) + r'$^{\circ}$' for label in x_labels])
         
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/mollweide/{}'.format(plotname + '-' + cbar))
@@ -290,7 +295,7 @@ def mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=False):
         
         if cbar=='veldis':
             veldis_bin = loc_veldis[idx]
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
                            c=veldis_bin, cmap='magma_r', s=.5,rasterized=True, vmin=0,vmax=20, zorder=2)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[0,0], ax[0,1], ax[1,0], ax[1,1], ax[2,0], ax[2,1]], 
@@ -300,7 +305,7 @@ def mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=False):
             
         elif cbar=='deviation':  
             trackdeform_bin = track_deform[idx]
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
                            c=trackdeform_bin, cmap='magma_r', s=.5,rasterized=True, vmin=0, vmax=10, zorder=2)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[0,0], ax[0,1], ax[1,0], ax[1,1], ax[2,0], ax[2,1]], 
@@ -310,7 +315,7 @@ def mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=False):
             
         elif cbar=='pms':    
             pm_ang_bin = pm_ang[idx]
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
                            c=pm_ang_bin, cmap='magma_r', s=.5,rasterized=True, vmin=0, vmax=90, zorder=2)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[0,0], ax[0,1], ax[1,0], ax[1,1], ax[2,0], ax[2,1]], 
@@ -320,7 +325,7 @@ def mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=False):
 
         elif cbar=='widths':
             widths_bin = widths[idx]
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
                            c=widths_bin, cmap='magma_r', s=.5,rasterized=True, vmin=0, vmax=3, zorder=2)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[0,0], ax[0,1], ax[1,0], ax[1,1], ax[2,0], ax[2,1]], 
@@ -330,7 +335,7 @@ def mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=False):
             
         elif cbar=='lon_pole':
             lpolestd_bin = l_pole_std[idx]
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
                            c=lpolestd_bin, cmap='magma_r', s=.5,rasterized=True, norm=LogNorm(vmin=0.1, vmax=200), zorder=2)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[0,0], ax[0,1], ax[1,0], ax[1,1], ax[2,0], ax[2,1]], 
@@ -340,7 +345,7 @@ def mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=False):
 
         elif cbar=='lat_pole':
             bpolestd_bin = b_pole_std[idx]
-            sc=plt.scatter(wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
+            sc=plt.scatter(-wrapped_ls*u.deg.to(u.rad), bs_bin*u.deg.to(u.rad), 
                            c=bpolestd_bin, cmap='magma_r', s=.5,rasterized=True, norm=LogNorm(vmin=0.1, vmax=200), zorder=2)
             if j==0:
                 cb=plt.colorbar(sc, ax=[ax[0,0], ax[0,1], ax[1,0], ax[1,1], ax[2,0], ax[2,1]], 
@@ -349,14 +354,19 @@ def mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=False):
                 cb.set_label(r'$\sigma_{b^{\prime},\mathrm{pole}}\,[^{\circ}]$')
 
         lmc_l_gc_wrap = np.where(lmc_l_gc >= 180, lmc_l_gc - 360, lmc_l_gc)
-        plt.scatter(lmc_l_gc_wrap[-1]*u.deg.to(u.rad), lmc_b_gc[-1]*u.deg.to(u.rad), s=100,  zorder=2,
+        plt.scatter(-lmc_l_gc_wrap[-1]*u.deg.to(u.rad), lmc_b_gc[-1]*u.deg.to(u.rad), s=100,  zorder=2,
                             edgecolors='k', facecolor='lightgrey',marker='*', label='LMC', rasterized=True)
   
-        plt.scatter((lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
+        plt.scatter((-lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
                      s=5,c='lightgrey', zorder=1)
         
         ax[pltidx[j]].set_title(labels[j], fontsize=10, loc='right')
         j += 1
+        
+    # Flip lon labels
+    for axs in ax.flat:
+        x_labels = axs.get_xticks() * 180/np.pi
+        axs.set_xticklabels(['{:.0f}'.format(-label) + r'$^{\circ}$' for label in x_labels])
         
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/mollweide/ebins/{}'.format(plotname + '-' + cbar))
@@ -522,14 +532,14 @@ def smooth_mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=Fals
             
         elif cbar=='lon_pole':
             lpolestd_bin = l_pole_std[idx]
-            mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=150, nside=30, smooth=7, 
+            mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=100, nside=30, smooth=7, 
                           sub=subidx[j], title=labels[j], q=lpolestd_bin, 
                           cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
                 # cb.set_label(r'$\sigma_{l^{\prime},\mathrm{pole}}\,[^{\circ}]$')
 
         elif cbar=='lat_pole':
             bpolestd_bin = b_pole_std[idx]
-            mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=150, nside=30, smooth=7, 
+            mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=100, nside=30, smooth=7, 
                           sub=subidx[j], title=labels[j], q=bpolestd_bin, 
                           cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
                 # cb.set_label(r'$\sigma_{b^{\prime},\mathrm{pole}}\,[^{\circ}]$')
@@ -561,10 +571,10 @@ mollewide_gc(data_path, potentials, 'pms', labels, 'mollweide-gc', True)
 mollewide_gc(data_path, potentials, 'deviation', labels, 'mollweide-gc', True)
 mollewide_gc(data_path, potentials, 'widths', labels, 'mollweide-gc', True)
 
-smooth_mollweide_gc(data_path, potentials, 'veldis', labels, 'smooth-mollweide-gc', True)
-smooth_mollweide_gc(data_path, potentials, 'pms', labels, 'smooth-mollweide-gc', True)
-smooth_mollweide_gc(data_path, potentials, 'deviation', labels, 'smooth-mollweide-gc', True)
-smooth_mollweide_gc(data_path, potentials, 'widths', labels, 'smooth-mollweide-gc', True)
+# smooth_mollweide_gc(data_path, potentials, 'veldis', labels, 'smooth-mollweide-gc', True)
+# smooth_mollweide_gc(data_path, potentials, 'pms', labels, 'smooth-mollweide-gc', True)
+# smooth_mollweide_gc(data_path, potentials, 'deviation', labels, 'smooth-mollweide-gc', True)
+# smooth_mollweide_gc(data_path, potentials, 'widths', labels, 'smooth-mollweide-gc', True)
 
 ### All potentials, all energies
 print("Plotting mollewide_gc_Ebins...")
@@ -578,9 +588,9 @@ mollweide_gc_Ebins(data_path, pot, 'widths','gc-ebins-fullexp', True)
 mollweide_gc_Ebins(data_path, pot, 'lon_pole','gc-ebins-fullexp', True)
 mollweide_gc_Ebins(data_path, pot, 'lat_pole','gc-ebins-fullexp', True)
 
-smooth_mollweide_gc_Ebins(data_path, pot, 'veldis', 'smooth-gc-ebins-fullexp', True)
-smooth_mollweide_gc_Ebins(data_path, pot, 'pms', 'smooth-gc-ebins-fullexp', True)
-smooth_mollweide_gc_Ebins(data_path, pot, 'deviation', 'smooth-gc-ebins-fullexp', True)
-smooth_mollweide_gc_Ebins(data_path, pot, 'widths', 'smooth-gc-ebins-fullexp', True)
+# smooth_mollweide_gc_Ebins(data_path, pot, 'veldis', 'smooth-gc-ebins-fullexp', True)
+# smooth_mollweide_gc_Ebins(data_path, pot, 'pms', 'smooth-gc-ebins-fullexp', True)
+# smooth_mollweide_gc_Ebins(data_path, pot, 'deviation', 'smooth-gc-ebins-fullexp', True)
+# smooth_mollweide_gc_Ebins(data_path, pot, 'widths', 'smooth-gc-ebins-fullexp', True)
 smooth_mollweide_gc_Ebins(data_path, pot, 'lon_pole','smooth-gc-ebins-fullexp', True)
 smooth_mollweide_gc_Ebins(data_path, pot, 'lat_pole','smooth-gc-ebins-fullexp', True)
