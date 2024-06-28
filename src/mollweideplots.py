@@ -81,7 +81,7 @@ v1_disc = np.array([disc_lpole, disc_bpole])
 v2 = np.array([0, 90])
 rotation_matrix_disc = rotation_matrix_from_vectors(v1_disc, v2)
 
-def mollweide(l, b, bmin, bmax, title="", nside=24, smooth=1, q=[0], sub=421, **kwargs):
+def mollweide(l, b, bmin, bmax, title="", unit="", nside=24, smooth=1, q=[0], sub=421, **kwargs):
 
     mwlmc_indices = hp.ang2pix(nside,  (90-b)*np.pi/180., l*np.pi/180.)
     npix = hp.nside2npix(nside)
@@ -115,7 +115,7 @@ def mollweide(l, b, bmin, bmax, title="", nside=24, smooth=1, q=[0], sub=421, **
       graticule=True,
       graticule_labels=True,
       rot=(0, 0, 0),
-      unit=" ",
+      unit=unit,
       sub=sub,
       xlabel="Galactic Longitude (l) ",
       ylabel="Galactic Latitude (b)",
@@ -129,7 +129,7 @@ def mollweide(l, b, bmin, bmax, title="", nside=24, smooth=1, q=[0], sub=421, **
       cmap=cmap,
       label='Colourbar label',
       fontsize={"xlabel": 15, "ylabel": 15,"xtick_label": 10,"ytick_label": 10,
-              "title": 15, "cbar_label": 10,"cbar_tick_label": 10},
+              "title": 15, "cbar_label": 12,"cbar_tick_label": 12},
       override_plot_properties={"cbar_shrink":.5, "figure_size_ratio":1,
                               "cbar_pad":.1,'cbar_label_pad': 1} )
 	
@@ -412,26 +412,26 @@ def smooth_mollweide_gc(path_data, pots, cbar, pot_labels, plotname, savefig=Fal
         if cbar=='veldis':
             mollweide(l=wrapped_ls, b=b_gc, bmin=0, bmax=15, nside=30, smooth=7, 
                       sub=subidx[j], title=pot_labels[j], q=loc_veldis, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-             # cb.set_label(r'$\sigma_{v, \mathrm{loc}}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit=r'$\sigma_{v, \mathrm{loc}}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
 
         elif cbar=='pms':
             mollweide(l=wrapped_ls, b=b_gc, bmin=0, bmax=50, nside=30, smooth=7, 
                       sub=subidx[j], title=pot_labels[j], q=pm_ang, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$\bar{\vartheta}\,[^{\circ}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit = r'$\bar{\vartheta}\,[^{\circ}]$')
             
         elif cbar=='deviation':
             mollweide(l=wrapped_ls, b=b_gc, bmin=0, bmax=10, nside=30, smooth=7, 
                       sub=subidx[j], title=pot_labels[j], q=track_deform, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$\bar{\delta}\,[^{\circ}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit = r'$\bar{\delta}\,[^{\circ}]$')
                 
         elif cbar=='widths':
             mollweide(l=wrapped_ls, b=b_gc, bmin=0, bmax=3, nside=30, smooth=7, 
                       sub=subidx[j], title=pot_labels[j], q=widths, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$w\,[^{\circ}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit=r'$w\,[^{\circ}]$')
         
     if savefig==True:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/mollweide/{}'.format(plotname + '-' + cbar))
@@ -506,43 +506,43 @@ def smooth_mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=Fals
             veldis_bin = loc_veldis[idx]
             mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=15, nside=30, smooth=7, 
                       sub=subidx[j], title=labels[j], q=veldis_bin, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$\sigma_{v, \mathrm{loc}}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit=r'$\sigma_{v, \mathrm{loc}}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
             
         elif cbar=='deviation':  
             trackdeform_bin = track_deform[idx]
             mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=10, nside=30, smooth=7, 
                       sub=subidx[j], title=labels[j], q=trackdeform_bin, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$\bar{\delta}\,[^{\circ}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit=r'$\bar{\delta}\,[^{\circ}]$')
             
         elif cbar=='pms':    
             pm_ang_bin = pm_ang[idx]
             mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=50, nside=30, smooth=7, 
                       sub=subidx[j], title=labels[j], q=pm_ang_bin, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$\bar{\vartheta}\,[^{\circ}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit= r'$\bar{\vartheta}\,[^{\circ}]$')
 
         elif cbar=='widths':
             widths_bin = widths[idx]
             mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=3, nside=30, smooth=7, 
                       sub=subidx[j], title=labels[j], q=widths_bin, 
-                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$w\,[^{\circ}]$')
+                      cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit=r'$w\,[^{\circ}]$')
             
         elif cbar=='lon_pole':
             lpolestd_bin = l_pole_std[idx]
             mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=100, nside=30, smooth=7, 
                           sub=subidx[j], title=labels[j], q=lpolestd_bin, 
-                          cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$\sigma_{l^{\prime},\mathrm{pole}}\,[^{\circ}]$')
+                          cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit=r'$\sigma_{l^{\prime},\mathrm{pole}}\,[^{\circ}]$')
 
         elif cbar=='lat_pole':
             bpolestd_bin = b_pole_std[idx]
             mollweide(l=wrapped_ls, b=bs_bin, bmin=0, bmax=100, nside=30, smooth=7, 
                           sub=subidx[j], title=labels[j], q=bpolestd_bin, 
-                          cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc)
-                # cb.set_label(r'$\sigma_{b^{\prime},\mathrm{pole}}\,[^{\circ}]$')
+                          cmap='magma_r', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                     unit=r'$\sigma_{b^{\prime},\mathrm{pole}}\,[^{\circ}]$')
         
         j += 1
         
@@ -550,6 +550,77 @@ def smooth_mollweide_gc_Ebins(data_path, potential, cbar, plotname, savefig=Fals
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/mollweide/ebins/{}'.format(plotname + '-' + cbar))
     plt.close()
     
+def mollweide_pot_enhancment(cbar, savefig=False):
+    
+    if cbar=='density':
+        fields_slice = 3
+        unit = r"$\delta \rho$"
+        plotname='dens-enhancement'
+        bmin, bmax= -.5, .5
+    if cbar=='potential':
+        fields_slice = 4
+        unit = r"$\delta \Phi$"
+        plotname='pot-enhancement'
+        bmin, bmax= -.1, .1
+    
+    subidx = [421, 422, 423, 424, 425, 426]
+    
+    d_ranges = [(10,20), (20,40), (40,60), (60,80), (80,100), (100,150)]
+    labels = list([r'$d \in \{10, 20\}\,[\mathrm{kpc}]$', 
+                   r'$d \in \{20, 40\}\,[\mathrm{kpc}]$',
+                  r'$d \in \{40, 60\}\,[\mathrm{kpc}]$',
+                  r'$d \in \{60, 80\}\,[\mathrm{kpc}]$',
+                  r'$d \in \{80, 100\}\,[\mathrm{kpc}]$',
+                  r'$d \in \{100, 150\}\,[\mathrm{kpc}]$'])
+
+    ts=np.linspace(-5, 0, 1000)
+    lmc_xs = [Model.expansion_centres(t)[6:9] for t in ts]
+    lmc_vs =  [Model.expansion_centre_velocities(t)[6:9] for t in ts]
+    lmc_l_gc, lmc_b_gc, *_ = galactic_coords(np.array(lmc_xs), np.array(lmc_vs))
+    lmc_l_gc_wrap = np.where(lmc_l_gc >= 180, lmc_l_gc - 360, lmc_l_gc)
+    
+    ls = np.linspace(-180, 180, 100)
+    bs = np.linspace(-90, 90, 100)
+    Lsm, Bsm = np.meshgrid(ls, bs)
+    L, B =  Lsm.ravel(), Bsm.ravel()
+    
+    fig, ax = plt.subplots(3, 2, subplot_kw={'projection': 'mollweide'}, figsize=(14, 16))
+    plt.subplots_adjust(hspace=0.2, wspace=-0.1)
+    
+    ax[0,0].set_visible(False)
+    ax[0,1].set_visible(False)
+    ax[1,0].set_visible(False)
+    ax[1,1].set_visible(False)
+    ax[2,0].set_visible(False)
+    ax[2,1].set_visible(False)
+    
+    for j in range(len(subidx)):
+        
+        dens0_arr = np.zeros(len(L))
+        dens_mwhalo_arr = np.zeros(len(L))
+        
+        d_range = d_ranges[j]
+        for d in range(d_range[0], d_range[1], 2):
+        
+            ds = np.ones(len(L)) * d
+
+            lb_galactic = SkyCoord(l=L*u.deg, b=B*u.deg, distance=ds*u.kpc, frame='galactic')
+            pos_gc = lb_galactic.transform_to('galactocentric')
+            dens0 = Model.mwhalo_fields(ts[-1], pos_gc.x.value, pos_gc.y.value, pos_gc.z.value, mwhharmonicflag=0)[:,fields_slice]
+            dens_mwhalo = Model.mwhalo_fields(ts[-1], pos_gc.x.value, pos_gc.y.value, pos_gc.z.value, mwhharmonicflag=63)[:,fields_slice]
+
+            dens0_arr =+ dens0
+            dens_mwhalo_arr =+ dens_mwhalo
+        
+        delta_rho = dens_mwhalo_arr/dens0_arr - 1
+        
+        mollweide(l=L, b=B,  bmin=bmin, bmax=bmax,  nside=20, smooth=10, 
+                  q=delta_rho, cmap='coolwarm', l2=lmc_l_gc_wrap , b2=lmc_b_gc,
+                  sub=subidx[j], title=labels[j], unit=unit)
+        
+    if savefig==True:
+        plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/mollweide/{}'.format(plotname))
+    plt.close()
 ###---------------------------------------------------------------------------------------------------------------- 
 # Run the script and plot scripts 
 ###---------------------------------------------------------------------------------------------------------------- 
@@ -566,10 +637,10 @@ potentials = list(['rigid-mw.hdf5','rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MW
 labels = list(['Rigid MW without motion','Rigid Monopole \& LMC', 'Evolving Monopole \& LMC', 'Monopole + Dipole \& LMC', 'Monopole + Quadrupole \& LMC', \
                'Monopole + Dipole + Quadrupole \& LMC',  'Full Expansion (no LMC)', 'Full Expansion \& LMC'])
 
-mollewide_gc(data_path, potentials, 'veldis', labels, 'mollweide-gc', True)
-mollewide_gc(data_path, potentials, 'pms', labels, 'mollweide-gc', True)
-mollewide_gc(data_path, potentials, 'deviation', labels, 'mollweide-gc', True)
-mollewide_gc(data_path, potentials, 'widths', labels, 'mollweide-gc', True)
+# mollewide_gc(data_path, potentials, 'veldis', labels, 'mollweide-gc', True)
+# mollewide_gc(data_path, potentials, 'pms', labels, 'mollweide-gc', True)
+# mollewide_gc(data_path, potentials, 'deviation', labels, 'mollweide-gc', True)
+# mollewide_gc(data_path, potentials, 'widths', labels, 'mollweide-gc', True)
 
 # smooth_mollweide_gc(data_path, potentials, 'veldis', labels, 'smooth-mollweide-gc', True)
 # smooth_mollweide_gc(data_path, potentials, 'pms', labels, 'smooth-mollweide-gc', True)
@@ -581,16 +652,22 @@ print("Plotting mollewide_gc_Ebins...")
 pot = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
 # pot = 'full-MWhalo-full-MWdisc-no-LMC.hdf5'
 
-mollweide_gc_Ebins(data_path, pot, 'veldis','gc-ebins-fullexp', True)
-mollweide_gc_Ebins(data_path, pot, 'pms','gc-ebins-fullexp', True)
-mollweide_gc_Ebins(data_path, pot, 'deviation','gc-ebins-fullexp', True)
-mollweide_gc_Ebins(data_path, pot, 'widths','gc-ebins-fullexp', True)
-mollweide_gc_Ebins(data_path, pot, 'lon_pole','gc-ebins-fullexp', True)
-mollweide_gc_Ebins(data_path, pot, 'lat_pole','gc-ebins-fullexp', True)
+# mollweide_gc_Ebins(data_path, pot, 'veldis','gc-ebins-fullexp', True)
+# mollweide_gc_Ebins(data_path, pot, 'pms','gc-ebins-fullexp', True)
+# mollweide_gc_Ebins(data_path, pot, 'deviation','gc-ebins-fullexp', True)
+# mollweide_gc_Ebins(data_path, pot, 'widths','gc-ebins-fullexp', True)
+# mollweide_gc_Ebins(data_path, pot, 'lon_pole','gc-ebins-fullexp', True)
+# mollweide_gc_Ebins(data_path, pot, 'lat_pole','gc-ebins-fullexp', True)
 
 # smooth_mollweide_gc_Ebins(data_path, pot, 'veldis', 'smooth-gc-ebins-fullexp', True)
 # smooth_mollweide_gc_Ebins(data_path, pot, 'pms', 'smooth-gc-ebins-fullexp', True)
 # smooth_mollweide_gc_Ebins(data_path, pot, 'deviation', 'smooth-gc-ebins-fullexp', True)
 # smooth_mollweide_gc_Ebins(data_path, pot, 'widths', 'smooth-gc-ebins-fullexp', True)
-smooth_mollweide_gc_Ebins(data_path, pot, 'lon_pole','smooth-gc-ebins-fullexp', True)
-smooth_mollweide_gc_Ebins(data_path, pot, 'lat_pole','smooth-gc-ebins-fullexp', True)
+# smooth_mollweide_gc_Ebins(data_path, pot, 'lon_pole','smooth-gc-ebins-fullexp', True)
+# smooth_mollweide_gc_Ebins(data_path, pot, 'lat_pole','smooth-gc-ebins-fullexp', True)
+ 
+                      
+### Plotting potential constrast
+print("Plotting mollweide_pot_enhancment...")
+mollweide_pot_enhancment('density', True)
+mollweide_pot_enhancment('potential', True)
