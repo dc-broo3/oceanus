@@ -260,7 +260,7 @@ def widths_deforms(lons, lats):
     lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
     lats_mainbody = lats[(lons >= lower_value) & (lons <= upper_value)] 
     # Create bins
-    lon_bins = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50)
+    lon_bins, Delta_phi1 = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50, retstep=True)
     # Slice lons_mainbody into bins
     bin_indices = np.digitize(lons_mainbody, lon_bins)
     # Create a mask array
@@ -270,8 +270,13 @@ def widths_deforms(lons, lats):
 
     # Calculate width for each bin
     local_width = np.array([np.nanstd(lats_mainbody[m]) for m in mask.T])
-    track_deforms = np.array([np.abs(np.nanmedian(lats_mainbody[m])) for m in mask.T])
-    return np.nanmedian(local_width), np.nanmedian(track_deforms)
+    dev_bins = np.array([np.abs(np.nanmedian(lats_mainbody[m])) for m in mask.T])
+
+    # Calculate gradient of the deviation for adjacent bins)
+    Delta_dev_bins = np.diff(dev_bins)
+    ddev_dphi1 = Delta_dev_bins / Delta_phi1
+
+    return np.nanmedian(local_width), np.nanmedian(dev_bins), np.percentile(ddev_dphi1, 95)
 
 def pm_misalignment(lons, xfs, vfs):
     
@@ -537,7 +542,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     lons, lats = lons_lats(xs_snaps[-1], vs_snaps[-1])
     sigma_v = local_veldis(lons, vs_snaps[-1])
     length = np.nanpercentile(lons, 95) - np.nanpercentile(lons, 5)
-    width, track_deform = widths_deforms(lons, lats)
+    width, track_deform, grad_track_deform = widths_deforms(lons, lats)
     pm_angle = pm_misalignment(lons, xs_snaps[-1], vs_snaps[-1])
     # med_lon, med_lat = np.nanmedian(lons), np.nanmedian(lats)
     
@@ -556,7 +561,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh, motion)    
     write_stream_hdf5(outpath, filename, xs_snaps, vs_snaps, ts2,
                       Es, Ls, Lzs, Lxs, sigma_v, 
-                      length, width, track_deform, pm_angle,
+                      length, width, track_deform, grad_track_deform, pm_angle,
                       lmc_close_sep, gls, gbs,
                       pot_label, fc, Mprog, a_s, 
                       pericenter, apocenter)
@@ -614,7 +619,7 @@ def readparams(paramfile):
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
                       energies, Ls, Lzs, Lxs, sigma_v, 
-                      length, width, track_deform, pm_angles,
+                      length, width, track_deform, grad_track_deform, pm_angles,
                       lmc_sep, gls, gbs,
                       potential, progics, progmass, progscale, 
                       pericenter, apocenter):
@@ -638,6 +643,7 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('lengths', data=length)
     hf.create_dataset('widths', data=width)
     hf.create_dataset('track_deform', data=track_deform)
+    hf.create_dataset('grad_track_deform', data=grad_track_deform)
     hf.create_dataset('pm_misalignment', data=pm_angles) 
     # hf.create_dataset('av_lon', data=med_lon)
     # hf.create_dataset('av_lat', data=med_lat)
