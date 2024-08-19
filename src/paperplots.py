@@ -22,6 +22,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import SymLogNorm, LogNorm
 from matplotlib.patches import Polygon
+from matplotlib.path import Path
+import matplotlib.patches as patches
+from scipy.spatial import ConvexHull
 import os
 os.environ["PATH"] += os.pathsep + "/Library/TeX/texbin"
 plt.style.use('/mnt/ceph/users/rbrooks/oceanus/analysis/my_standard.mplstyle')
@@ -74,6 +77,31 @@ def rotation_matrix_from_vectors(v1, v2):
                   [sin_theta, cos_theta]])
     return R
 
+def rubinlsst_mask(path, potl):
+
+    rubin_radec = np.load('/mnt/ceph/users/rbrooks/oceanus/analysis/RUBIN_ra_dec_footprint.npy')
+    # Create an approximate outline around the edges of Rubin LSST footprint
+    hull = ConvexHull(rubin_radec)
+    rubin_outline_radec = rubin_radec[hull.vertices]
+    
+    outline_path = Path(rubin_outline_radec)
+    # outline_patch = patches.PathPatch(outline_path, facecolor='none', edgecolor='b', lw=3)
+
+    with h5py.File(path + potl, 'r') as file:
+        energies = np.array(file['energies'])
+        pm_ang = np.array(file['pm_misalignment'])
+        l_gc = np.array(file['l_gc'])
+        b_gc = np.array(file['b_gc'])
+
+    lb_streams = SkyCoord(l=l_gc*u.deg,
+    b=b_gc*u.deg, frame='galactic')
+
+    radec_streams = lb_streams.transform_to('icrs')
+    radec_streams = np.vstack([radec_streams.ra.value, radec_streams.dec.value]).T
+
+    lsst_mask = outline_path.contains_points(radec_streams)
+    return lsst_mask
+
 disc_xs, disc_vs = Model.expansion_centres(0.)[:3], Model.expansion_centre_velocities(0.)[:3]
 disc_lpole, disc_bpole = orbpole(np.array(disc_xs), np.array(disc_vs))
 v1_disc = np.array([disc_lpole, disc_bpole])
@@ -111,7 +139,7 @@ def plot_metric_QUAD(ax, indices_in_bins, metric, threshold, y_label, title, col
 
     ax.set_xlabel(r'$E\,[10^{4}\,(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=12)
     ax.set_ylabel(y_label, fontsize=12)
-    ax.set_xlim(-9.99, -4.01)
+    ax.set_xlim(-9.99, -4.21)
     ax.set_ylim(-0.02, 1.02)
     ax.set_title(title, fontsize=14)
     if mask_idx==0:
@@ -498,7 +526,7 @@ def fig4(path_data, pots, pot_labels, plotname, savefig=False):
         
             plt.xlabel(r'$E\,[10^{4}\,(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=12)
             plt.ylabel(y_label, fontsize=12)
-            plt.xlim(-9.99,-4.01)
+            plt.xlim(-9.99,-4.21)
             plt.ylim(-0.02, 1.02)
             plt.title(title, fontsize=14, fontweight='bold')
             
@@ -533,145 +561,9 @@ def fig4(path_data, pots, pot_labels, plotname, savefig=False):
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname), bbox_inches='tight')
     plt.close()
 
-# def fig5(path_data, potl, pot_name, labels, plotname, savefig=False):
-    
-    # ts=np.linspace(-5, 0, 1000)
-    # lmc_xs = [Model.expansion_centres(t)[6:9] for t in ts]
-    # lmc_vs =  [Model.expansion_centre_velocities(t)[6:9] for t in ts]
-    # lmc_l_gc, lmc_b_gc, *_ = galactic_coords(np.array(lmc_xs), np.array(lmc_vs))
-
-    # disc_xs = [Model.expansion_centres(t)[:3] for t in ts]
-    # lmc_dist_gc = np.linalg.norm(np.array(lmc_xs) - np.array(disc_xs), axis=1)
-    
-    # fig, ax = plt.subplots(3, 2, figsize=(10, 11))
-    # mollweide_ax = fig.add_subplot(3, 2, 6, projection='mollweide')
-    # plt.subplots_adjust(hspace=0.55, wspace=0.3)
-
-    # print("Reading data...")
-    # with h5py.File(path_data + potl, 'r') as file:
-    #     energies = np.array(file['energies'])
-    #     loc_veldis = np.array(file['loc_veldis'])
-    #     widths = np.array(file['widths'])
-    #     track_deform = np.array(file['track_deform'])
-    #     pm_ang = np.array(file['pm_misalignment'])
-
-    #     t_idx = -1
-    #     l_pole = np.array(file['pole_l'])[:, t_idx]
-    #     b_pole = np.array(file['pole_b'])[:, t_idx]
-        
-    #     l_gc = np.array(file['l_gc'])
-    #     b_gc = np.array(file['b_gc'])
-
-    #     poles = np.stack((l_pole, b_pole))
-    # print("Data read...")    
-    # rot_pole = np.array([rotation_matrix_disc @ poles[:, i] for i in range(len(l_pole))])
-    
-    # rot_bpole_i = np.where(rot_pole[:,1] > 90, rot_pole[:,1] - 180, rot_pole[:,1])
-    # rot_bpole_wrapped = np.where(rot_bpole_i < -90, rot_bpole_i + 180, rot_bpole_i)
-    # cos_bpole = np.cos(rot_bpole_wrapped * np.pi/180)
-    # cos_bpole_prog = cos_bpole[:,0]
-
-    # l_pole_std, b_pole_std = np.nanstd(rot_pole[:,0],axis=1) * cos_bpole_prog, np.nanstd(rot_pole[:,1],axis=1)
-    # # l_pole_std, b_pole_std = np.nanstd(rot_pole[:, 0], axis=1), np.nanstd(rot_pole[:, 1], axis=1)
-    
-    # wrapped_l_gc = -np.where(l_gc >= 180, l_gc - 360, l_gc)
-            
-    # mask_q1 = ((wrapped_l_gc > -180) & (wrapped_l_gc < 0) & (b_gc > 0) & (b_gc < 90))
-    # mask_q2 = ((wrapped_l_gc > 0) & (wrapped_l_gc < 180) & (b_gc > 0) & (b_gc < 90))
-    # mask_q3 = ((wrapped_l_gc > -180) & (wrapped_l_gc < 0) & (b_gc > -90) & (b_gc < 0))
-    # mask_q4 = ((wrapped_l_gc > 0) & (wrapped_l_gc < 180) & (b_gc > -90) & (b_gc < 0))
-    # masks = [mask_q1, mask_q2, mask_q3, mask_q4]
-
-    # E_bins = np.linspace(-11, -3, 15)
-    # bin_mids = [(E_bins[i] + E_bins[i + 1]) / 2 for i in range(len(E_bins) - 1)]
-
-    # # Define the colors for each quadrant
-    # colors = ['#EE7733', '#009988', '#33BBEE', '#EE3377']
-    
-    # plt.suptitle(pot_name, y=0.97, fontweight='bold')
-    
-    # for m in range(len(masks)):
-    #     print(f"Plotting Q{m + 1}")
-    #     Es = energies[masks[m]]
-    #     hist, bins = np.histogram(Es / 1e4, E_bins)
-
-    #     indices_in_bins = []
-    #     for i in range(len(bins) - 1):
-    #         indices = np.where((Es / 1e4 > bins[i]) & (Es / 1e4 < bins[i + 1]))[0]
-    #         indices_in_bins.append(indices)
-
-    #     # plot_metric_QUAD(ax[0, 0], indices_in_bins, loc_veldis[masks[m]], 2.5,
-    #     #             r'$f\left(E\,;\,\sigma_v > 2.5\,\mathrm{km}\,\mathrm{s}^{-1} \right)$', 'Local velocity dispersion',
-    #     #             colors, labels, bin_mids, m)
-        
-      
-    #     plot_metric_QUAD(ax[0, 0], indices_in_bins, track_deform[masks[m]], 2,
-    #                 r'$f\left(E\,;\,\bar{\delta} > 2^{\circ} \right)$', 'Deviation from Great Circle',
-    #                 colors, labels, bin_mids, m)
-        
-    #     plot_metric_QUAD(ax[0, 1], indices_in_bins, pm_ang[masks[m]], 10,
-    #                 r'$f\left(E\,;\,\bar{\vartheta} > 10^{\circ} \right)$', 'Proper motion misalignment',
-    #                 colors, labels, bin_mids, m)
-        
-    #     plot_metric_QUAD(ax[1, 0], indices_in_bins, l_pole_std[masks[m]], 2,
-    #                 r'$f\left(E\,;\,\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}}) > 2^{\circ} \right)$', 'Longitudinal pole spread',
-    #                 colors, labels, bin_mids, m)
-        
-    #     plot_metric_QUAD(ax[1, 1], indices_in_bins, b_pole_std[masks[m]], 2,
-    #                 r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Latitudinal pole spread',
-    #                 colors, labels, bin_mids, m)
-        
-    #     plot_metric_QUAD(ax[2, 0], indices_in_bins, widths[masks[m]], 0.5,
-    #                 r'$f\left(E\,;\,w > 0.5^{\circ} \right)$', 'Width', colors, labels, bin_mids, m)
-
-    #     ax[2, 1].set_visible(False)
-        
-    # plt.sca(mollweide_ax)
-    # plt.grid(alpha=.25)    
-
-    # # Define the vertices for the quadrants
-    # quadrants = [
-    #     Polygon([[-np.pi, 0], [0, 0], [0, np.pi / 2], [-np.pi, np.pi / 2]], closed=True),  # Top-left
-    #     Polygon([[0, 0], [np.pi, 0], [np.pi, np.pi / 2], [0, np.pi / 2]], closed=True),    # Top-right
-    #     Polygon([[-np.pi, -np.pi / 2], [0, -np.pi / 2], [0, 0], [-np.pi, 0]], closed=True),  # Bottom-left
-    #     Polygon([[0, -np.pi / 2], [np.pi, -np.pi / 2], [np.pi, 0], [0, 0]], closed=True),    # Bottom-right
-    # ]
-
-    # # Fill each quadrant with the respective color
-    # for color, quad in zip(colors, quadrants):
-    #     mollweide_ax.add_patch(quad)
-    #     quad.set_facecolor(color)
-    #     quad.set_alpha(0.2)
-
-    # lmc_l_gc_wrap = np.where(lmc_l_gc >= 180, lmc_l_gc - 360, lmc_l_gc)
-    # plt.scatter((-lmc_l_gc_wrap[-1]) * u.deg.to(u.rad), lmc_b_gc[-1] * u.deg.to(u.rad), s=100,
-    #             edgecolors='k', facecolor='orange', marker='*', rasterized=True, zorder=2)
-    # sc = plt.scatter((-lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
-    #                  s=5, c=lmc_dist_gc, cmap='Greys_r', norm=LogNorm(vmin=45, vmax=750), lw=0, zorder=1)
-    # cb=plt.colorbar(sc,location='bottom', aspect=30, pad=0.1, shrink=.6)
-    # cb.set_label(r'$\mathbf{r}_{\mathrm{LMC}}\,[\mathrm{kpc}]$')
-    # cb.ax.tick_params(labelsize=10)
-    
-    # mollweide_ax.annotate('Q1', (-5*np.pi/6, np.pi/8))
-    # mollweide_ax.annotate('Q2', (4*np.pi/6, np.pi/8))
-    # mollweide_ax.annotate('Q3', (-5*np.pi/6, -np.pi/8))
-    # mollweide_ax.annotate('Q4', (4*np.pi/6, -np.pi/8))
-    
-    # mollweide_ax.tick_params( labelsize=8)
-    
-    # x_labels = mollweide_ax.get_xticks() * 180/np.pi
-    # mollweide_ax.set_xticklabels(['{:.0f}'.format(-label) + r'$^{\circ}$' for label in x_labels])
-    
-    # ax[2, 0].legend(frameon=False, ncol=1, fontsize=10)
-    
-    # if savefig:
-    #     plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname), bbox_inches='tight')
-    #     print('Figure saved.')
-    # plt.close()
-
 def fig5(path_data, potl, real_data, pot_name, labels, plotname, savefig=False):
 
-    ts=np.linspace(-5, 0, 1000)
+    ts=np.linspace(-2.5, 0, 1000)
     lmc_xs = [Model.expansion_centres(t)[6:9] for t in ts]
     lmc_vs =  [Model.expansion_centre_velocities(t)[6:9] for t in ts]
     lmc_l_gc, lmc_b_gc, *_ = galactic_coords(np.array(lmc_xs), np.array(lmc_vs))
@@ -743,7 +635,7 @@ def fig5(path_data, potl, real_data, pot_name, labels, plotname, savefig=False):
                     colors, labels, bin_mids, m)
         
         plot_metric_QUAD(ax[1, 0], indices_in_bins, l_pole_std[masks[m]], 2,
-                    r'$f\left(E\,;\,\sigma_{l^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Longitudinal pole spread',
+                    r'$f\left(E\,;\,\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}}) > 2^{\circ} \right)$', 'Longitudinal pole spread',
                     colors, labels, bin_mids, m)
         
         plot_metric_QUAD(ax[1, 1], indices_in_bins, b_pole_std[masks[m]], 2,
@@ -783,9 +675,9 @@ def fig5(path_data, potl, real_data, pot_name, labels, plotname, savefig=False):
 
     lmc_l_gc_wrap = np.where(lmc_l_gc >= 180, lmc_l_gc - 360, lmc_l_gc)
     plt.scatter((-lmc_l_gc_wrap[-1]) * u.deg.to(u.rad), lmc_b_gc[-1] * u.deg.to(u.rad), s=100,
-                edgecolors='k', facecolor='orange', marker='*', rasterized=True, zorder=2)
+                edgecolors='k', facecolor='deepskyblue', marker='*', rasterized=True, zorder=2)
     sc = plt.scatter((-lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
-                     s=5, c=lmc_dist_gc, cmap='Greys_r', norm=LogNorm(vmin=45, vmax=750), lw=0, zorder=1)
+                     s=5, c=lmc_dist_gc, cmap='Greys_r', norm=LogNorm(vmin=45, vmax=500), lw=0, zorder=1)
     cb=plt.colorbar(sc,location='bottom', aspect=30, pad=0.1, shrink=.6)
     cb.set_label(r'$\mathbf{r}_{\mathrm{LMC}}\,[\mathrm{kpc}]$')
     cb.ax.tick_params(labelsize=10)
@@ -806,11 +698,206 @@ def fig5(path_data, potl, real_data, pot_name, labels, plotname, savefig=False):
     mollweide_ax.set_xticklabels(['{:.0f}'.format(-label) + r'$^{\circ}$' for label in x_labels])
 
     ax[2, 0].legend(frameon=False, ncol=1, fontsize=10)
-    
+
     if savefig:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname), bbox_inches='tight')
         print('Figure saved.')
+    plt.close()
 
+
+def fig6(path_data, potls, real_data, quadlabels, plotname, savefig=False):
+
+    ### ADAPTED QUADRANT PLOTTING FUNCTION USED IN FIG 6 ONLY.
+    def plot_metric_Q4(ax, indices_in_bins, metric, threshold, y_label, colors, labels, bin_mids, pot_idx):
+        ax.tick_params(axis='x',which='both', top=False)
+        frac = []
+        uncert = []
+        for idx in indices_in_bins:
+            metric_bin = metric[idx]
+            if len(metric_bin) == 0:
+                frac_high = 0
+                uncert_high = 0
+            else:
+                above = len(metric_bin[metric_bin > threshold])
+                if above == 0:
+                    above = 1  # to avoid division by 0 below
+                total = len(metric_bin)
+                frac_high = above / total
+                uncert_high = frac_high * ((1 / above) + (1 / total))**0.5
+            frac.append(frac_high)
+            uncert.append(uncert_high)
+    
+        if pot_idx == 0: #mask_idx == 2 
+            ax.plot(bin_mids, frac, lw=3, label=labels[pot_idx], c=colors[pot_idx])
+            ax.fill_between(bin_mids, np.array(frac) - np.array(uncert), np.array(frac) + np.array(uncert),
+                            alpha=0.2, ec='None', fc=colors[pot_idx])
+    
+        elif pot_idx == 1: #mask_idx == 2 
+            ax.plot(bin_mids, frac, lw=1, ls='dashed', label=labels[pot_idx], c=colors[pot_idx])
+            ax.fill_between(bin_mids, np.array(frac) - np.array(uncert), np.array(frac) + np.array(uncert),
+                            alpha=0.1, ec='None', fc=colors[pot_idx])
+    
+        elif pot_idx == 2: #mask_idx == 2 
+            ax.plot(bin_mids, frac, lw=1, ls='dotted', label=labels[pot_idx], c=colors[pot_idx])
+            ax.fill_between(bin_mids, np.array(frac) - np.array(uncert), np.array(frac) + np.array(uncert),
+                            alpha=0.1, ec='None', fc=colors[pot_idx])
+    
+        ax.set_xlabel(r'$E\,[10^{4}\,(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=12)
+        ax.set_ylabel(y_label, fontsize=12)
+        ax.set_xlim(-9.99, -4.21)
+        ax.set_ylim(-0.02, 1.02)
+        if pot_idx==0:
+            secax = ax.secondary_xaxis('top', functions=(interp_E_to_r, interp_r_to_E))
+            secax.set_xlabel('Galactocentric radius [kpc]', color='grey', fontsize=12) 
+            secax.tick_params(axis='x',which='both', colors='grey')
+        
+
+    ### GETTING THE LMC'S PAST ORBIT IN GC COORDINATES
+    ts=np.linspace(-2.5, 0, 1000)
+    lmc_xs = [Model.expansion_centres(t)[6:9] for t in ts]
+    lmc_vs =  [Model.expansion_centre_velocities(t)[6:9] for t in ts]
+    lmc_l_gc, lmc_b_gc, *_ = galactic_coords(np.array(lmc_xs), np.array(lmc_vs))
+    
+    disc_xs = [Model.expansion_centres(t)[:3] for t in ts]
+    lmc_dist_gc = np.linalg.norm(np.array(lmc_xs) - np.array(disc_xs), axis=1)
+
+    ### BEGINING OF PLOTTING 
+    fig, ax = plt.subplots(1, 2, figsize=(11.5, 3))
+    plt.subplots_adjust(wspace=0.1)
+    ax[1].set_visible(False)
+    mollweide_ax = fig.add_subplot(1, 2, 2, projection='mollweide')
+
+    ### PLOTTING THE QUADRANTS DATA FOR THE FIDUCIAL 'FULL EXPANSION + LMC' POTENTIAL
+    print("Reading data...")
+    for j in range(0, len(potls)): 
+        potl=potls[j]
+        with h5py.File(path_data + potl, 'r') as file:
+            energies = np.array(file['energies'])
+            pm_ang = np.array(file['pm_misalignment'])
+            l_gc = np.array(file['l_gc'])
+            b_gc = np.array(file['b_gc'])
+
+        wrapped_l_gc = -np.where(l_gc >= 180, l_gc - 360, l_gc)
+    
+        # Masks for quadrants data
+        mask_q4 = ((wrapped_l_gc > 0) & (wrapped_l_gc < 180) & (b_gc > -90) & (b_gc < 0))
+
+        E_bins = np.linspace(-11, -3, 15)
+        bin_mids = [(E_bins[i] + E_bins[i + 1]) / 2 for i in range(len(E_bins) - 1)]
+    
+        # Define the colors for each quadrant
+        colors = ['#EE3377', '#EE3377', '#EE3377']
+        plt.sca(ax[0])
+    
+        # Plotting masked quadrant
+        Es = energies[mask_q4]
+        hist, bins = np.histogram(Es / 1e4, E_bins)
+
+        indices_in_bins = []
+        for i in range(len(bins) - 1):
+            indices = np.where((Es / 1e4 > bins[i]) & (Es / 1e4 < bins[i + 1]))[0]
+            indices_in_bins.append(indices)
+        
+        plot_metric_Q4(ax[0], indices_in_bins, pm_ang[mask_q4], 10,
+                    r'$f\left(E\,;\,\bar{\vartheta} > 10^{\circ} \right)$',
+                    colors, quadlabels, bin_mids, j)
+
+    # Plotting DES data
+    xerr = np.array([interp_r_to_E(real_data['med_d'] + real_data['std_d']),
+                           interp_r_to_E(real_data['med_d'] - real_data['std_d'])] )[:,np.newaxis]
+
+    n_sample = 7 
+    yerr = ((real_data['frac'] * (1 - real_data['frac'])) / n_sample )**.5
+    
+    plt.errorbar(interp_r_to_E(real_data['med_d']), real_data['frac'],
+                 xerr=np.abs(xerr - interp_r_to_E(real_data['med_d'])),
+                 yerr = yerr,
+                 marker='o', linestyle='None', ecolor='k',
+                 capsize=2, mfc='red', mec='k', ms=5, label='DES streams')
+
+    # Plotting LSST prediction
+    with h5py.File(path_data + potls[0], 'r') as file:
+            energies = np.array(file['energies'])
+            pm_ang = np.array(file['pm_misalignment'])
+    lsst_mask = rubinlsst_mask(path_data, potls[0])
+    E_lsst = energies[lsst_mask]
+    pmang_lsst = pm_ang[lsst_mask]
+    hist, bins = np.histogram(E_lsst / 1e4, E_bins)
+    
+    indices_in_bins = []
+    for i in range(len(bins) - 1):
+        indices = np.where((E_lsst / 1e4 > bins[i]) & (E_lsst / 1e4 < bins[i + 1]))[0]
+        indices_in_bins.append(indices)
+
+    frac = []
+    uncert = []
+
+    for idx in indices_in_bins:
+        pm_ang_bin = pmang_lsst[idx]
+        if len(pm_ang_bin)==0:
+            frac_high = np.nan
+            uncert_high = 0
+        else:
+            above = len(pm_ang_bin[pm_ang_bin > 10])
+            if above==0:
+                above=1 # to avoid divison by 0 below
+            total = len(pm_ang_bin)
+            frac_high = above / total
+            uncert_high = frac_high * ((1/above) + (1/total))**0.5
+        frac.append(frac_high)
+        uncert.append(uncert_high)
+
+    plt.plot(bin_mids, frac, c='k', lw=1, ls='solid', label='LSST', zorder=2)
+    plt.fill_between(bin_mids, np.array(frac)-np.array(uncert), np.array(frac)+np.array(uncert),
+                     color='k', alpha=0.2, edgecolor='None')
+
+    plt.legend(frameon=False, ncol=1, fontsize=10)
+
+
+    ### PLOTTING THE MOLLWIEDE PROJECTION 
+    
+    plt.sca(mollweide_ax)
+    plt.grid(alpha=.25)    
+    colors = ['#EE7733', '#009988', '#AA4499', '#EE3377']
+    # Define the vertices for the quadrants
+    quadrants = [
+        Polygon([[-np.pi, 0], [0, 0], [0, np.pi / 2], [-np.pi, np.pi / 2]], closed=True),  # Top-left
+        Polygon([[0, 0], [np.pi, 0], [np.pi, np.pi / 2], [0, np.pi / 2]], closed=True),    # Top-right
+        Polygon([[-np.pi, -np.pi / 2], [0, -np.pi / 2], [0, 0], [-np.pi, 0]], closed=True),  # Bottom-left
+        Polygon([[0, -np.pi / 2], [np.pi, -np.pi / 2], [np.pi, 0], [0, 0]], closed=True),    # Bottom-right
+    ]
+
+    # Fill each quadrant with the respective color
+    for color, quad in zip(colors, quadrants):
+        mollweide_ax.add_patch(quad)
+        quad.set_facecolor(color)
+        quad.set_alpha(0.2)
+
+    # Past orbit of LMC
+    lmc_l_gc_wrap = np.where(lmc_l_gc >= 180, lmc_l_gc - 360, lmc_l_gc)
+    plt.scatter((-lmc_l_gc_wrap[-1]) * u.deg.to(u.rad), lmc_b_gc[-1] * u.deg.to(u.rad), s=100,
+                edgecolors='k', facecolor='deepskyblue', marker='*', rasterized=True, zorder=2)
+    sc = plt.scatter((-lmc_l_gc_wrap) * u.deg.to(u.rad), lmc_b_gc * u.deg.to(u.rad), rasterized=True,
+                     s=5, c=lmc_dist_gc, cmap='Greys_r', norm=LogNorm(vmin=45, vmax=500), lw=0, zorder=1)
+    cb=plt.colorbar(sc,location='bottom', aspect=30, pad=0.1, shrink=.6)
+    cb.set_label(r'$\mathbf{r}_{\mathrm{LMC}}\,[\mathrm{kpc}]$')
+    cb.ax.tick_params(labelsize=10)
+
+    # DES data
+    plt.scatter(-real_data['gc_l']* u.deg.to(u.rad), 
+                real_data['gc_b']* u.deg.to(u.rad), 
+                facecolor='r', edgecolor='k')
+    
+    mollweide_ax.annotate('Q1', (-5*np.pi/6, np.pi/8))
+    mollweide_ax.annotate('Q2', (4*np.pi/6, np.pi/8))
+    mollweide_ax.annotate('Q3', (-5*np.pi/6, -np.pi/8))
+    mollweide_ax.annotate('Q4', (4*np.pi/6, -np.pi/8))
+    
+    mollweide_ax.tick_params( labelsize=9)
+    
+    x_labels = mollweide_ax.get_xticks() * 180/np.pi
+    mollweide_ax.set_xticklabels(['{:.0f}'.format(-label) + r'$^{\circ}$' for label in x_labels])
+    
     if savefig:
         plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname), bbox_inches='tight')
         print('Figure saved.')
@@ -823,20 +910,20 @@ print("Script is running...")
 
 ### Figure 1
 fig1_data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/16384-dt1Myr/'
-streams_fig1 = list(['stream_7', 'stream_700', 'stream_7000']) 
+streams_fig1 = list(['stream_7', 'stream_5283', 'stream_14787']) 
 plotname_fig1a, plotname_fig1b = 'fig1a', 'fig1b'
 fs_fig1a, fs_fig1b = (13,4.5), (16,4.5)
 
 potentials_fig1a = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5'])
-labels_fig1a = list(['Rigid MW \n (without motion)', 'Rigid MW \n + motion (no LMC)', 'Rigid Monopole \n \& LMC', 'Evolving Monopole \n \& LMC'])
+labels_fig1a = list(['Rigid MW \n without motion (no LMC)', 'Rigid MW \n + motion (no LMC)', 'Rigid Monopole \n \& LMC', 'Evolving Monopole \n \& LMC'])
 
 potentials_fig1b = list(['md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
                         'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
 labels_fig1b = list(['Monopole + Dipole \n \& LMC', 'Monopole + Quadrupole \n \& LMC', 'Monopole + Dipole \n + Quadrupole \& LMC', \
                'Full Expansion \n(no LMC)', 'Full Expansion \n \& LMC'])
 
-# fig1(streams_fig1, fig1_data_path, potentials_fig1a, labels_fig1a, fs_fig1a, plotname_fig1a, True)
-# fig1(streams_fig1, fig1_data_path, potentials_fig1b, labels_fig1b, fs_fig1b, plotname_fig1b, True)
+fig1(streams_fig1, fig1_data_path, potentials_fig1a, labels_fig1a, fs_fig1a, plotname_fig1a, True)
+fig1(streams_fig1, fig1_data_path, potentials_fig1b, labels_fig1b, fs_fig1b, plotname_fig1b, True)
 
 data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/16384-dt1Myr/'
     
@@ -860,4 +947,14 @@ potential_fig5 = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
 potential_name_fig5 = 'Full Expansion \& LMC'
 labels_fig5 = list(['Q1','Q2','Q3','Q4'])
 # fig5(data_path, potential_fig5, potential_name_fig5, labels_fig5, 'fig5', True)
-# fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
+fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
+
+
+### Figure 6
+print("Plotting figure 6...")
+data_path='/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/16384-dt1Myr/'
+pots_fig6 = list(['full-MWhalo-full-MWdisc-full-LMC.hdf5', 'full-MWhalo-full-MWdisc-no-LMC.hdf5',
+                 'rm-MWhalo-full-MWdisc-full-LMC.hdf5'])
+quadlabels_fig6 = list(['Q4 Full Expansion \& LMC','Q4 Full Expansion (no LMC)','Q4 Rigid Monopole \& LMC'])
+
+fig6(data_path, pots_fig6, DES_plot_data, quadlabels_fig6, 'fig6', True)
