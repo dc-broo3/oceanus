@@ -257,7 +257,7 @@ def fig1(streams, path, potentials, labels, figsize, plotname, savefig=False):
     plt.close()
 
 def fig3(path, plotname, savefig=False):
-    fig, ax = plt.subplots(3,3, figsize=(13,9))
+    fig, ax = plt.subplots(3,3, figsize=(12.5,8.75))
     plt.subplots_adjust(hspace=0.5, wspace=0.3)
 
     potentials = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
@@ -295,116 +295,117 @@ def fig3(path, plotname, savefig=False):
         cos_bpole_prog = cos_bpole[:,0]
         
         l_pole_std, b_pole_std = np.nanstd(rot_pole[:,0],axis=1) * cos_bpole_prog, np.nanstd(rot_pole[:,1],axis=1)
-        
+
+        Nstreams= len(lengths)
         # lengths
         plt.sca(ax[0,0])
-        h, bin_edges = np.histogram(lengths, bins=np.linspace(-1, 360, 150))
+        h, bin_edges = np.histogram(lengths, bins=np.logspace(-1, np.log10(360), 200))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
         elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
         else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
         plt.xlabel(r'$l_{\mathrm{stream}}\,[^{\circ}]$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
-        plt.xlim(0, 360)
-        plt.ylim(1,16394)
+        plt.ylabel('CDF')
+        plt.xlim(1.1, 360)
+        plt.ylim(0, 1)
         plt.xscale('log')
         plt.title('Length')
 
-        # widths
+        # asymmetry
         plt.sca(ax[0,1])
-        h, bin_edges = np.histogram(widths, bins=np.linspace(0., 3, 100))
+        h, bin_edges = np.histogram(asymmetry, bins=np.logspace(-1, 1, 300))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
         elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
         else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
-        plt.vlines(0.5, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
+        plt.xlabel(r'$l_{\mathrm{leading}}/l_{\mathrm{trailing}}$')
+        plt.ylabel('CDF')
+        plt.xlim(0.09, 11)
+        plt.xscale('log')
+        plt.ylim(0, 1)
+        plt.title('Asymmetry')
+
+        # widths
+        plt.sca(ax[0,2])
+        h, bin_edges = np.histogram(widths, bins=np.logspace(np.log10(0.05), np.log10(3), 100))
+        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
+        if j==8:
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
+        elif j==7:
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
+        else:
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
+        plt.vlines(0.5, 0, 1, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
         
         plt.xlabel(r'$w\,[^{\circ}]$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
-        plt.xlim(0,)
-        plt.ylim(1,16394)
+        plt.ylabel('CDF')
+        plt.xlim(5e-2,3)
+        plt.ylim(0,1)
         plt.xscale('log')
         plt.title('Width')
-
-        # velocity dispersion
-        plt.sca(ax[0,2])
-        h, bin_edges = np.histogram(loc_veldis, bins=np.linspace(0, 20, 100))
-        bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
-        if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
-        elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
-        else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
-        # plt.vlines(2.5, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
-        
-        plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
-        plt.xlim(0,20)
-        plt.ylim(1,16394)
-        plt.xscale('log')
-        plt.title('Local velocity dispersion')
         
         # track deviation
         plt.sca(ax[1,0])
-        h, bin_edges = np.histogram(track_deform, bins=np.linspace(-0., 10, 100))
+        h, bin_edges = np.histogram(track_deform, bins=np.logspace(-2, 1, 100))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
         elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
         else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
-        plt.vlines(2, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
+        plt.vlines(2, 0, 1, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
         
         plt.xlabel(r'$\bar{\delta}\,[^{\circ}]$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
-        plt.xlim(0.,)
-        plt.ylim(1,16394)
+        plt.ylabel('CDF')
+        plt.xlim(5e-2,10)
+        plt.ylim(0,1)
         plt.xscale('log')
         plt.title('Deviation from Great Circle')
     
-        # asymmetry
+        # velocity dispersion
         plt.sca(ax[1,1])
-        h, bin_edges = np.histogram(asymmetry, bins=np.linspace(0, 11, 300))
+        h, bin_edges = np.histogram(loc_veldis, bins=np.logspace(-1, np.log10(20), 100))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
         elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
         else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
-        plt.xlabel(r'$l_{\mathrm{leading}}/l_{\mathrm{trailing}}$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
-        plt.xlim(0.09, 11)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
+        # plt.vlines(2.5, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        
+        plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
+        plt.ylabel('CDF')
+        plt.xlim(2e-1,20)
+        plt.ylim(0,1)
         plt.xscale('log')
-        plt.ylim(1,16394)
-        plt.title('Asymmetry')
+        plt.title('Local velocity dispersion')
         
         # pm angle
         plt.sca(ax[1,2])
-        h, bin_edges = np.histogram(pm_ang, bins=np.linspace(0, 90, 500))
+        h, bin_edges = np.histogram(pm_ang, bins=np.logspace(np.log10(0.5), np.log10(90), 500))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
         elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
         else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
 
-        plt.vlines(10, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.vlines(10, 0, 1, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
 
         plt.xlabel(r'$\bar{\vartheta} \,[^{\circ}]$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
+        plt.ylabel('CDF')
         plt.xlim(0.8,90)
         plt.xscale('log')
-        plt.ylim(1,16394)
+        plt.ylim(0, 1)
         plt.title('Proper motion misalignment')
         
         # median l pole spread
@@ -412,39 +413,39 @@ def fig3(path, plotname, savefig=False):
         h, bin_edges = np.histogram(l_pole_std, bins=np.logspace(-2, 2, 100))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
         elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
         else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
         plt.vlines(2, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
         
         # plt.xlabel(r'$\sigma_{l^{\prime},\,{\mathrm{pole}}}[^{\circ}]$')
         plt.xlabel(r'$\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}})\,[^{\circ}]$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
+        plt.ylabel('CDF')
         plt.xlim(0.05,150)
-        plt.ylim(1,16394)
+        plt.ylim(0,1)
         plt.xscale('log')
-        plt.title('Longitudinal pole spread')
+        plt.title('Longitudinal pole dispersion')
         
         # median b pole spread
         plt.sca(ax[2,1])
         h, bin_edges = np.histogram(b_pole_std, bins=np.logspace(-2, 2, 100))
         bin_mids = (bin_edges[:-1] + bin_edges[1:]) /2
         if j==8:
-            plt.plot(bin_mids, np.cumsum(h), lw=2.5, color='k', label=labels[j], zorder=1)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2.5, color='k', label=labels[j], zorder=1)
         elif j==7:
-            plt.plot(bin_mids, np.cumsum(h), lw=2, ls='dashed', color='k', label=labels[j])
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=2, ls='dashed', color='k', label=labels[j])
         else:
-            plt.plot(bin_mids, np.cumsum(h), lw=1, label=labels[j], zorder=2)
+            plt.plot(bin_mids, np.cumsum(h)/Nstreams, lw=1, label=labels[j], zorder=2)
         plt.vlines(2, 0, 16394, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
         
         plt.xlabel(r'$\sigma_{b^{\prime},\,{\mathrm{pole}}}[^{\circ}]$')
-        plt.ylabel(r'$\Sigma_{\mathrm{counts}}$')
+        plt.ylabel('CDF')
         plt.xlim(0.05,150)
-        plt.ylim(1,16394)
+        plt.ylim(0,1)
         plt.xscale('log')
-        plt.title('Latitudinal pole spread')
+        plt.title('Latitudinal pole dispersion')
         plt.legend(frameon=False, ncol=1, fontsize=12, bbox_to_anchor=(1.1,1.15))
         
         ax[2,2].set_visible(False)
@@ -910,7 +911,7 @@ print("Script is running...")
 
 ### Figure 1
 fig1_data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/16384-dt1Myr/'
-streams_fig1 = list(['stream_7', 'stream_5283', 'stream_14787']) 
+streams_fig1 = list(['stream_9', 'stream_12680', 'stream_16212']) 
 plotname_fig1a, plotname_fig1b = 'fig1a', 'fig1b'
 fs_fig1a, fs_fig1b = (13,4.5), (16,4.5)
 
@@ -922,15 +923,15 @@ potentials_fig1b = list(['md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-
 labels_fig1b = list(['Monopole + Dipole \n \& LMC', 'Monopole + Quadrupole \n \& LMC', 'Monopole + Dipole \n + Quadrupole \& LMC', \
                'Full Expansion \n(no LMC)', 'Full Expansion \n \& LMC'])
 
-fig1(streams_fig1, fig1_data_path, potentials_fig1a, labels_fig1a, fs_fig1a, plotname_fig1a, True)
-fig1(streams_fig1, fig1_data_path, potentials_fig1b, labels_fig1b, fs_fig1b, plotname_fig1b, True)
+# fig1(streams_fig1, fig1_data_path, potentials_fig1a, labels_fig1a, fs_fig1a, plotname_fig1a, True)
+# fig1(streams_fig1, fig1_data_path, potentials_fig1b, labels_fig1b, fs_fig1b, plotname_fig1b, True)
 
 data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/16384-dt1Myr/'
     
 ### Figure 3
 print("Plotting figure 3...")
 plotname_fig3 = 'fig3' 
-# fig3(data_path, plotname_fig3, True)
+fig3(data_path, plotname_fig3, True)
 
 ### Figure 4
 print("Plotting figure 4...")
@@ -939,7 +940,7 @@ potentials_fig4 = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc
                 'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
 labels_fig4 = list(['Rigid MW without motion (no LMC)', 'Rigid MW + motion (no LMC)', 'Rigid Monopole \& LMC', 'Evolving Monopole \& LMC', \
        'Monopole + Dipole \& LMC', 'Monopole + Quadrupole \& LMC', 'Monopole + Dipole + Quadrupole \& LMC', 'Full Expansion (no LMC)', 'Full Expansion \& LMC'])
-fig4(data_path, potentials_fig4, labels_fig4, 'fig4', True)
+# fig4(data_path, potentials_fig4, labels_fig4, 'fig4', True)
 
 ### Figure 5
 print("Plotting figure 5...")
@@ -947,7 +948,7 @@ potential_fig5 = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
 potential_name_fig5 = 'Full Expansion \& LMC'
 labels_fig5 = list(['Q1','Q2','Q3','Q4'])
 # fig5(data_path, potential_fig5, potential_name_fig5, labels_fig5, 'fig5', True)
-fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
+# fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
 
 
 ### Figure 6
@@ -957,4 +958,4 @@ pots_fig6 = list(['full-MWhalo-full-MWdisc-full-LMC.hdf5', 'full-MWhalo-full-MWd
                  'rm-MWhalo-full-MWdisc-full-LMC.hdf5'])
 quadlabels_fig6 = list(['Q4 Full Expansion \& LMC','Q4 Full Expansion (no LMC)','Q4 Rigid Monopole \& LMC'])
 
-fig6(data_path, pots_fig6, DES_plot_data, quadlabels_fig6, 'fig6', True)
+# fig6(data_path, pots_fig6, DES_plot_data, quadlabels_fig6, 'fig6', True)
