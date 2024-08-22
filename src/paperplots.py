@@ -4,6 +4,7 @@ from scipy.spatial.transform import Rotation
 from scipy.interpolate import interp1d
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import scipy
 import pathlib
 import h5py
@@ -256,7 +257,7 @@ def fig1(streams, path, potentials, labels, figsize, plotname, savefig=False):
         return plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname))
     plt.close()
 
-def fig3(path, plotname, savefig=False):
+def fig3_cdf(path, plotname, savefig=False):
     fig, ax = plt.subplots(3,3, figsize=(12.5,8.75))
     plt.subplots_adjust(hspace=0.5, wspace=0.3)
 
@@ -457,8 +458,213 @@ def fig3(path, plotname, savefig=False):
         print('* Saving figure at {}.pdf'.format(savepath))
         plt.savefig(savepath, bbox_inches='tight')
     plt.close()
-       
+
+
+def fig3_pdf(path, plotname, savefig=False):
+    fig, ax = plt.subplots(3,3, figsize=(12.5,8.75))
+    plt.subplots_adjust(hspace=0.5, wspace=0.3)
+
+    potentials = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                           'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                            'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'Full-MWhalo-MWdisc-LMC.hdf5'])
+
+    labels = list(['Rigid MW without motion (no LMC)', 'Rigid MW + motion (no LMC)', 'Rigid Monopole \& LMC', 'Evolving Monopole \& LMC', \
+                   'Monopole + Dipole \& LMC', 'Monopole + Quadrupole \& LMC',\
+                   'Monopole + Dipole + Quadrupole \& LMC', 'Full Expansion (no LMC)', 'Full Expansion \& LMC'])
+
+    for j in range(len(potentials)): 
+
+        with h5py.File(path + potentials[j],'r') as file:
+            lengths = np.array(file['lengths'])
+            widths = np.array(file['widths'])
+            loc_veldis = np.array(file['loc_veldis'])
+            track_deform = np.array(file['track_deform'])
+            pm_ang = np.array(file['pm_misalignment'])
+            
+            lons = np.array(file['lons'])
+            l_lead = np.nanpercentile(lons, 95, axis=1)
+            l_trail = np.nanpercentile(lons, 5, axis=1)
+            asymmetry = np.abs(l_lead/l_trail)
+            
+            t_idx = -1
+            l_pole = np.array(file['pole_l'])[:,t_idx]
+            b_pole = np.array(file['pole_b'])[:,t_idx]
+        
+            poles =  np.stack((l_pole, b_pole))
+        rot_pole = np.array([rotation_matrix_disc @ poles[:,i] for i in range(len(l_pole))])
+        
+        rot_bpole_i = np.where(rot_pole[:,1] > 90, rot_pole[:,1] - 180, rot_pole[:,1])
+        rot_bpole_wrapped = np.where(rot_bpole_i < -90, rot_bpole_i + 180, rot_bpole_i)
+        cos_bpole = np.cos(rot_bpole_wrapped * np.pi/180)
+        cos_bpole_prog = cos_bpole[:,0]
+        
+        l_pole_std, b_pole_std = np.nanstd(rot_pole[:,0],axis=1) * cos_bpole_prog, np.nanstd(rot_pole[:,1],axis=1)
+
+        # lengths
+        plt.sca(ax[0,0])
+        if j==8:
+            kde=sns.kdeplot(data=lengths, bw_adjust=1, log_scale=True, lw=2.5, color='k', label=labels[j], zorder=1 )
+ 
+        elif j==7:
+            kde=sns.kdeplot(data=lengths, bw_adjust=1, log_scale=True, lw=2, ls='dashed', color='k', label=labels[j])
+ 
+        else:
+            kde=sns.kdeplot(data=lengths, bw_adjust=1, log_scale=True,  lw=1, label=labels[j], zorder=2)
+   
+        plt.xlabel(r'$l_{\mathrm{stream}}\,[^{\circ}]$')
+        plt.ylabel('PDF')
+        plt.xlim(1.1, 360)
+        plt.ylim(0,.99)
+        plt.xscale('log')
+        plt.title('Length')
+
+        # asymmetry
+        plt.sca(ax[0,1])
+        if j==8:
+            kde=sns.kdeplot(data=asymmetry, bw_adjust=1, log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
+ 
+        elif j==7:
+            kde=sns.kdeplot(data=asymmetry, bw_adjust=1, log_scale=True,lw=2, ls='dashed', color='k', label=labels[j])
+ 
+        else:
+            kde=sns.kdeplot(data=asymmetry, bw_adjust=1, log_scale=True,lw=1, label=labels[j], zorder=2)
+ 
+        plt.xlabel(r'$l_{\mathrm{leading}}/l_{\mathrm{trailing}}$')
+        plt.ylabel('PDF')
+        plt.xlim(0.09, 11)
+        plt.xscale('log')
+        plt.ylim(0, 2.49)
+        plt.title('Asymmetry')
+
+        #widths
+        plt.sca(ax[0,2])
+        if j==8:
+            kde=sns.kdeplot(data=widths, bw_adjust=1,log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
+ 
+        elif j==7:
+            kde=sns.kdeplot(data=widths, bw_adjust=1, log_scale=True,lw=2, ls='dashed', color='k', label=labels[j])
+ 
+        else:
+            kde=sns.kdeplot(data=widths, bw_adjust=1, log_scale=True,lw=1, label=labels[j], zorder=2)
+ 
+        plt.vlines(0.5, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5, clip_on=True)
+        
+        plt.xlabel(r'$w\,[^{\circ}]$')
+        plt.ylabel('PDF')
+        plt.xlim(5e-2,3)
+        plt.ylim(0, 2.49)
+        plt.xscale('log')
+        plt.title('Width')
+
+        # track deformation
+        plt.sca(ax[1,0])
+        if j==8:
+            kde=sns.kdeplot(data=track_deform, bw_adjust=1, log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
+ 
+        elif j==7:
+            kde=sns.kdeplot(data=track_deform, bw_adjust=1, log_scale=True,lw=2, ls='dashed', color='k', label=labels[j])
+ 
+        else:
+            kde=sns.kdeplot(data=track_deform, bw_adjust=1, log_scale=True,lw=1, label=labels[j], zorder=2)
+ 
+        plt.vlines(2, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        
+        plt.xlabel(r'$\bar{\delta}\,[^{\circ}]$')
+        plt.ylabel('PDF')
+        plt.xlim(5e-2,10)
+        plt.ylim(0,1.49)
+        plt.xscale('log')
+        plt.title('Deviation from Great Circle')
+
+        # velocity dispersion
+        plt.sca(ax[1,1])
+        if j==8:
+            kde=sns.kdeplot(data=loc_veldis, bw_adjust=1, log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
+ 
+        elif j==7:
+            kde=sns.kdeplot(data=loc_veldis, bw_adjust=1, log_scale=True,lw=2, ls='dashed', color='k', label=labels[j])
+ 
+        else:
+            kde=sns.kdeplot(data=loc_veldis, bw_adjust=1, log_scale=True,lw=1, label=labels[j], zorder=2)
+ 
+        plt.vlines(2.5, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        
+        plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
+        plt.ylabel('PDF')
+        plt.xlim(2e-1,20)
+        plt.ylim(0,2.49)
+        plt.xscale('log')
+        plt.title('Local velocity dispersion')
     
+        # pm angle
+        plt.sca(ax[1,2])
+        if j==8:
+            kde=sns.kdeplot(data=pm_ang, bw_adjust=1, log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
+ 
+        elif j==7:
+            kde=sns.kdeplot(data=pm_ang, bw_adjust=1, log_scale=True,lw=2, ls='dashed', color='k', label=labels[j])
+ 
+        else:
+            kde=sns.kdeplot(data=pm_ang, bw_adjust=1, log_scale=True,lw=1, label=labels[j], zorder=2)
+ 
+        plt.vlines(10, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+
+        plt.xlabel(r'$\bar{\vartheta} \,[^{\circ}]$')
+        plt.ylabel('PDF')
+        plt.xlim(0.8,90)
+        plt.xscale('log')
+        plt.ylim(0,1.49)
+        plt.title('Proper motion misalignment')
+        
+        # median l pole spread
+        plt.sca(ax[2,0])
+        if j==8:
+            kde=sns.kdeplot(data=l_pole_std, bw_adjust=1,log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
+
+        elif j==7:
+            kde=sns.kdeplot(data=l_pole_std, bw_adjust=1,log_scale=True, lw=2, ls='dashed', color='k', label=labels[j])
+
+        else:
+            kde=sns.kdeplot(data=l_pole_std, bw_adjust=1,log_scale=True, lw=1, label=labels[j], zorder=2)
+        plt.vlines(2, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        
+        plt.xlabel(r'$\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}})\,[^{\circ}]$')
+        plt.ylabel('PDF')
+        plt.xlim(0.05,150)
+        plt.ylim(0, 1.99)
+        plt.xscale('log')
+        plt.title('Longitudinal pole dispersion')
+        
+        # median b pole spread
+        plt.sca(ax[2,1])
+        if j==8:
+            kde=sns.kdeplot(data=b_pole_std, bw_adjust=1,log_scale=True, lw=2.5, color='k', label=labels[j], zorder=1 )
+
+        elif j==7:
+            kde=sns.kdeplot(data=b_pole_std, bw_adjust=1,log_scale=True,lw=2, ls='dashed', color='k', label=labels[j])
+
+        else:
+            kde=sns.kdeplot(data=b_pole_std, bw_adjust=1, log_scale=True,lw=1, label=labels[j], zorder=2)
+        plt.vlines(2, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        
+        plt.xlabel(r'$\sigma_{b^{\prime},\,{\mathrm{pole}}}[^{\circ}]$')
+        plt.ylabel('PDF')
+        plt.xlim(0.05,150)
+        plt.ylim(0,2.49)
+        plt.xscale('log')
+        plt.title('Latitudinal pole dispersion')
+        plt.legend(frameon=False, ncol=1, fontsize=12, bbox_to_anchor=(1.1,1.15))
+        
+        ax[2,2].set_visible(False)
+        
+    if savefig==False:
+        return
+    elif savefig==True:
+        savepath = '/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname)
+        print('* Saving figure at {}.pdf'.format(savepath))
+        plt.savefig(savepath, bbox_inches='tight')
+    plt.close()
+       
 def fig4(path_data, pots, pot_labels, plotname, savefig=False):
     fig, axs = plt.subplots(3, 2, figsize=(10, 11))
     plt.subplots_adjust(hspace=0.65, wspace=0.3)
@@ -930,8 +1136,9 @@ data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files
     
 ### Figure 3
 print("Plotting figure 3...")
-plotname_fig3 = 'fig3' 
-fig3(data_path, plotname_fig3, True)
+plotname_fig3 = 'fig3-pdf' 
+# fig3_cdf(data_path, plotname_fig3, False)
+fig3_pdf(data_path, plotname_fig3, True)
 
 ### Figure 4
 print("Plotting figure 4...")
