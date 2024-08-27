@@ -466,7 +466,7 @@ def fig3_pdf(path, plotname, savefig=False):
 
     potentials = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
                            'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
-                            'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'Full-MWhalo-MWdisc-LMC.hdf5'])
+                            'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
 
     labels = list(['Rigid MW without motion (no LMC)', 'Rigid MW + motion (no LMC)', 'Rigid Monopole \& LMC', 'Evolving Monopole \& LMC', \
                    'Monopole + Dipole \& LMC', 'Monopole + Quadrupole \& LMC',\
@@ -533,7 +533,7 @@ def fig3_pdf(path, plotname, savefig=False):
         plt.ylabel('PDF')
         plt.xlim(0.09, 11)
         plt.xscale('log')
-        plt.ylim(0, 2.49)
+        plt.ylim(0, 2.69)
         plt.title('Asymmetry')
 
         #widths
@@ -556,7 +556,7 @@ def fig3_pdf(path, plotname, savefig=False):
         plt.xscale('log')
         plt.title('Width')
 
-        # track deformation
+        # deviation from Great Circle
         plt.sca(ax[1,0])
         if j==8:
             kde=sns.kdeplot(data=track_deform, bw_adjust=1, log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
@@ -572,12 +572,13 @@ def fig3_pdf(path, plotname, savefig=False):
         plt.xlabel(r'$\bar{\delta}\,[^{\circ}]$')
         plt.ylabel('PDF')
         plt.xlim(5e-2,10)
-        plt.ylim(0,1.49)
+        plt.ylim(0,1.29)
         plt.xscale('log')
         plt.title('Deviation from Great Circle')
 
         # velocity dispersion
         plt.sca(ax[1,1])
+        loc_veldis[loc_veldis == 0] = 0.0001
         if j==8:
             kde=sns.kdeplot(data=loc_veldis, bw_adjust=1, log_scale=True,lw=2.5, color='k', label=labels[j], zorder=1 )
  
@@ -587,12 +588,12 @@ def fig3_pdf(path, plotname, savefig=False):
         else:
             kde=sns.kdeplot(data=loc_veldis, bw_adjust=1, log_scale=True,lw=1, label=labels[j], zorder=2)
  
-        plt.vlines(2.5, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        # plt.vlines(2.5, 0, 4, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
         
         plt.xlabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
         plt.ylabel('PDF')
         plt.xlim(2e-1,20)
-        plt.ylim(0,2.49)
+        plt.ylim(0,2.29)
         plt.xscale('log')
         plt.title('Local velocity dispersion')
     
@@ -613,7 +614,7 @@ def fig3_pdf(path, plotname, savefig=False):
         plt.ylabel('PDF')
         plt.xlim(0.8,90)
         plt.xscale('log')
-        plt.ylim(0,1.49)
+        plt.ylim(0,1.29)
         plt.title('Proper motion misalignment')
         
         # median l pole spread
@@ -631,7 +632,7 @@ def fig3_pdf(path, plotname, savefig=False):
         plt.xlabel(r'$\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}})\,[^{\circ}]$')
         plt.ylabel('PDF')
         plt.xlim(0.05,150)
-        plt.ylim(0, 1.99)
+        plt.ylim(0, 1.79)
         plt.xscale('log')
         plt.title('Longitudinal pole dispersion')
         
@@ -893,6 +894,9 @@ def fig5(path_data, potl, real_data, pot_name, labels, plotname, savefig=False):
     # plt.scatter(-real_data['gc_l']* u.deg.to(u.rad), 
     #             real_data['gc_b']* u.deg.to(u.rad), 
     #             facecolor='r', edgecolor='k')
+
+    mollweide_ax.annotate('LMC orbit', (-2.2*np.pi/6, -1.5*np.pi/8),
+                         fontsize=9)
     
     mollweide_ax.annotate('Q1', (-5*np.pi/6, np.pi/8))
     mollweide_ax.annotate('Q2', (4*np.pi/6, np.pi/8))
@@ -1094,6 +1098,9 @@ def fig6(path_data, potls, real_data, quadlabels, plotname, savefig=False):
     plt.scatter(-real_data['gc_l']* u.deg.to(u.rad), 
                 real_data['gc_b']* u.deg.to(u.rad), 
                 facecolor='r', edgecolor='k')
+
+    mollweide_ax.annotate('LMC orbit', (-2.2*np.pi/6, -1.5*np.pi/8),
+                         fontsize=9)
     
     mollweide_ax.annotate('Q1', (-5*np.pi/6, np.pi/8))
     mollweide_ax.annotate('Q2', (4*np.pi/6, np.pi/8))
@@ -1138,7 +1145,7 @@ data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files
 print("Plotting figure 3...")
 plotname_fig3 = 'fig3-pdf' 
 # fig3_cdf(data_path, plotname_fig3, False)
-fig3_pdf(data_path, plotname_fig3, True)
+# fig3_pdf(data_path, plotname_fig3, True)
 
 ### Figure 4
 print("Plotting figure 4...")
@@ -1155,7 +1162,7 @@ potential_fig5 = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
 potential_name_fig5 = 'Full Expansion \& LMC'
 labels_fig5 = list(['Q1','Q2','Q3','Q4'])
 # fig5(data_path, potential_fig5, potential_name_fig5, labels_fig5, 'fig5', True)
-# fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
+fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
 
 
 ### Figure 6
@@ -1165,4 +1172,4 @@ pots_fig6 = list(['full-MWhalo-full-MWdisc-full-LMC.hdf5', 'full-MWhalo-full-MWd
                  'rm-MWhalo-full-MWdisc-full-LMC.hdf5'])
 quadlabels_fig6 = list(['Q4 Full Expansion \& LMC','Q4 Full Expansion (no LMC)','Q4 Rigid Monopole \& LMC'])
 
-# fig6(data_path, pots_fig6, DES_plot_data, quadlabels_fig6, 'fig6', True)
+fig6(data_path, pots_fig6, DES_plot_data, quadlabels_fig6, 'fig6', True)
