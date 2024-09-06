@@ -665,6 +665,216 @@ def fig3_pdf(path, plotname, savefig=False):
         print('* Saving figure at {}.pdf'.format(savepath))
         plt.savefig(savepath, bbox_inches='tight')
     plt.close()
+
+def fig3_compressed(path, plotname, savefig=False):
+    fig, ax = plt.subplots(8,1, figsize=(9,12), sharex=True)
+    plt.subplots_adjust(hspace=0.)
+
+    potentials = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                           'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                            'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
+
+    labels = list(['Rigid MW without motion \n (no LMC)', 'Rigid MW + motion \n (no LMC)', 'Rigid Monopole \& LMC', 'Evolving Monopole \& LMC', \
+                   'Monopole + Dipole \& LMC', 'Monopole + Quadrupole \& LMC',\
+                   'Monopole + Dipole \n + Quadrupole \& LMC', 'Full Expansion (no LMC)', 'Full Expansion \& LMC'])
+
+    xaxis_loc = np.linspace(1, 9, 9)
+    plt.xticks(ticks=[1, 2, 3,4,5,6,7,8,9], labels=labels, rotation=70)
+
+    for j in range(len(potentials)): 
+
+        with h5py.File(path + potentials[j],'r') as file:
+            lengths = np.array(file['lengths'])
+            widths = np.array(file['widths'])
+            loc_veldis = np.array(file['loc_veldis'])
+            track_deform = np.array(file['track_deform'])
+            pm_ang = np.array(file['pm_misalignment'])
+            
+            lons = np.array(file['lons'])
+            l_lead = np.nanpercentile(lons, 95, axis=1)
+            l_trail = np.nanpercentile(lons, 5, axis=1)
+            asymmetry = np.abs(l_lead/l_trail)
+            
+            t_idx = -1
+            l_pole = np.array(file['pole_l'])[:,t_idx]
+            b_pole = np.array(file['pole_b'])[:,t_idx]
+        
+            poles =  np.stack((l_pole, b_pole))
+        rot_pole = np.array([rotation_matrix_disc @ poles[:,i] for i in range(len(l_pole))])
+        
+        rot_bpole_i = np.where(rot_pole[:,1] > 90, rot_pole[:,1] - 180, rot_pole[:,1])
+        rot_bpole_wrapped = np.where(rot_bpole_i < -90, rot_bpole_i + 180, rot_bpole_i)
+        cos_bpole = np.cos(rot_bpole_wrapped * np.pi/180)
+        cos_bpole_prog = cos_bpole[:,0]
+        
+        l_pole_std, b_pole_std = np.nanstd(rot_pole[:,0],axis=1) * cos_bpole_prog, np.nanstd(rot_pole[:,1],axis=1)
+
+        # lengths
+        mu, std = np.nanmedian(lengths), np.nanstd(lengths)
+        yerr = np.array([mu - np.percentile(lengths, 16), np.percentile(lengths, 84) - mu]).reshape(2,1)
+        
+        plt.sca(ax[0])
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)
+
+        plt.ylabel(r'$l_{\mathrm{stream}}\,[^{\circ}]$')
+        plt.ylim(1,99)
+
+        # asymmetry
+        mu, std = np.nanmedian(asymmetry), np.nanstd(asymmetry)
+        yerr = np.array([mu - np.percentile(asymmetry, 16), np.percentile(asymmetry, 84) - mu]).reshape(2,1)
+        plt.sca(ax[1])
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)
+ 
+        plt.ylabel(r'$l_{\mathrm{leading}}/l_{\mathrm{trailing}}$')
+        plt.ylim(0.001, 2.9)
+
+        #widths
+        mu, std = np.nanmedian(widths), np.nanstd(widths)
+        yerr = np.array([mu - np.percentile(widths, 16), np.percentile(widths, 84) - mu]).reshape(2,1)
+        plt.sca(ax[2])
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+        
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+        
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)
+        plt.hlines(0.5, 0, 10, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.ylabel(r'$w\,[^{\circ}]$')
+        plt.ylim(0.001, .79)
+        
+        # track deformation
+        mu, std = np.nanmedian(track_deform), np.nanstd(track_deform)
+        yerr = np.array([mu - np.percentile(track_deform, 16), np.percentile(track_deform, 84) - mu]).reshape(2,1)
+        plt.sca(ax[3])
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)
+        # plt.hlines(1, 0, 10, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.ylabel(r'$\bar{\delta}\,[^{\circ}]$')
+        plt.ylim(0.001, 1.99)
+        
+        # velocity dispersion
+        mu, std = np.nanmedian(loc_veldis), np.nanstd(loc_veldis)
+        yerr = np.array([mu - np.percentile(loc_veldis, 16), np.percentile(loc_veldis, 84) - mu]).reshape(2,1)
+        plt.sca(ax[4])
+
+        loc_veldis[loc_veldis == 0] = 0.0001
+        
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D',  ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)
+        
+        plt.ylabel(r'$\sigma_{v}\,[\mathrm{km}\,\mathrm{s}^{-1}]$')
+        plt.ylim(0.001, 3.9)
+    
+        # pm angle
+        mu, std = np.nanmedian(pm_ang), np.nanstd(pm_ang)
+        yerr = np.array([mu - np.percentile(pm_ang, 16), np.percentile(pm_ang, 84) - mu]).reshape(2,1)
+        plt.sca(ax[5])
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D',  ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)
+        plt.hlines(10, 0, 10, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.ylabel(r'$\bar{\vartheta} \,[^{\circ}]$')
+        plt.ylim(0.001, 27.9)
+        
+        # median l pole spread
+        mu, std = np.nanmedian(l_pole_std), np.nanstd(l_pole_std)
+        yerr = np.array([mu - np.nanpercentile(l_pole_std, 16), np.percentile(b_pole_std, 84) - mu]).reshape(2,1)
+        plt.sca(ax[6])
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)
+        plt.hlines(2, 0, 10, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.ylabel(r'$\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}})\,[^{\circ}]$')
+        plt.ylim(0.001, 3.9)
+        
+        # median b pole spread
+        mu, std = np.nanmedian(b_pole_std), np.nanstd(b_pole_std)
+        yerr = np.array([mu - np.percentile(b_pole_std, 16), np.percentile(b_pole_std, 84) - mu]).reshape(2,1)
+        plt.sca(ax[7])
+        if j==8:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        elif j==7:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
+                 capsize=2, mfc='k', mec='k', ms=6, zorder=1)
+ 
+        else:
+            plt.errorbar(xaxis_loc[j], mu, yerr=yerr, marker='D', ecolor='k',
+                 capsize=2, mec='k', ms=6, zorder=1)     
+        plt.hlines(2, 0, 10, color='lightgrey', ls='solid', lw=.75, zorder=0.5)
+        plt.ylabel(r'$\sigma_{b^{\prime},\,{\mathrm{pole}}}[^{\circ}]$')
+        plt.ylim(0.001, 3.9)
+        plt.xlim(0.5, 9.5)
+
+    fig.align_labels()
+        
+    if savefig==False:
+        return
+    elif savefig==True:
+        savepath = '/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname)
+        print('* Saving figure at {}.pdf'.format(savepath))
+        plt.savefig(savepath, bbox_inches='tight')
+    plt.close()
        
 def fig4(path_data, pots, pot_labels, plotname, savefig=False):
     fig, axs = plt.subplots(3, 2, figsize=(10, 11))
@@ -1147,6 +1357,11 @@ plotname_fig3 = 'fig3-pdf'
 # fig3_cdf(data_path, plotname_fig3, False)
 # fig3_pdf(data_path, plotname_fig3, True)
 
+### Figure 3 - Compressed
+print("Plotting compressed version of figure 3...")
+plotname_fig3_comp = 'fig3-compressed-pdf' 
+fig3_compressed(data_path, plotname_fig3_comp, True)
+
 ### Figure 4
 print("Plotting figure 4...")
 potentials_fig4 = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',\
@@ -1162,7 +1377,7 @@ potential_fig5 = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
 potential_name_fig5 = 'Full Expansion \& LMC'
 labels_fig5 = list(['Q1','Q2','Q3','Q4'])
 # fig5(data_path, potential_fig5, potential_name_fig5, labels_fig5, 'fig5', True)
-fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
+# fig5(data_path, potential_fig5, DES_plot_data, potential_name_fig5, labels_fig5, 'fig5', True)
 
 
 ### Figure 6
@@ -1172,4 +1387,4 @@ pots_fig6 = list(['full-MWhalo-full-MWdisc-full-LMC.hdf5', 'full-MWhalo-full-MWd
                  'rm-MWhalo-full-MWdisc-full-LMC.hdf5'])
 quadlabels_fig6 = list(['Q4 Full Expansion \& LMC','Q4 Full Expansion (no LMC)','Q4 Rigid Monopole \& LMC'])
 
-fig6(data_path, pots_fig6, DES_plot_data, quadlabels_fig6, 'fig6', True)
+# fig6(data_path, pots_fig6, DES_plot_data, quadlabels_fig6, 'fig6', True)
