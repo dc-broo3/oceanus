@@ -3,7 +3,7 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=rbrooks@flatironinstitute.org
 #SBATCH --time=00:30:00
-#SBATCH --job-name=agama-singlestream
+#SBATCH --job-name=oceanus
 #SBATCH -N1 --ntasks-per-node=1
 #SBATCH -e stderr.txt
 #SBATCH -o stdout.txt
@@ -24,8 +24,10 @@ echo "Current working directory is `pwd`"
 echo
 
 VENVDIR=/mnt/home/rbrooks/ceph/venvs
-source $VENVDIR/mwlmc_venv/bin/activate
+source $VENVDIR/mwlmc_fulldiscexp_venv/bin/activate
 
-pipeline=/mnt/home/rbrooks/ceph/oceanus/src/streamgen-agama.py
-param=/mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/orphan.yaml
+pipeline=/mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py
+param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/rigid-mw.yaml
+# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/full-mwh-full-mwd-full-lmc.yaml
+# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/full-mwh-full-mwd-no-lmc.yaml
 python3 $pipeline -o -f $param

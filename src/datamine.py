@@ -41,8 +41,8 @@ def lons_lats(pos, vel):
 def local_veldis(lons, vfs):
 
     # Compute percentiles
-    lower_value = np.nanpercentile(lons, 0.1)
-    upper_value = np.nanpercentile(lons, 99.9)
+    lower_value = np.nanpercentile(lons, 5)
+    upper_value = np.nanpercentile(lons, 95)
     # Filter lons_mainbody
     lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
     vfs_mainbody = vfs[1:][(lons >= lower_value) & (lons <= upper_value)] #excludes progenitor [1:]
@@ -151,16 +151,58 @@ def galactic_coords(p, v):
     
     return l.value, b.value, d.value, pm_l_cosb.value, pm_b.value, rvs.value, sigma_rv.value
 
+# def write_pltoutputs_hdf5(outpath, filename, 
+#                          l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
+#                          peris, apos,
+#                          widths, lengths, track_deform, grad_track_deform, lmc_sep,
+#                          lons, lats, pm_misalign, loc_veldis,
+#                          pole_b, pole_l,
+#                          pole_b_dis, pole_l_dis,
+#                          masses, energy, Ekinetic, Ls, Lzs):
+#     print("* Writing data for potential {}".format(filename))
+#     hf = h5py.File(outpath + filename + ".hdf5", 'w')
+#     hf.create_dataset('l_gc', data=l_gc)
+#     hf.create_dataset('b_gc', data=b_gc)
+#     hf.create_dataset('ds', data=ds)
+#     hf.create_dataset('pm_l_cosb', data=pm_l_cosb_gc)
+#     hf.create_dataset('pm_b', data=pm_b_gc)
+#     hf.create_dataset('vlos', data=vlos)
+#     hf.create_dataset('sigmavlos', data=sigma_los)
+                      
+#     hf.create_dataset('pericenter',data=peris)
+#     hf.create_dataset('apocenter', data=apos)
+                
+#     hf.create_dataset('lengths', data=lengths)
+#     hf.create_dataset('widths', data=widths)
+#     hf.create_dataset('track_deform', data=track_deform)
+#     hf.create_dataset('grad_track_deform', data=grad_track_deform)
+#     hf.create_dataset('lmc_sep', data=lmc_sep)
+#     hf.create_dataset('lons', data=lons)
+#     hf.create_dataset('lats', data=lats)
+#     # hf.create_dataset('av_lon', data=av_lon)
+#     # hf.create_dataset('av_lat', data=av_lat)
+#     hf.create_dataset('loc_veldis', data=loc_veldis)
+#     hf.create_dataset('pm_misalignment', data=pm_misalign)
+                      
+#     hf.create_dataset('pole_l', data=pole_l)
+#     hf.create_dataset('pole_b', data=pole_b)                 
+#     hf.create_dataset('sigma_pole_l', data=pole_l_dis)
+#     hf.create_dataset('sigma_pole_b', data=pole_b_dis)
+                      
+#     hf.create_dataset('mass', data=masses)           
+#     hf.create_dataset('energies', data=energy)
+#     hf.create_dataset('Eks', data=Ekinetic)
+#     hf.create_dataset('L', data=Ls)
+#     hf.create_dataset('Lz', data=Lzs)
+#     hf.close()
 
-def write_pltoutputs_hdf5(outpath, filename, 
+def write_pltoutputs_hdf5(outpath, filename,
                          l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                          peris, apos,
-                         widths, lengths, track_deform, grad_track_deform, lmc_sep,
-                         lons, lats, pm_misalign, loc_veldis,
-                         pole_b, pole_l,
-                         pole_b_dis, pole_l_dis,
-                         masses, energy, Ekinetic, Ls, Lzs):
-    print("* Writing data for potential {}".format(filename))
+                         widths, lengths, track_deform, grad_track_deform,
+                          pm_misalign, loc_veldis, masses):
+    print("* Writing data...")
+    
     hf = h5py.File(outpath + filename + ".hdf5", 'w')
     hf.create_dataset('l_gc', data=l_gc)
     hf.create_dataset('b_gc', data=b_gc)
@@ -177,24 +219,10 @@ def write_pltoutputs_hdf5(outpath, filename,
     hf.create_dataset('widths', data=widths)
     hf.create_dataset('track_deform', data=track_deform)
     hf.create_dataset('grad_track_deform', data=grad_track_deform)
-    hf.create_dataset('lmc_sep', data=lmc_sep)
-    hf.create_dataset('lons', data=lons)
-    hf.create_dataset('lats', data=lats)
-    # hf.create_dataset('av_lon', data=av_lon)
-    # hf.create_dataset('av_lat', data=av_lat)
+    
     hf.create_dataset('loc_veldis', data=loc_veldis)
-    hf.create_dataset('pm_misalignment', data=pm_misalign)
-                      
-    hf.create_dataset('pole_l', data=pole_l)
-    hf.create_dataset('pole_b', data=pole_b)                 
-    hf.create_dataset('sigma_pole_l', data=pole_l_dis)
-    hf.create_dataset('sigma_pole_b', data=pole_b_dis)
-                      
+    hf.create_dataset('pm_misalignment', data=pm_misalign)     
     hf.create_dataset('mass', data=masses)           
-    hf.create_dataset('energies', data=energy)
-    hf.create_dataset('Eks', data=Ekinetic)
-    hf.create_dataset('L', data=Ls)
-    hf.create_dataset('Lz', data=Lzs)
     hf.close()
 
 ###----------------------------------------------------------------------------------
@@ -203,33 +231,37 @@ def write_pltoutputs_hdf5(outpath, filename,
     
 l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los = [], [], [], [], [], [], []
 peris, apos = [], []
-widths, lengths, track_deforms, grad_track_deforms, lmc_sep = [], [], [], [], []
-lons, lats = [], []
+widths, lengths, track_deforms, grad_track_deforms = [], [], [], []
+# lmc_sep = []
+# lons, lats = [], []
 pm_angles = []
 # av_lon, av_lat = [], []
 loc_veldis = []
-pole_b, pole_l = [], []
-pole_b_dis, pole_l_dis = [], []
+# pole_b, pole_l = [], []
+# pole_b_dis, pole_l_dis = [], []
 masses = []
-energy, Eks, Ls, Lzs = [], [], [], []
+# energy, Eks, Ls, Lzs = [], [], [], []
 
-path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/1024-dthalfMyr-10rpmin-75ramax/'
+# path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/1024-dthalfMyr-10rpmin-75ramax/'
 # path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/16384-dt1Myr/'
 # potential = 'rigid-mw.hdf5'
 # potential = 'static-mw.hdf5'
 # potential = 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5' 
 # potential = 'full-MWhalo-full-MWdisc-full-LMC.hdf5' 
-potential = 'Full-MWhalo-MWdisc-LMC.hdf5' 
+# potential = 'Full-MWhalo-MWdisc-LMC.hdf5' 
 # potential = 'full-MWhalo-full-MWdisc-no-LMC.hdf5' 
 
+# agama streams
+path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/1024-agama.hdf5'
 
 Nstreams = 1024 #16384
 for i in range(Nstreams):
-    data_path = pathlib.Path(path) / potential 
+    # data_path = pathlib.Path(path) / potential 
+    data_path = pathlib.Path(path) 
     with h5py.File(data_path,'r') as file:
         
-        if i ==0:
-            filename_end = file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
+        # if i ==0:
+        #     filename_end = file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
         
         pos = np.array(file['stream_{}'.format(i)]['positions'])[-1]
         vel = np.array(file['stream_{}'.format(i)]['velocities'])[-1]
@@ -240,47 +272,57 @@ for i in range(Nstreams):
 
         peris.append(np.array(file['stream_{}'.format(i)]['pericenter']))
         apos.append(np.array(file['stream_{}'.format(i)]['apocenter']))
-        lmc_sep.append(np.array(file['stream_{}'.format(i)]['lmc_sep']))
+        # lmc_sep.append(np.array(file['stream_{}'.format(i)]['lmc_sep']))
         
         widths.append(np.array(file['stream_{}'.format(i)]['widths']))
         lengths.append(np.array(file['stream_{}'.format(i)]['lengths']))
         track_deforms.append(np.array(file['stream_{}'.format(i)]['track_deform']))
+        grad_track_deforms.append(np.array(file['stream_{}'.format(i)]['grad_track_deform']))
         
         lon, lat = lons_lats(pos, vel)
        
-        lons.append(lon) 
-        lats.append(lat)
-        loc_veldis.append(local_veldis(lon, vel))
+        # lons.append(lon) 
+        # lats.append(lat)
+        loc_veldis.append(np.array(file['stream_{}'.format(i)]['loc_veldis']))
 
-        _, _, grad_track_deform = widths_deforms(lon, lat)
-        grad_track_deforms.append(grad_track_deform)
+        # _, _, grad_track_deform = widths_deforms(lon, lat)
+        # grad_track_deforms.append(grad_track_deform)
         # grad_track_deforms.append(np.array(file['stream_{}'.format(i)]['grad_track_deform']))
         
         pm_angle = pm_misalignment(lon, pos, vel)
         pm_angles.append(pm_angle.value)
         # pm_angles.append(np.array(file['stream_{}'.format(i)]['pm_misalignment']))
         
-        pole_b.append(np.array(file['stream_{}'.format(i)]['pole_b']))
-        pole_l.append(np.array(file['stream_{}'.format(i)]['pole_l']))
-        pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])))
-        pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])))
+        # pole_b.append(np.array(file['stream_{}'.format(i)]['pole_b']))
+        # pole_l.append(np.array(file['stream_{}'.format(i)]['pole_l']))
+        # pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])))
+        # pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])))
         
         masses.append(np.array(file['stream_{}'.format(i)]['progenitor-mass']))
-        energy.append(np.array(file['stream_{}'.format(i)]['energies'])[-1, 0])
-        Ls.append(np.array(file['stream_{}'.format(i)]['L'])[-1, 0])
-        Lzs.append(np.array(file['stream_{}'.format(i)]['Lz'])[-1, 0])
+        # energy.append(np.array(file['stream_{}'.format(i)]['energies'])[-1, 0])
+        # Ls.append(np.array(file['stream_{}'.format(i)]['L'])[-1, 0])
+        # Lzs.append(np.array(file['stream_{}'.format(i)]['Lz'])[-1, 0])
         
-        Ek_prog = (.5 * np.linalg.norm(vel[0], axis=0)**2)
-        Eks.append(Ek_prog)
+        # Ek_prog = (.5 * np.linalg.norm(vel[0], axis=0)**2)
+        # Eks.append(Ek_prog)
            
-out_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/1024-dthalfMyr-10rpmin-75ramax/'
+# out_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/1024-dthalfMyr-10rpmin-75ramax/'
 # out_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/16384-dt1Myr/'
 
+# write_pltoutputs_hdf5(out_path, filename_end,
+#                       l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
+#                       peris, apos,
+#                      widths, lengths, track_deforms, grad_track_deforms, lmc_sep,
+#                      lons, lats, pm_angles, loc_veldis,
+#                      pole_b, pole_l,
+#                      pole_b_dis, pole_l_dis,
+#                      masses, energy, Eks, Ls, Lzs)
+
+# agama streams
+out_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/'
+filename_end = '1024-agama'
 write_pltoutputs_hdf5(out_path, filename_end,
                       l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                       peris, apos,
-                     widths, lengths, track_deforms, grad_track_deforms, lmc_sep,
-                     lons, lats, pm_angles, loc_veldis,
-                     pole_b, pole_l,
-                     pole_b_dis, pole_l_dis,
-                     masses, energy, Eks, Ls, Lzs)
+                     widths, lengths, track_deforms, grad_track_deforms,
+                      pm_angles, loc_veldis, masses)

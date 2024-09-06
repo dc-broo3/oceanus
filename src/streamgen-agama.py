@@ -14,12 +14,14 @@ from argparse import ArgumentParser
 import pathlib
 from scipy.spatial.transform import Rotation
 
+print("setting mass units for agama and gala...")
 mass_unit =232500
 agama.setUnits(length=1, velocity=1, mass=mass_unit)
 timeUnitGyr = agama.getUnits()['time'] / 1e3
 
 usys = gu.UnitSystem(u.kpc, 977.79222168*u.Myr, mass_unit*u.Msun, u.radian, u.km/u.s)
 
+print("loading agama MW--LMC model from Eugene's Tango for Three paper...")
 pot_frozen   = agama.Potential('../analysis/potentials_triax/potential_frozen.ini')   # fixed analytic potentials
 pot_evolving = agama.Potential('../analysis/potentials_triax/potential_evolving.ini') # time-dependent multipole potentials
 
@@ -285,6 +287,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
                                                                     pot_frozen, 
                                                                     np.array(fc),
                                                                     mass_sat)
+    print("stream generated!")
     xs, vs = xv_stream[:,:3], xv_stream[:,3:6] # only have the final snapshot
     
     # print("calculating energies, angular momenta, velocity dispersion, LMC separation...")
@@ -309,7 +312,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     
     # print("calculating LMC closest approach over all particles (and times)...")
     # lmc_close_sep = np.nanmin(lmc_sep, axis=0)
-          
+
     write_stream_hdf5(outpath, filename, xs, vs, ts,
                       sigma_v, length, width, track_deform, grad_track_deform, pm_angle, fc, Mprog, a_s, 
                       pericenter, apocenter)
@@ -335,17 +338,6 @@ def readparams(paramfile):
     Tbegin = d["Tbegin"]
     Tfinal =  d["Tfinal"]
     num_particles = d["num_particles"]
-
-    #change to is instance?
-    # assert type(inpath)==str, "inpath parameter  must be a string"
-    # assert type(snapname)==str, "snapname parameter must be a string"
-    # assert type(outpath)==str, "outpath parameter must be a string"
-    # assert type(outname)==str, "outname parameter must be a string"
-    # assert type(prog_mass)==int, "prog_mass parameter must be a float"
-    # assert type(prog_scale)==float, "prog_scale parameter must be a float"
-    # assert type(Tbegin)==float, "Tbegin parameter must be an float"
-    # assert type(Tfinal)==float, "Tfinal parameter must be an float"
-    # assert type(num_particles)==int, "strip_rate parameter must be an int"
     
     print("Read yaml contents and returning function...")
 
