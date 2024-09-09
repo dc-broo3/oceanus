@@ -257,6 +257,92 @@ def fig1(streams, path, potentials, labels, figsize, plotname, savefig=False):
         return plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname))
     plt.close()
 
+def fig1_portrait(streams, path, potentials, labels, figsize, plotname, savefig=False):
+              
+    t_idx = -1
+    
+    fig, ax = plt.subplots(9, 3, sharex='col', sharey=True, figsize=figsize)
+    plt.subplots_adjust(hspace=0, wspace=0.025)
+    
+    for j in range(len(potentials)): 
+        for i in range(len(streams)):   
+            #-------------------------------------------------------------------------------------
+            ### Read in the data
+            #-------------------------------------------------------------------------------------
+            data_path = pathlib.Path(path) / potentials[j]
+            with h5py.File(data_path,'r') as file:
+        
+                prog = gd.PhaseSpacePosition(file[streams[i]]["positions"][t_idx, 0] * u.kpc, file[streams[i]]["velocities"][t_idx, 0] * u.km / u.s)
+                stream = gd.PhaseSpacePosition(file[streams[i]]["positions"][t_idx, 1:].T * u.kpc, file[streams[i]]["velocities"][t_idx, 1:].T * u.km / u.s)
+                start_times = np.array(file[streams[i]]['times'])
+                prog_mass = np.array(file[streams[i]]['progenitor-mass']) * u.Msun
+            #-------------------------------------------------------------------------------------
+            ### Rotation matrix for progenitor to get it to near (X, 0, 0)
+            #-------------------------------------------------------------------------------------
+            R1 = Rotation.from_euler("z", -prog.spherical.lon.degree, degrees=True)
+            R2 = Rotation.from_euler("y", prog.spherical.lat.degree, degrees=True)
+            R_prog0 = R2.as_matrix() @ R1.as_matrix()  
+            #-------------------------------------------------------------------------------------
+            ### Rotate around new x axis so stream prog vel points along +y direction
+            #-------------------------------------------------------------------------------------
+            new_vxyz = R_prog0 @ prog.v_xyz
+            v_angle = np.arctan2(new_vxyz[2], new_vxyz[1])
+            R3 = Rotation.from_euler("x", -v_angle.to_value(u.degree), degrees=True)
+            R = (R3 * R2 * R1).as_matrix()
+            #-------------------------------------------------------------------------------------
+            ### Rotate the whole stream by the final rotation matrix
+            #-------------------------------------------------------------------------------------
+            prog_rot = gd.PhaseSpacePosition(prog.data.transform(R))
+            prog_sph = prog_rot.spherical
+            stream_rot = gd.PhaseSpacePosition(stream.data.transform(R))
+            stream_sph = stream_rot.spherical
+            lon = stream_sph.lon.wrap_at(180*u.deg).degree[:-2]
+            lat = stream_sph.lat.degree[:-2]
+            #-------------------------------------------------------------------------------------
+            ### Plot the streams
+            #-------------------------------------------------------------------------------------
+            plt.sca(ax[j,i])
+            # print('* Plotting {} in potential {}'.format(streams[i], potentials[j]))
+            plt.hlines(0, -200, 200, ls='dashed', color='lightgrey', lw=0.7, zorder=1)
+            plt.vlines(0, -200, 200, ls='dashed', color='lightgrey', lw=0.7, zorder=1)
+            plot=plt.scatter(lon[:-2], lat[:-2], s=.5, c=start_times, cmap = 'viridis',rasterized=True, zorder=2)
+            
+            if j==0:
+                name, ext = os.path.splitext(streams[i])
+                # plt.annotate(text='{}'.format(name), xy=(-170,19), fontsize=10 )
+                plt.annotate(text=r'M = {} $\times \, 10^{{4}} \, \mathrm{{M}}_{{\odot}}$'.format(np.round(prog_mass.value/1e4, 1)),
+                             xy=(-170, -25), fontsize=10)
+            
+    cb = fig.colorbar(plot,  ax=ax, location='bottom', aspect=30, pad=0.06)
+    cb.set_label('Stripping time [Gyr]')
+    cb.ax.tick_params(labelsize=12)
+
+    fig.align_labels()
+    
+    #-------------------------------------------------------------------------------------
+    ### Plot cosmetics
+    #-------------------------------------------------------------------------------------
+    for col in range(len(streams)):
+        name, ext = os.path.splitext(streams[col])
+        ax[0, col].set_title(name)
+        ax[len(potentials)-1, col].set_xlabel(r'$\mathrm{lon}\,[^{\circ}]$')
+        ax[len(potentials)-1, col].set_xlim(-189,189)
+        
+    for row in range(len(potentials)):
+        ax[row, 0].set_ylabel(r'$\mathrm{lat}\,[^{\circ}]$')
+        ax[row, 0].set_ylim(-34,34)
+
+        plt.sca(ax[row, 2])
+        plt.text(395, -15, labels[row], horizontalalignment='center')
+
+    plt.sca(ax[0,2])
+    plt.text(395, 40, 'Potential label', horizontalalignment='center')
+    
+    if savefig==False:
+        return
+    elif savefig==True:
+         return plt.savefig('/mnt/ceph/users/rbrooks/oceanus/analysis/figures/paper-figs/{}'.format(plotname), bbox_inches='tight')
+
 def fig3_cdf(path, plotname, savefig=False):
     fig, ax = plt.subplots(3,3, figsize=(12.5,8.75))
     plt.subplots_adjust(hspace=0.5, wspace=0.3)
@@ -1333,21 +1419,34 @@ def fig6(path_data, potls, real_data, quadlabels, plotname, savefig=False):
 print("Script is running...")
 
 ### Figure 1
-fig1_data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/16384-dt1Myr/'
-streams_fig1 = list(['stream_9', 'stream_12680', 'stream_16212']) 
-plotname_fig1a, plotname_fig1b = 'fig1a', 'fig1b'
-fs_fig1a, fs_fig1b = (13,4.5), (16,4.5)
+# fig1_data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/16384-dt1Myr/'
+# streams_fig1 = list(['stream_9', 'stream_12680', 'stream_16212']) 
+# plotname_fig1a, plotname_fig1b = 'fig1a', 'fig1b'
+# fs_fig1a, fs_fig1b = (13,4.5), (16,4.5)
 
-potentials_fig1a = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5'])
-labels_fig1a = list(['Rigid MW \n without motion (no LMC)', 'Rigid MW \n + motion (no LMC)', 'Rigid Monopole \n \& LMC', 'Evolving Monopole \n \& LMC'])
+# potentials_fig1a = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5'])
+# labels_fig1a = list(['Rigid MW \n without motion (no LMC)', 'Rigid MW \n + motion (no LMC)', 'Rigid Monopole \n \& LMC', 'Evolving Monopole \n \& LMC'])
 
-potentials_fig1b = list(['md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
-                        'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
-labels_fig1b = list(['Monopole + Dipole \n \& LMC', 'Monopole + Quadrupole \n \& LMC', 'Monopole + Dipole \n + Quadrupole \& LMC', \
-               'Full Expansion \n(no LMC)', 'Full Expansion \n \& LMC'])
+# potentials_fig1b = list(['md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
+#                         'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
+# labels_fig1b = list(['Monopole + Dipole \n \& LMC', 'Monopole + Quadrupole \n \& LMC', 'Monopole + Dipole \n + Quadrupole \& LMC', \
+#                'Full Expansion \n(no LMC)', 'Full Expansion \n \& LMC'])
 
 # fig1(streams_fig1, fig1_data_path, potentials_fig1a, labels_fig1a, fs_fig1a, plotname_fig1a, True)
 # fig1(streams_fig1, fig1_data_path, potentials_fig1b, labels_fig1b, fs_fig1b, plotname_fig1b, True)
+
+### Figure 1 portrait
+fig1_data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/16384-dt1Myr/'
+streams_fig1 = list(['stream_9', 'stream_12680', 'stream_16212']) 
+plotname = 'fig1-portrait'
+fs = (7.5,11.5)
+potentials = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc-full-LMC.hdf5', 'em-MWhalo-full-MWdisc-full-LMC.hdf5',
+                  'md-MWhalo-full-MWdisc-full-LMC.hdf5', 'mq-MWhalo-full-MWdisc-full-LMC.hdf5', 'mdq-MWhalo-full-MWdisc-full-LMC.hdf5',\
+                        'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
+labels = list(['Rigid MW \n without motion (no LMC)', 'Rigid MW \n + motion (no LMC)', 'Rigid Monopole \n \& LMC', 'Evolving Monopole \n \& LMC',
+              'Monopole + Dipole \n \& LMC', 'Monopole + Quadrupole \n \& LMC', 'Monopole + Dipole \n + Quadrupole \& LMC', \
+               'Full Expansion \n(no LMC)', 'Full Expansion \n \& LMC'])
+# fig1_portrait(streams_fig1, fig1_data_path, potentials, labels, fs, plotname, True)
 
 data_path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/plotting_data/16384-dt1Myr/'
     
