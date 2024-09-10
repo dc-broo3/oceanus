@@ -25,56 +25,37 @@ print("loading agama MW--LMC model from Eugene's Tango for Three paper...")
 pot_frozen   = agama.Potential('../analysis/potentials_triax/potential_frozen.ini')   # fixed analytic potentials
 pot_evolving = agama.Potential('../analysis/potentials_triax/potential_evolving.ini') # time-dependent multipole potentials
 
+def energies_angmom(xs, vs):
+    
+    """
+    calculate the energies and angular momenta of particles for a given time snapshot. Galactocentric frame.
+    """
+    # Kinetic energy
+    Ek = (.5 * np.linalg.norm(vs, axis=1)**2) * (u.km/u.s)**2
+    # Potential energy
+    Ep = pot_frozen.potential(xs) * (u.km/u.s)**2
+    
+    E = Ek + Ep
+    # Angular momentum
+    L = np.linalg.norm(np.cross(xs, vs), axis=1) * (u.kpc*u.km/u.s)
+    Lz = np.cross(xs[:,0:2], vs[:,0:2]) * (u.kpc*u.km/u.s)
+    Lx = np.cross(xs[:,1:], vs[:,1:]) * (u.kpc*u.km/u.s)
 
-# def energies_angmom(t, xs, vs, mwdflag, mwhflag, lmcflag, motion):
+    Ly = (L**2 - Lx**2 - Lz**2)**0.5
     
-#     """
-#     calculate the energies and angular momenta of particles for a given time snapshot. Galactocentric frame.
-#     """
-#     # Kinetic energy
-#     Ek = (.5 * np.linalg.norm(vs, axis=1)**2) * (u.km/u.s)**2
-#     # Potential energy
-#     x0 = np.array(Model.expansion_centres(t))
-#     if motion == False:
-#         x0 *= 0 
-    
-#     x_lmc_GC = x0[6:9] - x0[:3]
-    
-#     pot_disk = Model.mwd_fields(t, 
-#                                 xs[:,0],
-#                                 xs[:,1],
-#                                 xs[:,2],
-#                                 mwdflag)[:,4]
-#     pot_halo = Model.mwhalo_fields(t, 
-#                                    xs[:,0],
-#                                    xs[:,1],
-#                                    xs[:,2],
-#                                    mwhflag)[:,4]
-#     pot_lmc = Model.lmc_fields(t, 
-#                                xs[:,0] - x_lmc_GC[0],
-#                                xs[:,1] - x_lmc_GC[1],
-#                                xs[:,2] - x_lmc_GC[2],
-#                                lmcflag)[:,4]
-#     Ep = (pot_disk + pot_halo + pot_lmc) * (u.km/u.s)**2
-#     E = Ek + Ep
-#     # Angular momentum
-#     L = np.linalg.norm(np.cross(xs, vs), axis=1) * (u.kpc*u.km/u.s)
-#     Lz = np.cross(xs[:,0:2], vs[:,0:2]) * (u.kpc*u.km/u.s)
-#     Lx = np.cross(xs[:,1:], vs[:,1:]) * (u.kpc*u.km/u.s)
-    
-#     return E, L, Lz, Lx
+    return E, L, Lx, Ly, Lz
 
-# def orbpole(xs,vs):
-#     uu = np.cross(xs, vs, axis=1)
-#     uumag = np.linalg.norm(uu, axis=1)
-#     u = uu.T/uumag
-#     b = np.arcsin(u[2])
-#     sinl = u[1]/np.cos(b)
-#     cosl = u[0]/np.cos(b)
-#     ll = np.arctan2(sinl, cosl)
-#     gl = np.degrees(ll)
-#     gb = np.degrees(b)
-#     return gl, gb    
+def orbpole(xs, vs):
+    uu = np.cross(xs, vs, axis=1)
+    uumag = np.linalg.norm(uu, axis=1)
+    u = uu.T/uumag
+    b = np.arcsin(u[2])
+    sinl = u[1]/np.cos(b)
+    cosl = u[0]/np.cos(b)
+    ll = np.arctan2(sinl, cosl)
+    gl = np.degrees(ll)
+    gb = np.degrees(b)
+    return gl, gb     
 
 def lons_lats(pos, vel):
     prog = gd.PhaseSpacePosition(pos[0] * u.kpc, vel[0] * u.km / u.s)
@@ -281,20 +262,24 @@ def lagrange_cloud_strip_adT(params, overwrite):
     print("Begining stream generation process...")
     mass_sat   = Mprog/mass_unit  # in Msun
     time_total = Tbegin/timeUnitGyr.value  # in time units (0.978 Gyr)
-    print(np.array(fc).shape)
     ts, orbit_sat, xv_stream, ic_stream = createStreamParticleSpray(time_total, 
                                                                     num_particles, 
                                                                     pot_frozen, 
                                                                     np.array(fc),
                                                                     mass_sat)
-    print("stream generated!")
-    xs, vs = xv_stream[:,:3], xv_stream[:,3:6] # only have the final snapshot
     
-    # print("calculating energies, angular momenta, velocity dispersion, LMC separation...")
-    # Es = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
-    # Ls = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
-    # Lzs = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
-    # Lxs = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
+    xv_prog_stream = np.concatenate([orbit_sat[0].reshape(1,6), xv_stream])
+    print("stream generated!")
+    xs, vs = xv_prog_stream[:,:3], xv_prog_stream[:,3:6] # only have the final snapshot
+    
+    print("calculating energies, angular momenta, velocity dispersion, orbital poles...")
+    Es = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
+    Ls = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
+    Lxs = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
+    Lys = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
+    Lzs = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
+    gls = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
+    gbs = np.full(shape=(1, xs.shape[0]), fill_value=np.nan)
     
     lons, lats = lons_lats(xs, vs)
     sigma_v = local_veldis(lons, vs)
@@ -302,20 +287,14 @@ def lagrange_cloud_strip_adT(params, overwrite):
     width, track_deform, grad_track_deform = widths_deforms(lons, lats)
     pm_angle = pm_misalignment(lons, xs, vs)
     
-    # gls  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
-    # gbs  =  np.full(shape=(len(xs_snaps), max_particles), fill_value=np.nan)
-    
-    # for i in range(1):
-    #     Es[i], Ls[i], Lzs[i], Lxs[i], = energies_angmom(ts, xs, vs, mwdflag, mwhflag, lmcflag, motion)
-    #     lmc_sep[i] = np.linalg.norm(Model.expansion_centres(ts_snaps[i])[6:9]) - np.linalg.norm(xs_snaps[i], axis=1)
-    #     gls[i], gbs[i] = orbpole(xs, vs)
-    
-    # print("calculating LMC closest approach over all particles (and times)...")
-    # lmc_close_sep = np.nanmin(lmc_sep, axis=0)
+    for i in range(1):
+        Es[i], Ls[i], Lxs[i], Lys[i], Lzs[i] = energies_angmom(xs, vs)
+        gls[i], gbs[i] = orbpole(xs, vs)
 
     write_stream_hdf5(outpath, filename, xs, vs, ts,
                       sigma_v, length, width, track_deform, grad_track_deform, pm_angle, fc, Mprog, a_s, 
-                      pericenter, apocenter)
+                      pericenter, apocenter,
+                     Es, Ls, Lxs, Lys, Lzs, gls, gbs)
 
 def readparams(paramfile):
     """
@@ -345,7 +324,8 @@ def readparams(paramfile):
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
                       sigma_v, length, width, track_deform, grad_track_deform, pm_angles, progics, progmass, progscale, 
-                      pericenter, apocenter):
+                      pericenter, apocenter,
+                     energies, Ls, Lxs, Lys, Lzs, gls, gbs):
     """
     Write stream into an hdf5 file
     
@@ -358,21 +338,23 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('positions', data=positions, shape=(tmax, particlemax, 3))
     hf.create_dataset('velocities', data=velocities, shape=(tmax, particlemax, 3))
     hf.create_dataset('times', data=times)
-    # hf.create_dataset('energies', data=energies)
-    # hf.create_dataset('L', data=Ls)
-    # hf.create_dataset('Lz', data=Lzs)
-    # hf.create_dataset('Lx', data=Lzs)
+    
+    hf.create_dataset('energies', data=energies)
+    hf.create_dataset('L', data=Ls)
+    hf.create_dataset('Lx', data=Lxs)
+    hf.create_dataset('Ly', data=Lys)
+    hf.create_dataset('Lz', data=Lzs)
+    
     hf.create_dataset('loc_veldis', data=sigma_v)
     hf.create_dataset('lengths', data=length)
     hf.create_dataset('widths', data=width)
     hf.create_dataset('track_deform', data=track_deform)
     hf.create_dataset('grad_track_deform', data=grad_track_deform)
     hf.create_dataset('pm_misalignment', data=pm_angles) 
-    # hf.create_dataset('av_lon', data=med_lon)
-    # hf.create_dataset('av_lat', data=med_lat)
-    # hf.create_dataset('lmc_sep', data=lmc_sep)
-    # hf.create_dataset('pole_l', data=gls)
-    # hf.create_dataset('pole_b', data=gbs)
+
+    hf.create_dataset('pole_l', data=gls)
+    hf.create_dataset('pole_b', data=gbs)
+    
     hf.create_dataset('progenitor-ics', data=progics)
     hf.create_dataset('progenitor-mass', data=progmass)
     hf.create_dataset('progenitor-scale', data=progscale)
