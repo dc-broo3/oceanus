@@ -1,4 +1,5 @@
 from scipy.spatial.transform import Rotation
+from scipy.stats import circstd
 import numpy as np
 import scipy
 import pathlib
@@ -200,7 +201,8 @@ def write_pltoutputs_hdf5(outpath, filename,
                          l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                          peris, apos,
                          widths, lengths, track_deform, grad_track_deform,
-                          pm_misalign, loc_veldis, masses):
+                          pm_misalign, loc_veldis, masses,
+                     pole_b_dis, pole_l_dis, energy, Ls, Lxs, Lys, Lzs):
     print("* Writing data...")
     
     hf = h5py.File(outpath + filename + ".hdf5", 'w')
@@ -222,7 +224,16 @@ def write_pltoutputs_hdf5(outpath, filename,
     
     hf.create_dataset('loc_veldis', data=loc_veldis)
     hf.create_dataset('pm_misalignment', data=pm_misalign)     
-    hf.create_dataset('mass', data=masses)           
+    hf.create_dataset('mass', data=masses)        
+             
+    hf.create_dataset('sigma_pole_l', data=pole_l_dis)
+    hf.create_dataset('sigma_pole_b', data=pole_b_dis)
+
+    hf.create_dataset('energies', data=energy)
+    hf.create_dataset('L', data=Ls)
+    hf.create_dataset('Lx', data=Lxs)
+    hf.create_dataset('Ly', data=Lys)
+    hf.create_dataset('Lz', data=Lzs)    
     hf.close()
 
 ###----------------------------------------------------------------------------------
@@ -237,10 +248,10 @@ widths, lengths, track_deforms, grad_track_deforms = [], [], [], []
 pm_angles = []
 # av_lon, av_lat = [], []
 loc_veldis = []
-# pole_b, pole_l = [], []
-# pole_b_dis, pole_l_dis = [], []
+pole_b, pole_l = [], []
+pole_b_dis, pole_l_dis = [], []
 masses = []
-# energy, Eks, Ls, Lzs = [], [], [], []
+energy, Ls, Lxs, Lys, Lzs = [], [], [], [], []
 
 # path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/1024-dthalfMyr-10rpmin-75ramax/'
 # path = '/mnt/ceph/users/rbrooks/oceanus/analysis/stream-runs/combined-files/16384-dt1Myr/'
@@ -262,7 +273,7 @@ for i in range(Nstreams):
         
         # if i ==0:
         #     filename_end = file['stream_{}'.format(i)]['potential'][()].decode('utf-8')
-        
+        # print(file['stream_{}'.format(i)].keys())
         pos = np.array(file['stream_{}'.format(i)]['positions'])[-1]
         vel = np.array(file['stream_{}'.format(i)]['velocities'])[-1]
         l, b, d,  pm_l_cosb, pm_b, rvs, sigma_rv = galactic_coords(pos, vel)
@@ -295,13 +306,17 @@ for i in range(Nstreams):
         
         # pole_b.append(np.array(file['stream_{}'.format(i)]['pole_b']))
         # pole_l.append(np.array(file['stream_{}'.format(i)]['pole_l']))
-        # pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])))
-        # pole_l_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_l'])))
+        stream_lpoles = np.array(file['stream_{}'.format(i)]['pole_l'])[-1]
+        pole_l_std = circstd(stream_lpoles, high=180, low=-180, nan_policy='omit')
+        pole_l_dis.append(pole_l_std)
+        pole_b_dis.append(np.nanstd(np.array(file['stream_{}'.format(i)]['pole_b'])))
         
         masses.append(np.array(file['stream_{}'.format(i)]['progenitor-mass']))
-        # energy.append(np.array(file['stream_{}'.format(i)]['energies'])[-1, 0])
-        # Ls.append(np.array(file['stream_{}'.format(i)]['L'])[-1, 0])
-        # Lzs.append(np.array(file['stream_{}'.format(i)]['Lz'])[-1, 0])
+        energy.append(np.nanmedian(np.array(file['stream_{}'.format(i)]['energies'])[-1, 0]))
+        Ls.append(np.array(file['stream_{}'.format(i)]['L'])[-1, 0])
+        Lxs.append(np.array(file['stream_{}'.format(i)]['Lx'])[-1, 0])
+        Lys.append(np.array(file['stream_{}'.format(i)]['Ly'])[-1, 0])
+        Lzs.append(np.array(file['stream_{}'.format(i)]['Lz'])[-1, 0])
         
         # Ek_prog = (.5 * np.linalg.norm(vel[0], axis=0)**2)
         # Eks.append(Ek_prog)
@@ -325,4 +340,5 @@ write_pltoutputs_hdf5(out_path, filename_end,
                       l_gc, b_gc, ds, pm_l_cosb_gc, pm_b_gc, vlos, sigma_los,
                       peris, apos,
                      widths, lengths, track_deforms, grad_track_deforms,
-                      pm_angles, loc_veldis, masses)
+                      pm_angles, loc_veldis, masses,
+                     pole_b_dis, pole_l_dis, energy, Ls, Lxs, Lys, Lzs)

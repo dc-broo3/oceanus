@@ -109,7 +109,7 @@ v1_disc = np.array([disc_lpole, disc_bpole])
 v2 = np.array([0, 90])
 rotation_matrix_disc = rotation_matrix_from_vectors(v1_disc, v2)
 
-def plot_metric_QUAD(ax, indices_in_bins, metric, threshold, y_label, title, colors, labels, bin_mids, mask_idx):
+def plot_metric_QUAD(ax, indices_in_bins, metric, threshold, ylim_up, y_label, title, colors, labels, bin_mids, mask_idx):
     ax.tick_params(axis='x',which='both', top=False)
     
     frac = []
@@ -141,7 +141,7 @@ def plot_metric_QUAD(ax, indices_in_bins, metric, threshold, y_label, title, col
     ax.set_xlabel(r'$E\,[10^{4}\,(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=12)
     ax.set_ylabel(y_label, fontsize=12)
     ax.set_xlim(-9.99, -4.21)
-    ax.set_ylim(-0.02, 1.02)
+    ax.set_ylim(-0.02, ylim_up)
     ax.set_title(title, fontsize=14)
     if mask_idx==0:
         secax = ax.secondary_xaxis('top', functions=(interp_E_to_r, interp_r_to_E))
@@ -808,7 +808,7 @@ def fig4(path, plotname, savefig=False):
  
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
  
         else:
@@ -833,7 +833,7 @@ def fig4(path, plotname, savefig=False):
  
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
  
         else:
@@ -857,7 +857,7 @@ def fig4(path, plotname, savefig=False):
         
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
         
         else:
@@ -882,7 +882,7 @@ def fig4(path, plotname, savefig=False):
  
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
  
         else:
@@ -910,7 +910,7 @@ def fig4(path, plotname, savefig=False):
  
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
  
         else:
@@ -934,7 +934,7 @@ def fig4(path, plotname, savefig=False):
  
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D',  ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
  
         else:
@@ -958,7 +958,7 @@ def fig4(path, plotname, savefig=False):
  
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
  
         else:
@@ -982,7 +982,7 @@ def fig4(path, plotname, savefig=False):
  
         elif j==7:
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr,  marker='D', ecolor='k',
-                 capsize=5, mfc='k', mec='k', ms=6, zorder=1)
+                 capsize=5, mfc='white', markeredgewidth=1.5, mec='k', ms=6, zorder=1)
             plt.errorbar(xaxis_loc[j], mu, yerr=yerr_II, marker='None', ecolor='k',capsize=5, color='None', alpha=0.5, zorder=1)
  
         else:
@@ -1039,7 +1039,7 @@ def fig5(path_data, pots, pot_labels, plotname, savefig=False):
         indices_in_bins = [np.where((energies / 1e4 >= bins[i]) & (energies / 1e4 < bins[i + 1]))[0] for i in range(len(bins) - 1)]
         
       
-        def plot_metric(ax, metric, threshold, y_label, title):
+        def plot_metric(ax, metric, threshold, ylim_up, y_label, title):
             ax.tick_params(axis='x',which='both', top=False)
 
             frac = []
@@ -1074,7 +1074,7 @@ def fig5(path_data, pots, pot_labels, plotname, savefig=False):
             plt.xlabel(r'$E\,[10^{4}\,(\mathrm{km}\,\mathrm{s}^{-1})^2]$', fontsize=12)
             plt.ylabel(y_label, fontsize=12)
             plt.xlim(-9.99,-4.21)
-            plt.ylim(-0.02, 1.02)
+            plt.ylim(-0.02, ylim_up)
             plt.title(title, fontsize=14, fontweight='bold')
             
             if j==0:
@@ -1087,19 +1087,19 @@ def fig5(path_data, pots, pot_labels, plotname, savefig=False):
         # plt.legend(frameon=False, ncol=2, bbox_to_anchor=(2.3, 1.85), fontsize=13)
 
         plt.sca(axs[0, 0])
-        plot_metric(axs[0, 0], track_deform, 2, r'$f\left(E\,;\,\bar{\delta} > 2^{\circ} \right)$', 'Deviation from Great Circle')
+        plot_metric(axs[0, 0], track_deform, 2, 0.52, r'$f\left(E\,;\,\bar{\delta} > 2^{\circ} \right)$', 'Deviation from Great Circle')
     
         plt.sca(axs[0, 1])
-        plot_metric(axs[0, 1], pm_ang, 10, r'$f\left(E\,;\,\bar{\vartheta} > 10^{\circ} \right)$', 'Proper motion misalignment')
+        plot_metric(axs[0, 1], pm_ang, 10, 1.02, r'$f\left(E\,;\,\bar{\vartheta} > 10^{\circ} \right)$', 'Proper motion misalignment')
 
         plt.sca(axs[1, 0])
-        plot_metric(axs[1, 0], l_pole_std, 2, r'$f\left(E\,;\,\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}}) > 2^{\circ} \right)$', 'Longitudinal pole spread')
+        plot_metric(axs[1, 0], l_pole_std, 2, 1.02, r'$f\left(E\,;\,\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}}) > 2^{\circ} \right)$', 'Longitudinal pole spread')
 
         plt.sca(axs[1, 1])
-        plot_metric(axs[1, 1], b_pole_std, 2, r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Latitudinal pole spread')
+        plot_metric(axs[1, 1], b_pole_std, 2, 0.7, r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Latitudinal pole spread')
         
         plt.sca(axs[2, 0])
-        plot_metric(axs[2, 0], widths, 0.5, r'$f\left(E\,;\,w > 0.5^{\circ} \right)$', 'Width')
+        plot_metric(axs[2, 0], widths, 0.5, 1.02, r'$f\left(E\,;\,w > 0.5^{\circ} \right)$', 'Width')
         plt.legend(frameon=False, ncol=1, bbox_to_anchor=(1.2, 1.15), fontsize=12)
        
     axs[2, 1].set_visible(False)
@@ -1173,23 +1173,23 @@ def fig6(path_data, potl, real_data, pot_name, labels, plotname, savefig=False):
         #             colors, labels, bin_mids, m)
         
       
-        plot_metric_QUAD(ax[0, 0], indices_in_bins, track_deform[masks[m]], 2,
+        plot_metric_QUAD(ax[0, 0], indices_in_bins, track_deform[masks[m]], 2, 0.52,
                     r'$f\left(E\,;\,\bar{\delta} > 2^{\circ} \right)$', 'Deviation from Great Circle',
                     colors, labels, bin_mids, m)
         
-        plot_metric_QUAD(ax[0, 1], indices_in_bins, pm_ang[masks[m]], 10,
+        plot_metric_QUAD(ax[0, 1], indices_in_bins, pm_ang[masks[m]], 10, 1.02,
                     r'$f\left(E\,;\,\bar{\vartheta} > 10^{\circ} \right)$', 'Proper motion misalignment',
                     colors, labels, bin_mids, m)
         
-        plot_metric_QUAD(ax[1, 0], indices_in_bins, l_pole_std[masks[m]], 2,
+        plot_metric_QUAD(ax[1, 0], indices_in_bins, l_pole_std[masks[m]], 2, 1.02, 
                     r'$f\left(E\,;\,\sigma_{l^{\prime}\,{\mathrm{pole}}} \cos(b^{\prime}_{\mathrm{pole}}) > 2^{\circ} \right)$', 'Longitudinal pole spread',
                     colors, labels, bin_mids, m)
         
-        plot_metric_QUAD(ax[1, 1], indices_in_bins, b_pole_std[masks[m]], 2,
+        plot_metric_QUAD(ax[1, 1], indices_in_bins, b_pole_std[masks[m]], 2, 0.7,
                     r'$f\left(E\,;\,\sigma_{b^{\prime},\,\mathrm{pole}} > 2^{\circ} \right)$', 'Latitudinal pole spread',
                     colors, labels, bin_mids, m)
         
-        plot_metric_QUAD(ax[2, 0], indices_in_bins, widths[masks[m]], 0.5,
+        plot_metric_QUAD(ax[2, 0], indices_in_bins, widths[masks[m]], 0.5, 1.02,
                     r'$f\left(E\,;\,w > 0.5^{\circ} \right)$', 'Width', colors, labels, bin_mids, m)
 
         ax[2, 1].set_visible(False)
@@ -1502,7 +1502,7 @@ plotname_fig3 = 'fig3'
 ### Figure 4 
 print("Plotting figure 4...")
 plotname_fig4 = 'fig4' 
-fig4(data_path, plotname_fig4, True)
+# fig4(data_path, plotname_fig4, True)
 
 ### Figure 5
 print("Plotting figure 5...")
@@ -1511,15 +1511,16 @@ potentials_fig5 = list(['rigid-mw.hdf5','static-mw.hdf5', 'rm-MWhalo-full-MWdisc
                 'full-MWhalo-full-MWdisc-no-LMC.hdf5', 'full-MWhalo-full-MWdisc-full-LMC.hdf5'])
 labels_fig5 = list(['Rigid MW without motion (no LMC)', 'Rigid MW + motion (no LMC)', 'Rigid Monopole \& LMC', 'Evolving Monopole \& LMC', \
        'Monopole + Dipole \& LMC', 'Monopole + Quadrupole \& LMC', 'Monopole + Dipole + Quadrupole \& LMC', 'Full Expansion (no LMC)', 'Full Expansion \& LMC'])
-# fig5(data_path, potentials_fig5, labels_fig5, 'fig4', True)
+fig5(data_path, potentials_fig5, labels_fig5, 'fig5', True)
 
 ### Figure 6
 print("Plotting figure 6...")
-potential_fig5 = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
-potential_name_fig5 = 'Full Expansion \& LMC'
-labels_fig5 = list(['Q1','Q2','Q3','Q4'])
-# fig6(data_path, potential_fig6, potential_name_fig6, labels_fig6, 'fig5', True)
-# fig6(data_path, potential_fig6, DES_plot_data, potential_name_fig6, labels_fig6, 'fig5', True)
+potential_fig6 = 'full-MWhalo-full-MWdisc-full-LMC.hdf5'
+potential_name_fig6 = 'Full Expansion \& LMC'
+# potential_fig6 = 'full-MWhalo-full-MWdisc-no-LMC.hdf5'
+# potential_name_fig6 = 'Full Expansion (no LMC)'
+labels_fig6 = list(['Q1','Q2','Q3','Q4'])
+# fig6(data_path, potential_fig6, DES_plot_data, potential_name_fig6, labels_fig6, 'fig6', True)
 
 
 ### Figure 7
@@ -1529,4 +1530,4 @@ pots_fig7 = list(['full-MWhalo-full-MWdisc-full-LMC.hdf5', 'full-MWhalo-full-MWd
                  'rm-MWhalo-full-MWdisc-full-LMC.hdf5'])
 quadlabels_fig7 = list(['Q4 Full Expansion \& LMC','Q4 Full Expansion (no LMC)','Q4 Rigid Monopole \& LMC'])
 
-# fig6(data_path, pots_fig7, DES_plot_data, quadlabels_fig7, 'fig7', True)
+# fig7(data_path, pots_fig7, DES_plot_data, quadlabels_fig7, 'fig7', True)
