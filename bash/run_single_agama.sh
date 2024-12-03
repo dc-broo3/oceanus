@@ -27,5 +27,5 @@ VENVDIR=/mnt/home/rbrooks/ceph/venvs
 source $VENVDIR/mwlmc_venv/bin/activate
 
 pipeline=/mnt/home/rbrooks/ceph/oceanus/src/streamgen-agama.py
-param=/mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/orphan.yaml
+param=/mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/agama-mw/param_396.yaml
 python3 $pipeline -o -f $param

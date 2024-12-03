@@ -3,8 +3,8 @@ inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/mq-mwh-full-mwd-full-lmc"
 outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/mq-mwh-full-mwd-full-lmc/"
 Tbegin : -5.0
 Tfinal :  0.  
-dtmin  : 0.0005
-strip_rate : 2
+dtmin  : 0.001
+strip_rate : 4
 haloflag : 2
 lmcflag : 63
 discflag : 63

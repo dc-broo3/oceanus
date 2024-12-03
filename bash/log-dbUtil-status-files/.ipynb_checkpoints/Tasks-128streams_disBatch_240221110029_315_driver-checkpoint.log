@@ -1,0 +1,825 @@
+2024-02-21 11:00:29,126 INFO     DisBatch       : Starting feeder (590232) on worker3027 in /mnt/ceph/users/rbrooks/oceanus/bash.
+2024-02-21 11:00:29,126 INFO     DisBatch       : Args: ['/cm/local/apps/slurm/var/spool/job3218277/slurm_script', '-e', '--mailFreq', '128', '--mailTo', 'rbrooks@flatironinstitute.org', '-p', './log-dbUtil-status-files/', 'Tasks-128streams']
+2024-02-21 11:00:29,127 INFO     DisBatch       : Env: environ({'SLURM_MPI_TYPE': 'pmi2', 'LS_COLORS': 'rs=0:di=38;5;33:ln=38;5;51:mh=00:pi=40;38;5;11:so=38;5;13:do=38;5;5:bd=48;5;232;38;5;11:cd=48;5;232;38;5;3:or=48;5;232;38;5;9:mi=01;05;37;41:su=48;5;196;38;5;15:sg=48;5;11;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;21;38;5;15:ex=38;5;40:*.tar=38;5;9:*.tgz=38;5;9:*.arc=38;5;9:*.arj=38;5;9:*.taz=38;5;9:*.lha=38;5;9:*.lz4=38;5;9:*.lzh=38;5;9:*.lzma=38;5;9:*.tlz=38;5;9:*.txz=38;5;9:*.tzo=38;5;9:*.t7z=38;5;9:*.zip=38;5;9:*.z=38;5;9:*.dz=38;5;9:*.gz=38;5;9:*.lrz=38;5;9:*.lz=38;5;9:*.lzo=38;5;9:*.xz=38;5;9:*.zst=38;5;9:*.tzst=38;5;9:*.bz2=38;5;9:*.bz=38;5;9:*.tbz=38;5;9:*.tbz2=38;5;9:*.tz=38;5;9:*.deb=38;5;9:*.rpm=38;5;9:*.jar=38;5;9:*.war=38;5;9:*.ear=38;5;9:*.sar=38;5;9:*.rar=38;5;9:*.alz=38;5;9:*.ace=38;5;9:*.zoo=38;5;9:*.cpio=38;5;9:*.7z=38;5;9:*.rz=38;5;9:*.cab=38;5;9:*.wim=38;5;9:*.swm=38;5;9:*.dwm=38;5;9:*.esd=38;5;9:*.jpg=38;5;13:*.jpeg=38;5;13:*.mjpg=38;5;13:*.mjpeg=38;5;13:*.gif=38;5;13:*.bmp=38;5;13:*.pbm=38;5;13:*.pgm=38;5;13:*.ppm=38;5;13:*.tga=38;5;13:*.xbm=38;5;13:*.xpm=38;5;13:*.tif=38;5;13:*.tiff=38;5;13:*.png=38;5;13:*.svg=38;5;13:*.svgz=38;5;13:*.mng=38;5;13:*.pcx=38;5;13:*.mov=38;5;13:*.mpg=38;5;13:*.mpeg=38;5;13:*.m2v=38;5;13:*.mkv=38;5;13:*.webm=38;5;13:*.ogm=38;5;13:*.mp4=38;5;13:*.m4v=38;5;13:*.mp4v=38;5;13:*.vob=38;5;13:*.qt=38;5;13:*.nuv=38;5;13:*.wmv=38;5;13:*.asf=38;5;13:*.rm=38;5;13:*.rmvb=38;5;13:*.flc=38;5;13:*.avi=38;5;13:*.fli=38;5;13:*.flv=38;5;13:*.gl=38;5;13:*.dl=38;5;13:*.xcf=38;5;13:*.xwd=38;5;13:*.yuv=38;5;13:*.cgm=38;5;13:*.emf=38;5;13:*.ogv=38;5;13:*.ogx=38;5;13:*.aac=38;5;45:*.au=38;5;45:*.flac=38;5;45:*.m4a=38;5;45:*.mid=38;5;45:*.midi=38;5;45:*.mka=38;5;45:*.mp3=38;5;45:*.mpc=38;5;45:*.ogg=38;5;45:*.ra=38;5;45:*.wav=38;5;45:*.oga=38;5;45:*.opus=38;5;45:*.spx=38;5;45:*.xspf=38;5;45:', 'LD_LIBRARY_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/lib:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib64:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib64:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib64:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib:/cm/shared/apps/slurm/current/lib64:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib', 'SRUN_DEBUG': '3', 'LMOD_SITE_MODULEPATH': '/mnt/sw/lmod/x86_64/rocky8/modules', 'SLURM_STEP_ID': '0', 'TCLLIBPATH': '/mnt/sw/nix/store/ji8vlirp8iqw3iwpjxiv3hr14s970cz5-tk-8.6.11/lib', 'SLURM_NODEID': '0', 'SLURM_TASK_PID': '590232', '__LMOD_REF_COUNT_GSL_BASE': '/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1:1', '__LMOD_REF_COUNT_PATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch:1;/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/bin:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/bin:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/bin:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/bin:1;/cm/shared/apps/slurm/current/bin:1;/mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/bin:1;/usr/lib64/ccache:1;/usr/local/bin:1;/usr/bin:1;/usr/local/sbin:1;/usr/sbin:1;/opt/dell/srvadmin/bin:1;/mnt/home/rbrooks/.local/bin:1', '_ModuleTable002_': 'dG9yZS8zazU0bmxmYTZrYTloZzZ5anNxZ2NxYnppcWpweGlway1tb2R1bGVzL2xpbnV4LXJvY2t5OC14ODZfNjQvQ29yZS9nY2MvMTEuNC4wLmx1YSIsCmZ1bGxOYW1lID0gImdjYy8xMS40LjAiLApsb2FkT3JkZXIgPSA0LApwcm9wVCA9IHt9LApzdGFja0RlcHRoID0gMCwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gImdjYyIsCndWID0gIl4wMDAwMDAxMS4wMDAwMDAwMDQuKnpmaW5hbCIsCn0sCmdzbCA9IHsKZm4gPSAiL21udC9zdy9uaXgvc3RvcmUvM2s1NG5sZmE2a2E5aGc2eWpzcWdjcWJ6aXFqcHhpcGstbW9kdWxlcy9saW51eC1yb2NreTgteDg2XzY0L0NvcmUvZ3NsLzIuNy4xLmx1YSIsCmZ1bGxOYW1lID0gImdzbC8yLjcuMSIsCmxvYWRPcmRlciA9IDUs', 'SSH_CONNECTION': '10.128.46.167 57634 10.250.144.1 22', 'SLURM_PRIO_PROCESS': '0', 'SLURM_CPU_BIND_VERBOSE': 'quiet', '__LMOD_REF_COUNT_C_INCLUDE_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/include:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/include:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/include:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/include:1;/cm/shared/apps/slurm/current/include:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include:1', 'LANG': 'en_US.UTF-8', 'MODULEPATH_BASE': '/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64', 'SLURM_SUBMIT_DIR': '/mnt/ceph/users/rbrooks/oceanus/bash', 'HISTCONTROL': 'ignoredups', '_ModuleTable008_': 'MXEtbG1vZC04LjYuNS9sbW9kL2xtb2QvbW9kdWxlZmlsZXMvQ29yZSIsCn0sCnN5c3RlbUJhc2VNUEFUSCA9ICIvbW50L3N3L2xtb2QveDg2XzY0L3JvY2t5OC9tb2R1bGVzOi9tbnQvc3cvbml4L3N0b3JlL3gyNDB6Y2kzYzR5NWticjZ5dzJxY2ZwZmN5ZGRhMTFxLWxtb2QtOC42LjUvbW9kdWxlZmlsZXMvTGludXg6L21udC9zdy9uaXgvc3RvcmUveDI0MHpjaTNjNHk1a2JyNnl3MnFjZnBmY3lkZGExMXEtbG1vZC04LjYuNS9tb2R1bGVmaWxlcy9Db3JlOi9tbnQvc3cvbml4L3N0b3JlL3gyNDB6Y2kzYzR5NWticjZ5dzJxY2ZwZmN5ZGRhMTFxLWxtb2QtOC42LjUvbG1vZC9sbW9kL21vZHVsZWZpbGVzL0NvcmUiLAp9Cg==', '__LMOD_REF_COUNT_PYTHON_ROOT': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view:1', 'FLEXIBLAS_LIBRARY_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib', 'PMI_SIZE': '128', 'HOSTNAME': 'worker3027', 'LMOD_SYSTEM_DEFAULT_MODULES': 'modules:slurm:openblas', 'OLDPWD': '/mnt/home/rbrooks/ceph', '__LMOD_REF_COUNT__LMFILES_': '/mnt/sw/lmod/x86_64/rocky8/modules/modules/2.2-20230808.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/openblas/threaded-0.3.23.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/slurm.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/gcc/11.4.0.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/gsl/2.7.1.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/hdf5/1.10.9.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/python/3.10.10.lua:1;/mnt/sw/lmod/x86_64/rocky8/modules/disBatch/beta.lua:1', 'C_INCLUDE_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/include:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/include:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/include:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/include:/cm/shared/apps/slurm/current/include:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include', 'SLURM_STEPID': '0', 'SLURM_SRUN_COMM_HOST': '10.250.144.1', 'HDF5_ROOT': '/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9', '__LMOD_SET_FPATH': '1', 'FPATH': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/init/ksh_funcs', '_ModuleTable007_': 'bHVybSIsCndWID0gIk0uKnpmaW5hbCIsCn0sCn0sCm1wYXRoQSA9IHsKIi9tbnQvc3cvbml4L3N0b3JlLzNrNTRubGZhNmthOWhnNnlqc3FnY3FiemlxanB4aXBrLW1vZHVsZXMvbGludXgtcm9ja3k4LXg4Nl82NC9Db3JlIgosICIvbW50L3N3L2xtb2QveDg2XzY0L3JvY2t5OC9tb2R1bGVzIgosICIvbW50L3N3L25peC9zdG9yZS94MjQwemNpM2M0eTVrYnI2eXcycWNmcGZjeWRkYTExcS1sbW9kLTguNi41L21vZHVsZWZpbGVzL0xpbnV4IgosICIvbW50L3N3L25peC9zdG9yZS94MjQwemNpM2M0eTVrYnI2eXcycWNmcGZjeWRkYTExcS1sbW9kLTguNi41L21vZHVsZWZpbGVzL0NvcmUiLCAiL21udC9zdy9uaXgvc3RvcmUveDI0MHpjaTNjNHk1a2JyNnl3MnFjZnBmY3lkZGEx', '__LMOD_REF_COUNT_CPLUS_INCLUDE_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/include:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/include:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/include:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/include:1;/cm/shared/apps/slurm/current/include:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include:1', 'KDEDIRS': '/usr', 'SLURM_PROCID': '0', 'SLURM_JOB_GID': '2479', 'LMOD_RC': '/mnt/sw/lmod/lmodrc.lua', '__LMOD_REF_COUNT_LD_LIBRARY_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/lib:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib64:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib64:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib64:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib:1;/cm/shared/apps/slurm/current/lib64:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib:2', '__LMOD_REF_COUNT_PKG_CONFIG_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/share/pkgconfig:1;/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/lib/pkgconfig:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib64/pkgconfig:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib/pkgconfig:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib64/pkgconfig:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib/pkgconfig:1;/cm/shared/apps/slurm/current/lib64/pkgconfig:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib/pkgconfig:1', 'SLURM_CPU_BIND': 'quiet,none', 'OPENBLAS_BASE': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23', 'SLURMD_NODENAME': 'worker3027', '__LMOD_REF_COUNT_SLURM_BASE': '/cm/shared/apps/slurm/current:1', '_ModuleTable004_': 'Cn0sCm1vZHVsZXMgPSB7CmZuID0gIi9tbnQvc3cvbG1vZC94ODZfNjQvcm9ja3k4L21vZHVsZXMvbW9kdWxlcy8yLjItMjAyMzA4MDgubHVhIiwKZnVsbE5hbWUgPSAibW9kdWxlcy8yLjItMjAyMzA4MDgiLApsb2FkT3JkZXIgPSAxLApwcm9wVCA9IHsKbG1vZCA9IHsKc3RpY2t5ID0gMSwKfSwKfSwKc3RhY2tEZXB0aCA9IDAsCnN0YXR1cyA9ICJhY3RpdmUiLAp1c2VyTmFtZSA9ICJtb2R1bGVzIiwKd1YgPSAiXjAwMDAwMDAyLjAwMDAwMDAwMi4qemZpbmFsLS4wMjAyMzA4MDguKnpmaW5hbCIsCn0sCm9wZW5ibGFzID0gewpmbiA9ICIvbW50L3N3L25peC9zdG9yZS8zazU0bmxmYTZrYTloZzZ5anNxZ2NxYnppcWpweGlway1tb2R1bGVzL2xpbnV4LXJvY2t5OC14ODZfNjQv', 'VIRTUAL_ENV': '/mnt/home/rbrooks/ceph/venvs/mwlmc_venv', '__LMOD_REF_COUNT_HDF5_BASE': '/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9:1', 'SLURM_TASKS_PER_NODE': '32(x4)', '__LMOD_REF_COUNT_PYTHONPATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch:1', 'S_COLORS': 'auto', 'LMOD_FAMILY_BLAS': 'openblas', 'which_declare': 'declare -f', 'PYTHON_ROOT': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view', 'XDG_SESSION_ID': 'c48458', 'SLURM_NNODES': '4', 'USER': 'rbrooks', 'SLURM_LAUNCH_NODE_IPADDR': '10.250.144.1', '__LMOD_REF_COUNT_SLURM_ROOT': '/cm/shared/apps/slurm/current:1', 'LMOD_FAMILY_BLAS_VERSION': 'threaded-0.3.23', 'SLURM_STEP_TASKS_PER_NODE': '128', '__LMOD_REF_COUNT_MODULEPATH': '/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core:1;/mnt/sw/lmod/x86_64/rocky8/modules:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Linux:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Core:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/modulefiles/Core:1', '__LMOD_REF_COUNT_OPENBLAS_BASE': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23:1', '__LMOD_REF_COUNT_LOADEDMODULES': 'modules/2.2-20230808:1;openblas/threaded-0.3.23:1;slurm:1;gcc/11.4.0:1;gsl/2.7.1:1;hdf5/1.10.9:1;python/3.10.10:1;disBatch/beta:1', '__LMOD_REF_COUNT_GCC_ROOT': '/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0:1', '__LMOD_REF_COUNT_GCC_BASE': '/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0:1', 'PWD': '/mnt/home/rbrooks/ceph/oceanus/bash', '__LMOD_REF_COUNT_PYTHON_BASE': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view:1', 'ENABLE_LMOD': '1', 'SLURM_JOB_NODELIST': 'worker[3027-3030]', 'GCC_ROOT': '/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0', 'HOME': '/mnt/home/rbrooks', 'PMI_FD': '11', 'SLURM_CLUSTER_NAME': 'slurm', 'CMAKE_PREFIX_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0:/cm/shared/apps/slurm/current:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23', 'SLURM_NODELIST': 'worker[3027-3030]', 'SSH_CLIENT': '10.128.46.167 57634 22', 'LMOD_VERSION': '8.6.5', 'SLURM_NTASKS': '128', 'GSL_BASE': '/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1', 'LMOD_SITE_MSG_FILE': '/mnt/sw/lmod/site_msg.lua', 'SLURM_JOB_CPUS_PER_NODE': '40(x4)', 'BASH_ENV': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/init/bash', 'XDG_DATA_DIRS': '/usr/share', 'SLURM_TOPOLOGY_ADDR': 'worker3027', 'GCC_BASE': '/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0', 'FLEXIBLAS': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib/libopenblas.so', 'SLURM_WORKING_CLUSTER': 'slurm:rusty-mgr1:6800:9728:109', '__LMOD_REF_COUNT_LIBRARY_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/lib:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib64:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib64:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib64:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib:1;/cm/shared/apps/slurm/current/lib64:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib:1', 'SLURM_STEP_NODELIST': 'worker5051', 'SLURM_JOB_NAME': 'disBatch', 'SLURM_SRUN_COMM_PORT': '44595', 'TMPDIR': '/tmp', 'LIBRARY_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/lib:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib64:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib64:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib64:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/lib:/cm/shared/apps/slurm/current/lib64:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib', '__LMOD_REF_COUNT_CMAKE_PREFIX_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view:1;/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0:1;/cm/shared/apps/slurm/current:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23:1', 'LMOD_sys': 'Linux', 'SLURM_JOBID': '3218277', '_ModuleTable001_': 'X01vZHVsZVRhYmxlXyA9IHsKTVR2ZXJzaW9uID0gMywKY19yZWJ1aWxkVGltZSA9IDcyMDAuMCwKY19zaG9ydFRpbWUgPSAwLjAwMDg1NzgzMDA0NzYwNzQyLApkZXB0aFQgPSB7fSwKZmFtaWx5ID0gewpibGFzID0gIm9wZW5ibGFzIiwKfSwKbVQgPSB7CmRpc0JhdGNoID0gewpmbiA9ICIvbW50L3N3L2xtb2QveDg2XzY0L3JvY2t5OC9tb2R1bGVzL2Rpc0JhdGNoL2JldGEubHVhIiwKZnVsbE5hbWUgPSAiZGlzQmF0Y2gvYmV0YSIsCmxvYWRPcmRlciA9IDgsCnByb3BUID0ge30sCnN0YWNrRGVwdGggPSAwLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAiZGlzQmF0Y2giLAp3ViA9ICJeYmV0YS4qemZpbmFsIiwKfSwKZ2NjID0gewpmbiA9ICIvbW50L3N3L25peC9z', 'SLURM_CONF': '/cm/shared/apps/slurm/var/etc/slurm/slurm.conf', 'LOADEDMODULES': 'modules/2.2-20230808:openblas/threaded-0.3.23:slurm:gcc/11.4.0:gsl/2.7.1:hdf5/1.10.9:python/3.10.10:disBatch/beta', '__LMOD_REF_COUNT_GSL_ROOT': '/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1:1', 'LMOD_AVAIL_STYLE': 'system:<trim>:group', '__LMOD_REF_COUNT_ACLOCAL_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/share/aclocal:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/share/aclocal:1', '__LMOD_REF_COUNT_MANPATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/share/man:1;/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/man:1;/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/share/man:1;/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/share/man:1;/cm/shared/apps/slurm/current/man:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/share/man:1;/usr/local/share/man:1;/usr/share/man:1;/cm/local/apps/environment-modules/current/share/man:1', '_ModuleTable006_': 'PSAicHl0aG9uLzMuMTAuMTAiLApsb2FkT3JkZXIgPSA3LApwcm9wVCA9IHt9LApzdGFja0RlcHRoID0gMCwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gInB5dGhvbiIsCndWID0gIl4wMDAwMDAwMy4wMDAwMDAwMTAuMDAwMDAwMDEwLip6ZmluYWwiLAp9LApzbHVybSA9IHsKZm4gPSAiL21udC9zdy9uaXgvc3RvcmUvM2s1NG5sZmE2a2E5aGc2eWpzcWdjcWJ6aXFqcHhpcGstbW9kdWxlcy9saW51eC1yb2NreTgteDg2XzY0L0NvcmUvc2x1cm0ubHVhIiwKZnVsbE5hbWUgPSAic2x1cm0iLApsb2FkT3JkZXIgPSAzLApwcm9wVCA9IHsKbG1vZCA9IHsKc3RpY2t5ID0gMSwKfSwKfSwKc3RhY2tEZXB0aCA9IDAsCnN0YXR1cyA9ICJhY3RpdmUiLAp1c2VyTmFtZSA9ICJz', 'VIRTUAL_ENV_PROMPT': '(mwlmc_venv) ', '_ModuleTable003_': 'CnByb3BUID0ge30sCnN0YWNrRGVwdGggPSAwLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAiZ3NsIiwKd1YgPSAiMDAwMDAwMDAyLjAwMDAwMDAwNy4wMDAwMDAwMDEuKnpmaW5hbCIsCn0sCmhkZjUgPSB7CmZuID0gIi9tbnQvc3cvbml4L3N0b3JlLzNrNTRubGZhNmthOWhnNnlqc3FnY3FiemlxanB4aXBrLW1vZHVsZXMvbGludXgtcm9ja3k4LXg4Nl82NC9Db3JlL2hkZjUvMS4xMC45Lmx1YSIsCmZ1bGxOYW1lID0gImhkZjUvMS4xMC45IiwKbG9hZE9yZGVyID0gNiwKcHJvcFQgPSB7fSwKc3RhY2tEZXB0aCA9IDAsCnN0YXR1cyA9ICJhY3RpdmUiLAp1c2VyTmFtZSA9ICJoZGY1IiwKd1YgPSAiXjAwMDAwMDAxLjAwMDAwMDAxMC4wMDAwMDAwMDkuKnpmaW5hbCIs', 'SLURM_ROOT': '/cm/shared/apps/slurm/current', 'SLURM_JOB_QOS': 'gen', 'LMOD_ROOT': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod', 'SLURM_TOPOLOGY_ADDR_PATTERN': 'node', 'SSH_TTY': '/dev/pts/96', 'OPENBLAS_ROOT': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23', 'MAIL': '/var/spool/mail/rbrooks', 'GSL_ROOT': '/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1', 'SLURM_CPUS_ON_NODE': '40', 'SLURM_JOB_NUM_NODES': '4', '__Init_Default_Modules': '1', 'CMD_WLM_CLUSTER_NAME': 'slurm', 'SHELL': '/bin/bash', 'TERM': 'xterm-256color', 'LMOD_ADMIN_FILE': '/mnt/sw/lmod/admin.list', 'SLURM_JOB_UID': '2479', '_ModuleTable_Sz_': '8', 'SLURM_JOB_PARTITION': 'gen', 'SLURM_PTY_WIN_ROW': '51', '__LMOD_REF_COUNT_HDF5_ROOT': '/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9:1', 'SLURM_CPU_BIND_LIST': '', 'SLURM_BASE': '/cm/shared/apps/slurm/current', 'SLURM_JOB_USER': 'rbrooks', 'SLURM_PTY_WIN_COL': '108', '__LMOD_REF_COUNT_OPENBLAS_ROOT': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23:1', 'PMI_JOBID': '3218231.0', 'SLURM_NPROCS': '128', 'SHLVL': '2', 'SLURM_SUBMIT_HOST': 'worker5051', 'PYTHONPATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch', 'SLURM_JOB_ACCOUNT': 'cca', 'ACLOCAL_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/share/aclocal:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/share/aclocal', 'MANPATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/share/man:/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/man:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/share/man:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/share/man:/cm/shared/apps/slurm/current/man:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/share/man:/usr/local/share/man:/usr/share/man:/cm/local/apps/environment-modules/current/share/man::/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/man:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/share/man:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/share/man:/cm/shared/apps/slurm/current/man:/usr/local/share/man:/usr/share/man:/opt/dell/srvadmin/share/man:/cm/local/apps/environment-modules/current/share/man', 'SLURM_STEP_LAUNCHER_PORT': '44595', 'MODULEPATH': '/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core:/mnt/sw/lmod/x86_64/rocky8/modules:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Linux:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Core:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/modulefiles/Core', 'SLURM_PTY_PORT': '34749', 'SLURM_GTIDS': '0', 'XDG_CACHE_HOME': '/dev/shm/.cache-rbrooks', 'LOGNAME': 'rbrooks', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/2479/bus', 'XDG_RUNTIME_DIR': '/run/user/2479', 'CPLUS_INCLUDE_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/include:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/include:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/include:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/include:/cm/shared/apps/slurm/current/include:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include', 'MODULEPATH_ROOT': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles', 'LMOD_PACKAGE_PATH': '/mnt/sw/lmod/site', 'PATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch:/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/bin:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/bin:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/bin:/mnt/sw/nix/store/6560mkp838syd8jpp6gdyyisczwcvs67-gcc-11.4.0/bin:/cm/shared/apps/slurm/current/bin:/mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/dell/srvadmin/bin:/mnt/home/rbrooks/.local/bin', 'SLURM_JOB_ID': '3218277', '_LMFILES_': '/mnt/sw/lmod/x86_64/rocky8/modules/modules/2.2-20230808.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/openblas/threaded-0.3.23.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/slurm.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/gcc/11.4.0.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/gsl/2.7.1.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/hdf5/1.10.9.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/python/3.10.10.lua:/mnt/sw/lmod/x86_64/rocky8/modules/disBatch/beta.lua', 'SLURM_CPU_BIND_TYPE': 'none', 'PS1': '(mwlmc_venv) [\\u@\\h \\W]\\$ ', 'DEBUGINFOD_URLS': 'https://debuginfod.centos.org/ ', 'SLURM_STEP_NUM_TASKS': '128', 'MODULESHOME': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod', 'LMOD_SETTARG_FULL_SUPPORT': 'no', 'PKG_CONFIG_PATH': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/share/pkgconfig:/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/lib/pkgconfig:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib64/pkgconfig:/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9/lib/pkgconfig:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib64/pkgconfig:/mnt/sw/nix/store/5grr2yvpmc4mz8bl0p8z7ik6axp1gdhq-gsl-2.7.1/lib/pkgconfig:/cm/shared/apps/slurm/current/lib64/pkgconfig:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib/pkgconfig', 'HISTSIZE': '1000', 'LMOD_PKG': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod', 'SLURM_STEP_NUM_NODES': '1', 'PYTHON_BASE': '/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view', 'PMI_RANK': '0', 'LMOD_CMD': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/libexec/lmod', '_ModuleTable005_': 'Q29yZS9vcGVuYmxhcy90aHJlYWRlZC0wLjMuMjMubHVhIiwKZnVsbE5hbWUgPSAib3BlbmJsYXMvdGhyZWFkZWQtMC4zLjIzIiwKbG9hZE9yZGVyID0gMiwKcHJvcFQgPSB7Cmxtb2QgPSB7CnN0aWNreSA9IDEsCn0sCn0sCnN0YWNrRGVwdGggPSAwLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAib3BlbmJsYXMiLAp3ViA9ICIqdGhyZWFkZWQuKnpmaW5hbC0uMDAwMDAwMDAwLjAwMDAwMDAwMy4wMDAwMDAwMjMuKnpmaW5hbCIsCn0sCnB5dGhvbiA9IHsKZm4gPSAiL21udC9zdy9uaXgvc3RvcmUvM2s1NG5sZmE2a2E5aGc2eWpzcWdjcWJ6aXFqcHhpcGstbW9kdWxlcy9saW51eC1yb2NreTgteDg2XzY0L0NvcmUvcHl0aG9uLzMuMTAuMTAubHVhIiwKZnVsbE5hbWUg', 'SLURM_LOCALID': '0', '__LMOD_REF_COUNT_TCLLIBPATH': '/mnt/sw/nix/store/ji8vlirp8iqw3iwpjxiv3hr14s970cz5-tk-8.6.11/lib:1', 'CVS_RSH': 'ssh', 'HDF5_BASE': '/mnt/sw/nix/store/pzy26nkp8s5cgnph94j4nad4vknh3wrq-hdf5-1.10.9', 'LESSOPEN': '||/usr/bin/lesspipe.sh %s', 'LMOD_DIR': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/libexec', 'BASH_FUNC_which%%': '() {  ( alias;\n eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@\n}', 'BASH_FUNC_module%%': '() {  eval $($LMOD_CMD bash "$@") && eval $(${LMOD_SETTARG_CMD:-:} -s sh)\n}', 'BASH_FUNC_ml%%': '() {  eval $($LMOD_DIR/ml_cmd "$@")\n}', '_': '/cm/shared/apps/slurm/current/bin/sbatch', 'SLURM_NODE_ALIASES': '(null)', 'ENVIRONMENT': 'BATCH'})
+2024-02-21 11:00:29,134 INFO     kvs            : Setting queue size to 4000
+2024-02-21 11:00:29,145 INFO     DisBatch       : KVS Server: 10.128.146.27:36253
+2024-02-21 11:00:29,146 INFO     kvs            : Accepted connect from ('10.128.146.27', 42188)
+2024-02-21 11:00:29,174 INFO     kvs            : Accepted connect from ('10.128.146.27', 42192)
+2024-02-21 11:00:29,175 INFO     kvs            : Accepted connect from ('10.128.146.27', 42196)
+2024-02-21 11:00:29,200 INFO     DisBatch       : Posting per engine task ".per engine START 0" 0	1	-1	P	#ENDLIST
+2024-02-21 11:00:29,202 INFO     DisBatch       : Posting per engine task ".per engine STOP 0" 0	1	-1	P	#ENDLIST
+2024-02-21 11:00:29,556 INFO     kvs            : Accepted connect from ('10.128.146.27', 42198)
+2024-02-21 11:00:33,265 INFO     kvs            : Accepted connect from ('10.128.146.27', 56182)
+2024-02-21 11:00:33,276 INFO     kvs            : Accepted connect from ('10.128.146.27', 56190)
+2024-02-21 11:00:33,278 INFO     kvs            : Accepted connect from ('10.128.146.27', 56204)
+2024-02-21 11:00:33,282 INFO     kvs            : Accepted connect from ('10.128.146.27', 56220)
+2024-02-21 11:00:33,283 INFO     kvs            : Accepted connect from ('10.128.146.27', 56222)
+2024-02-21 11:00:33,283 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 0" available
+2024-02-21 11:00:33,284 INFO     kvs            : Accepted connect from ('10.128.146.27', 56228)
+2024-02-21 11:00:33,284 INFO     DisBatch       : Giving .cylinder 0 0 0	1	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_0.yaml
+2024-02-21 11:00:33,285 INFO     kvs            : Accepted connect from ('10.128.146.27', 56236)
+2024-02-21 11:00:33,285 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 1" available
+2024-02-21 11:00:33,286 INFO     kvs            : Accepted connect from ('10.128.146.27', 56244)
+2024-02-21 11:00:33,287 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 2" available
+2024-02-21 11:00:33,287 INFO     DisBatch       : Giving .cylinder 0 1 1	2	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_1.yaml
+2024-02-21 11:00:33,288 INFO     DisBatch       : Giving .cylinder 0 2 2	3	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_2.yaml
+2024-02-21 11:00:33,289 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 3" available
+2024-02-21 11:00:33,289 INFO     kvs            : Accepted connect from ('10.128.146.27', 56258)
+2024-02-21 11:00:33,289 INFO     DisBatch       : Giving .cylinder 0 3 3	4	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_3.yaml
+2024-02-21 11:00:33,291 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 4" available
+2024-02-21 11:00:33,292 INFO     kvs            : Accepted connect from ('10.128.146.27', 56274)
+2024-02-21 11:00:33,292 INFO     DisBatch       : Giving .cylinder 0 4 4	5	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_4.yaml
+2024-02-21 11:00:33,294 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 5" available
+2024-02-21 11:00:33,295 INFO     kvs            : Accepted connect from ('10.128.146.27', 56288)
+2024-02-21 11:00:33,295 INFO     DisBatch       : Giving .cylinder 0 5 5	6	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_5.yaml
+2024-02-21 11:00:33,296 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 6" available
+2024-02-21 11:00:33,297 INFO     kvs            : Accepted connect from ('10.128.146.27', 56304)
+2024-02-21 11:00:33,297 INFO     DisBatch       : Giving .cylinder 0 6 6	7	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_6.yaml
+2024-02-21 11:00:33,300 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 7" available
+2024-02-21 11:00:33,301 INFO     kvs            : Accepted connect from ('10.128.146.27', 56306)
+2024-02-21 11:00:33,301 INFO     DisBatch       : Giving .cylinder 0 7 7	8	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_7.yaml
+2024-02-21 11:00:33,303 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 8" available
+2024-02-21 11:00:33,303 INFO     kvs            : Accepted connect from ('10.128.146.27', 56318)
+2024-02-21 11:00:33,304 INFO     DisBatch       : Giving .cylinder 0 8 8	9	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_8.yaml
+2024-02-21 11:00:33,305 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 9" available
+2024-02-21 11:00:33,306 INFO     kvs            : Accepted connect from ('10.128.146.27', 56330)
+2024-02-21 11:00:33,307 INFO     DisBatch       : Giving .cylinder 0 9 9	10	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_9.yaml
+2024-02-21 11:00:33,308 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 10" available
+2024-02-21 11:00:33,309 INFO     kvs            : Accepted connect from ('10.128.146.27', 56332)
+2024-02-21 11:00:33,309 INFO     DisBatch       : Giving .cylinder 0 10 10	11	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_10.yaml
+2024-02-21 11:00:33,311 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 11" available
+2024-02-21 11:00:33,311 INFO     kvs            : Accepted connect from ('10.128.146.27', 56342)
+2024-02-21 11:00:33,312 INFO     DisBatch       : Giving .cylinder 0 11 11	12	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_11.yaml
+2024-02-21 11:00:33,313 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 12" available
+2024-02-21 11:00:33,314 INFO     kvs            : Accepted connect from ('10.128.146.27', 56346)
+2024-02-21 11:00:33,315 INFO     DisBatch       : Giving .cylinder 0 12 12	13	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_12.yaml
+2024-02-21 11:00:33,316 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 13" available
+2024-02-21 11:00:33,317 INFO     kvs            : Accepted connect from ('10.128.146.27', 56356)
+2024-02-21 11:00:33,318 INFO     DisBatch       : Giving .cylinder 0 13 13	14	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_13.yaml
+2024-02-21 11:00:33,319 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 14" available
+2024-02-21 11:00:33,320 INFO     kvs            : Accepted connect from ('10.128.146.27', 56366)
+2024-02-21 11:00:33,321 INFO     DisBatch       : Giving .cylinder 0 14 14	15	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_14.yaml
+2024-02-21 11:00:33,323 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 15" available
+2024-02-21 11:00:33,323 INFO     kvs            : Accepted connect from ('10.128.146.27', 56378)
+2024-02-21 11:00:33,325 INFO     DisBatch       : Giving .cylinder 0 15 15	16	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_15.yaml
+2024-02-21 11:00:33,326 INFO     kvs            : Accepted connect from ('10.128.146.27', 56382)
+2024-02-21 11:00:33,327 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 16" available
+2024-02-21 11:00:33,329 INFO     kvs            : Accepted connect from ('10.128.146.27', 56394)
+2024-02-21 11:00:33,329 INFO     DisBatch       : Giving .cylinder 0 16 16	17	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_16.yaml
+2024-02-21 11:00:33,331 INFO     kvs            : Accepted connect from ('10.128.146.27', 56406)
+2024-02-21 11:00:33,331 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 17" available
+2024-02-21 11:00:33,333 INFO     kvs            : Accepted connect from ('10.128.146.27', 56412)
+2024-02-21 11:00:33,333 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 18" available
+2024-02-21 11:00:33,335 INFO     kvs            : Accepted connect from ('10.128.146.27', 56414)
+2024-02-21 11:00:33,336 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 19" available
+2024-02-21 11:00:33,337 INFO     kvs            : Accepted connect from ('10.128.146.27', 56418)
+2024-02-21 11:00:33,338 INFO     DisBatch       : Giving .cylinder 0 18 17	18	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_17.yaml
+2024-02-21 11:00:33,340 INFO     kvs            : Accepted connect from ('10.128.146.27', 56424)
+2024-02-21 11:00:33,341 INFO     DisBatch       : Giving .cylinder 0 17 18	19	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_18.yaml
+2024-02-21 11:00:33,342 INFO     kvs            : Accepted connect from ('10.128.146.27', 56430)
+2024-02-21 11:00:33,343 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 20" available
+2024-02-21 11:00:33,346 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 21" available
+2024-02-21 11:00:33,346 INFO     kvs            : Accepted connect from ('10.128.146.27', 56432)
+2024-02-21 11:00:33,348 INFO     DisBatch       : Giving .cylinder 0 19 19	20	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_19.yaml
+2024-02-21 11:00:33,349 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 22" available
+2024-02-21 11:00:33,350 INFO     kvs            : Accepted connect from ('10.128.146.27', 56444)
+2024-02-21 11:00:33,351 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 23" available
+2024-02-21 11:00:33,352 INFO     DisBatch       : Giving .cylinder 0 23 20	21	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_20.yaml
+2024-02-21 11:00:33,352 INFO     kvs            : Accepted connect from ('10.128.146.27', 56454)
+2024-02-21 11:00:33,354 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 24" available
+2024-02-21 11:00:33,355 INFO     DisBatch       : Giving .cylinder 0 21 21	22	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_21.yaml
+2024-02-21 11:00:33,356 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 25" available
+2024-02-21 11:00:33,356 INFO     kvs            : Accepted connect from ('10.128.146.27', 56458)
+2024-02-21 11:00:33,358 INFO     DisBatch       : Giving .cylinder 0 22 22	23	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_22.yaml
+2024-02-21 11:00:33,360 INFO     DisBatch       : Giving .cylinder 0 24 23	24	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_23.yaml
+2024-02-21 11:00:33,360 INFO     kvs            : Accepted connect from ('10.128.146.27', 56474)
+2024-02-21 11:00:33,361 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 26" available
+2024-02-21 11:00:33,363 INFO     DisBatch       : Giving .cylinder 0 20 24	25	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_24.yaml
+2024-02-21 11:00:33,365 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 27" available
+2024-02-21 11:00:33,366 INFO     kvs            : Accepted connect from ('10.128.146.27', 56480)
+2024-02-21 11:00:33,368 INFO     DisBatch       : Giving .cylinder 0 26 25	26	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_25.yaml
+2024-02-21 11:00:33,371 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 28" available
+2024-02-21 11:00:33,373 INFO     DisBatch       : Giving .cylinder 0 25 26	27	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_26.yaml
+2024-02-21 11:00:33,375 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 29" available
+2024-02-21 11:00:33,376 INFO     DisBatch       : Giving .cylinder 0 29 27	28	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_27.yaml
+2024-02-21 11:00:33,378 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 30" available
+2024-02-21 11:00:33,380 INFO     DisBatch       : Giving .cylinder 0 27 28	29	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_28.yaml
+2024-02-21 11:00:33,381 INFO     DisBatch       : Giving .cylinder 0 30 29	30	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_29.yaml
+2024-02-21 11:00:33,383 INFO     DisBatch       : Engine 0 (worker3027), ".cylinder 0 31" available
+2024-02-21 11:00:33,384 INFO     DisBatch       : Giving .cylinder 0 31 30	31	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_30.yaml
+2024-02-21 11:00:33,386 INFO     DisBatch       : Giving .cylinder 0 28 31	32	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_31.yaml
+2024-02-21 11:00:35,118 INFO     kvs            : Accepted connect from ('10.128.146.30', 61202)
+2024-02-21 11:00:35,134 INFO     kvs            : Accepted connect from ('10.128.146.30', 61206)
+2024-02-21 11:00:35,136 INFO     kvs            : Accepted connect from ('10.128.146.30', 61214)
+2024-02-21 11:00:35,142 INFO     kvs            : Accepted connect from ('10.128.146.30', 61224)
+2024-02-21 11:00:35,143 INFO     kvs            : Accepted connect from ('10.128.146.30', 61240)
+2024-02-21 11:00:35,144 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 0" available
+2024-02-21 11:00:35,145 INFO     kvs            : Accepted connect from ('10.128.146.30', 61256)
+2024-02-21 11:00:35,146 INFO     DisBatch       : Giving .cylinder 1 0 32	33	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_32.yaml
+2024-02-21 11:00:35,147 INFO     kvs            : Accepted connect from ('10.128.146.30', 61270)
+2024-02-21 11:00:35,149 INFO     kvs            : Accepted connect from ('10.128.146.30', 61282)
+2024-02-21 11:00:35,150 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 1" available
+2024-02-21 11:00:35,152 INFO     kvs            : Accepted connect from ('10.128.146.30', 61286)
+2024-02-21 11:00:35,153 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 2" available
+2024-02-21 11:00:35,155 INFO     kvs            : Accepted connect from ('10.128.146.30', 61302)
+2024-02-21 11:00:35,156 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 3" available
+2024-02-21 11:00:35,157 INFO     kvs            : Accepted connect from ('10.128.146.30', 61306)
+2024-02-21 11:00:35,158 INFO     DisBatch       : Giving .cylinder 1 1 33	34	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_33.yaml
+2024-02-21 11:00:35,158 INFO     kvs            : Accepted connect from ('10.128.146.30', 61318)
+2024-02-21 11:00:35,159 INFO     kvs            : Accepted connect from ('10.128.146.30', 61334)
+2024-02-21 11:00:35,160 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 4" available
+2024-02-21 11:00:35,161 INFO     kvs            : Accepted connect from ('10.128.146.30', 61348)
+2024-02-21 11:00:35,163 INFO     DisBatch       : Giving .cylinder 1 2 34	35	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_34.yaml
+2024-02-21 11:00:35,202 INFO     kvs            : Accepted connect from ('10.128.146.30', 61360)
+2024-02-21 11:00:35,202 INFO     kvs            : Accepted connect from ('10.128.146.30', 61370)
+2024-02-21 11:00:35,203 INFO     kvs            : Accepted connect from ('10.128.146.30', 61376)
+2024-02-21 11:00:35,204 INFO     kvs            : Accepted connect from ('10.128.146.30', 61390)
+2024-02-21 11:00:35,206 INFO     kvs            : Accepted connect from ('10.128.146.30', 61402)
+2024-02-21 11:00:35,207 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 5" available
+2024-02-21 11:00:35,207 INFO     kvs            : Accepted connect from ('10.128.146.30', 61416)
+2024-02-21 11:00:35,208 INFO     kvs            : Accepted connect from ('10.128.146.30', 61424)
+2024-02-21 11:00:35,210 INFO     kvs            : Accepted connect from ('10.128.146.30', 61432)
+2024-02-21 11:00:35,211 INFO     kvs            : Accepted connect from ('10.128.146.30', 32774)
+2024-02-21 11:00:35,211 INFO     kvs            : Accepted connect from ('10.128.146.30', 32778)
+2024-02-21 11:00:35,212 INFO     DisBatch       : Giving .cylinder 1 3 35	36	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_35.yaml
+2024-02-21 11:00:35,212 INFO     kvs            : Accepted connect from ('10.128.146.30', 32792)
+2024-02-21 11:00:35,213 INFO     kvs            : Accepted connect from ('10.128.146.30', 32808)
+2024-02-21 11:00:35,214 INFO     kvs            : Accepted connect from ('10.128.146.30', 32816)
+2024-02-21 11:00:35,214 INFO     kvs            : Accepted connect from ('10.128.146.30', 32830)
+2024-02-21 11:00:35,215 INFO     kvs            : Accepted connect from ('10.128.146.30', 32834)
+2024-02-21 11:00:35,215 INFO     kvs            : Accepted connect from ('10.128.146.30', 32844)
+2024-02-21 11:00:35,218 INFO     kvs            : Accepted connect from ('10.128.146.30', 32850)
+2024-02-21 11:00:35,222 INFO     kvs            : Accepted connect from ('10.128.146.30', 32866)
+2024-02-21 11:00:35,215 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 6" available
+2024-02-21 11:00:35,223 INFO     kvs            : Accepted connect from ('10.128.146.30', 32876)
+2024-02-21 11:00:35,225 INFO     kvs            : Accepted connect from ('10.128.146.30', 32886)
+2024-02-21 11:00:35,227 INFO     kvs            : Accepted connect from ('10.128.146.30', 32888)
+2024-02-21 11:00:35,227 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 7" available
+2024-02-21 11:00:35,229 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 8" available
+2024-02-21 11:00:35,229 INFO     DisBatch       : Giving .cylinder 1 6 36	37	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_36.yaml
+2024-02-21 11:00:35,230 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 9" available
+2024-02-21 11:00:35,231 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 10" available
+2024-02-21 11:00:35,232 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 11" available
+2024-02-21 11:00:35,233 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 12" available
+2024-02-21 11:00:35,234 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 13" available
+2024-02-21 11:00:35,235 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 14" available
+2024-02-21 11:00:35,236 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 15" available
+2024-02-21 11:00:35,238 INFO     DisBatch       : Giving .cylinder 1 12 37	38	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_37.yaml
+2024-02-21 11:00:35,240 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 16" available
+2024-02-21 11:00:35,241 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 17" available
+2024-02-21 11:00:35,242 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 18" available
+2024-02-21 11:00:35,243 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 19" available
+2024-02-21 11:00:35,244 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 20" available
+2024-02-21 11:00:35,245 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 21" available
+2024-02-21 11:00:35,246 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 22" available
+2024-02-21 11:00:35,247 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 23" available
+2024-02-21 11:00:35,247 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 24" available
+2024-02-21 11:00:35,249 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 25" available
+2024-02-21 11:00:35,249 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 26" available
+2024-02-21 11:00:35,251 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 27" available
+2024-02-21 11:00:35,251 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 28" available
+2024-02-21 11:00:35,253 INFO     DisBatch       : Giving .cylinder 1 8 38	39	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_38.yaml
+2024-02-21 11:00:35,254 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 29" available
+2024-02-21 11:00:35,255 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 30" available
+2024-02-21 11:00:35,256 INFO     DisBatch       : Engine 1 (worker3030), ".cylinder 1 31" available
+2024-02-21 11:00:35,257 INFO     DisBatch       : Giving .cylinder 1 26 39	40	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_39.yaml
+2024-02-21 11:00:35,258 INFO     DisBatch       : Giving .cylinder 1 27 40	41	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_40.yaml
+2024-02-21 11:00:35,259 INFO     DisBatch       : Giving .cylinder 1 22 41	42	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_41.yaml
+2024-02-21 11:00:35,260 INFO     DisBatch       : Giving .cylinder 1 30 42	43	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_42.yaml
+2024-02-21 11:00:35,261 INFO     DisBatch       : Giving .cylinder 1 23 43	44	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_43.yaml
+2024-02-21 11:00:35,262 INFO     DisBatch       : Giving .cylinder 1 13 44	45	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_44.yaml
+2024-02-21 11:00:35,263 INFO     DisBatch       : Giving .cylinder 1 17 45	46	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_45.yaml
+2024-02-21 11:00:35,264 INFO     DisBatch       : Giving .cylinder 1 20 46	47	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_46.yaml
+2024-02-21 11:00:35,265 INFO     DisBatch       : Giving .cylinder 1 5 47	48	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_47.yaml
+2024-02-21 11:00:35,266 INFO     DisBatch       : Giving .cylinder 1 7 48	49	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_48.yaml
+2024-02-21 11:00:35,268 INFO     DisBatch       : Giving .cylinder 1 4 49	50	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_49.yaml
+2024-02-21 11:00:35,269 INFO     DisBatch       : Giving .cylinder 1 18 50	51	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_50.yaml
+2024-02-21 11:00:35,270 INFO     DisBatch       : Giving .cylinder 1 14 51	52	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_51.yaml
+2024-02-21 11:00:35,271 INFO     DisBatch       : Giving .cylinder 1 19 52	53	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_52.yaml
+2024-02-21 11:00:35,272 INFO     DisBatch       : Giving .cylinder 1 21 53	54	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_53.yaml
+2024-02-21 11:00:35,273 INFO     DisBatch       : Giving .cylinder 1 31 54	55	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_54.yaml
+2024-02-21 11:00:35,274 INFO     DisBatch       : Giving .cylinder 1 25 55	56	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_55.yaml
+2024-02-21 11:00:35,276 INFO     DisBatch       : Giving .cylinder 1 29 56	57	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_56.yaml
+2024-02-21 11:00:35,277 INFO     DisBatch       : Giving .cylinder 1 9 57	58	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_57.yaml
+2024-02-21 11:00:35,278 INFO     DisBatch       : Giving .cylinder 1 16 58	59	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_58.yaml
+2024-02-21 11:00:35,279 INFO     DisBatch       : Giving .cylinder 1 15 59	60	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_59.yaml
+2024-02-21 11:00:35,280 INFO     DisBatch       : Giving .cylinder 1 10 60	61	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_60.yaml
+2024-02-21 11:00:35,281 INFO     DisBatch       : Giving .cylinder 1 11 61	62	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_61.yaml
+2024-02-21 11:00:35,282 INFO     DisBatch       : Giving .cylinder 1 24 62	63	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_62.yaml
+2024-02-21 11:00:35,283 INFO     DisBatch       : Giving .cylinder 1 28 63	64	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_63.yaml
+2024-02-21 11:00:35,483 INFO     kvs            : Accepted connect from ('10.128.146.28', 42660)
+2024-02-21 11:00:35,496 INFO     kvs            : Accepted connect from ('10.128.146.28', 42674)
+2024-02-21 11:00:35,498 INFO     kvs            : Accepted connect from ('10.128.146.28', 42688)
+2024-02-21 11:00:35,505 INFO     kvs            : Accepted connect from ('10.128.146.28', 42700)
+2024-02-21 11:00:35,506 INFO     kvs            : Accepted connect from ('10.128.146.28', 42710)
+2024-02-21 11:00:35,507 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 0" available
+2024-02-21 11:00:35,507 INFO     kvs            : Accepted connect from ('10.128.146.28', 42714)
+2024-02-21 11:00:35,509 INFO     DisBatch       : Giving .cylinder 2 0 64	65	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_64.yaml
+2024-02-21 11:00:35,509 INFO     kvs            : Accepted connect from ('10.128.146.28', 42726)
+2024-02-21 11:00:35,511 INFO     kvs            : Accepted connect from ('10.128.146.28', 42738)
+2024-02-21 11:00:35,512 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 1" available
+2024-02-21 11:00:35,513 INFO     kvs            : Accepted connect from ('10.128.146.28', 42742)
+2024-02-21 11:00:35,513 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 2" available
+2024-02-21 11:00:35,515 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 3" available
+2024-02-21 11:00:35,515 INFO     kvs            : Accepted connect from ('10.128.146.28', 42748)
+2024-02-21 11:00:35,517 INFO     kvs            : Accepted connect from ('10.128.146.28', 42752)
+2024-02-21 11:00:35,518 INFO     DisBatch       : Giving .cylinder 2 2 65	66	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_65.yaml
+2024-02-21 11:00:35,518 INFO     kvs            : Accepted connect from ('10.128.146.28', 42754)
+2024-02-21 11:00:35,520 INFO     kvs            : Accepted connect from ('10.128.146.28', 42766)
+2024-02-21 11:00:35,521 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 4" available
+2024-02-21 11:00:35,521 INFO     kvs            : Accepted connect from ('10.128.146.28', 42768)
+2024-02-21 11:00:35,523 INFO     DisBatch       : Giving .cylinder 2 4 66	67	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_66.yaml
+2024-02-21 11:00:35,524 INFO     kvs            : Accepted connect from ('10.128.146.28', 42776)
+2024-02-21 11:00:35,526 INFO     DisBatch       : Giving .cylinder 2 1 67	68	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_67.yaml
+2024-02-21 11:00:35,526 INFO     kvs            : Accepted connect from ('10.128.146.28', 42788)
+2024-02-21 11:00:35,528 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 5" available
+2024-02-21 11:00:35,529 INFO     kvs            : Accepted connect from ('10.128.146.28', 42798)
+2024-02-21 11:00:35,531 INFO     kvs            : Accepted connect from ('10.128.146.28', 42812)
+2024-02-21 11:00:35,531 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 6" available
+2024-02-21 11:00:35,533 INFO     kvs            : Accepted connect from ('10.128.146.28', 42828)
+2024-02-21 11:00:35,534 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 7" available
+2024-02-21 11:00:35,534 INFO     kvs            : Accepted connect from ('10.128.146.28', 42840)
+2024-02-21 11:00:35,536 INFO     kvs            : Accepted connect from ('10.128.146.28', 42850)
+2024-02-21 11:00:35,537 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 8" available
+2024-02-21 11:00:35,537 INFO     kvs            : Accepted connect from ('10.128.146.28', 42854)
+2024-02-21 11:00:35,539 INFO     kvs            : Accepted connect from ('10.128.146.28', 42864)
+2024-02-21 11:00:35,540 INFO     DisBatch       : Giving .cylinder 2 8 68	69	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_68.yaml
+2024-02-21 11:00:35,540 INFO     kvs            : Accepted connect from ('10.128.146.28', 42874)
+2024-02-21 11:00:35,542 INFO     kvs            : Accepted connect from ('10.128.146.28', 42876)
+2024-02-21 11:00:35,543 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 9" available
+2024-02-21 11:00:35,543 INFO     kvs            : Accepted connect from ('10.128.146.28', 42892)
+2024-02-21 11:00:35,545 INFO     kvs            : Accepted connect from ('10.128.146.28', 42906)
+2024-02-21 11:00:35,546 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 10" available
+2024-02-21 11:00:35,548 INFO     kvs            : Accepted connect from ('10.128.146.28', 42920)
+2024-02-21 11:00:35,548 INFO     kvs            : Accepted connect from ('10.128.146.28', 42924)
+2024-02-21 11:00:35,549 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 11" available
+2024-02-21 11:00:35,551 INFO     kvs            : Accepted connect from ('10.128.146.28', 42926)
+2024-02-21 11:00:35,552 INFO     kvs            : Accepted connect from ('10.128.146.28', 42942)
+2024-02-21 11:00:35,553 INFO     DisBatch       : Giving .cylinder 2 5 69	70	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_69.yaml
+2024-02-21 11:00:35,553 INFO     kvs            : Accepted connect from ('10.128.146.28', 42944)
+2024-02-21 11:00:35,555 INFO     kvs            : Accepted connect from ('10.128.146.28', 42960)
+2024-02-21 11:00:35,555 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 12" available
+2024-02-21 11:00:35,555 INFO     kvs            : Accepted connect from ('10.128.146.28', 42970)
+2024-02-21 11:00:35,557 INFO     kvs            : Accepted connect from ('10.128.146.28', 42976)
+2024-02-21 11:00:35,558 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 13" available
+2024-02-21 11:00:35,560 INFO     DisBatch       : Giving .cylinder 2 3 70	71	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_70.yaml
+2024-02-21 11:00:35,562 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 14" available
+2024-02-21 11:00:35,565 INFO     DisBatch       : Giving .cylinder 2 7 71	72	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_71.yaml
+2024-02-21 11:00:35,567 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 15" available
+2024-02-21 11:00:35,569 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 16" available
+2024-02-21 11:00:35,571 INFO     DisBatch       : Giving .cylinder 2 6 72	73	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_72.yaml
+2024-02-21 11:00:35,573 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 17" available
+2024-02-21 11:00:35,576 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 18" available
+2024-02-21 11:00:35,578 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 19" available
+2024-02-21 11:00:35,580 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 20" available
+2024-02-21 11:00:35,582 INFO     DisBatch       : Giving .cylinder 2 15 73	74	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_73.yaml
+2024-02-21 11:00:35,583 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 21" available
+2024-02-21 11:00:35,586 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 22" available
+2024-02-21 11:00:35,588 INFO     DisBatch       : Giving .cylinder 2 11 74	75	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_74.yaml
+2024-02-21 11:00:35,590 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 23" available
+2024-02-21 11:00:35,592 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 24" available
+2024-02-21 11:00:35,594 INFO     DisBatch       : Giving .cylinder 2 19 75	76	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_75.yaml
+2024-02-21 11:00:35,596 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 25" available
+2024-02-21 11:00:35,599 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 26" available
+2024-02-21 11:00:35,601 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 27" available
+2024-02-21 11:00:35,603 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 28" available
+2024-02-21 11:00:35,604 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 29" available
+2024-02-21 11:00:35,606 INFO     DisBatch       : Giving .cylinder 2 10 76	77	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_76.yaml
+2024-02-21 11:00:35,609 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 30" available
+2024-02-21 11:00:35,611 INFO     DisBatch       : Engine 2 (worker3028), ".cylinder 2 31" available
+2024-02-21 11:00:35,613 INFO     DisBatch       : Giving .cylinder 2 13 77	78	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_77.yaml
+2024-02-21 11:00:35,615 INFO     DisBatch       : Giving .cylinder 2 14 78	79	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_78.yaml
+2024-02-21 11:00:35,617 INFO     DisBatch       : Giving .cylinder 2 26 79	80	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_79.yaml
+2024-02-21 11:00:35,619 INFO     DisBatch       : Giving .cylinder 2 27 80	81	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_80.yaml
+2024-02-21 11:00:35,622 INFO     DisBatch       : Giving .cylinder 2 12 81	82	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_81.yaml
+2024-02-21 11:00:35,624 INFO     DisBatch       : Giving .cylinder 2 29 82	83	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_82.yaml
+2024-02-21 11:00:35,625 INFO     DisBatch       : Giving .cylinder 2 9 83	84	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_83.yaml
+2024-02-21 11:00:35,627 INFO     DisBatch       : Giving .cylinder 2 17 84	85	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_84.yaml
+2024-02-21 11:00:35,630 INFO     DisBatch       : Giving .cylinder 2 24 85	86	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_85.yaml
+2024-02-21 11:00:35,632 INFO     DisBatch       : Giving .cylinder 2 18 86	87	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_86.yaml
+2024-02-21 11:00:35,634 INFO     DisBatch       : Giving .cylinder 2 16 87	88	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_87.yaml
+2024-02-21 11:00:35,636 INFO     DisBatch       : Giving .cylinder 2 25 88	89	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_88.yaml
+2024-02-21 11:00:35,638 INFO     DisBatch       : Giving .cylinder 2 30 89	90	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_89.yaml
+2024-02-21 11:00:35,640 INFO     DisBatch       : Giving .cylinder 2 21 90	91	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_90.yaml
+2024-02-21 11:00:35,641 INFO     DisBatch       : Giving .cylinder 2 23 91	92	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_91.yaml
+2024-02-21 11:00:35,643 INFO     DisBatch       : Giving .cylinder 2 22 92	93	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_92.yaml
+2024-02-21 11:00:35,645 INFO     DisBatch       : Giving .cylinder 2 20 93	94	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_93.yaml
+2024-02-21 11:00:35,646 INFO     DisBatch       : Giving .cylinder 2 28 94	95	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_94.yaml
+2024-02-21 11:00:35,648 INFO     DisBatch       : Giving .cylinder 2 31 95	96	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_95.yaml
+2024-02-21 11:00:35,935 INFO     kvs            : Accepted connect from ('10.128.146.29', 50420)
+2024-02-21 11:00:35,949 INFO     kvs            : Accepted connect from ('10.128.146.29', 50430)
+2024-02-21 11:00:35,952 INFO     kvs            : Accepted connect from ('10.128.146.29', 50446)
+2024-02-21 11:00:35,958 INFO     kvs            : Accepted connect from ('10.128.146.29', 50450)
+2024-02-21 11:00:35,959 INFO     kvs            : Accepted connect from ('10.128.146.29', 50452)
+2024-02-21 11:00:35,960 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 0" available
+2024-02-21 11:00:35,960 INFO     kvs            : Accepted connect from ('10.128.146.29', 50466)
+2024-02-21 11:00:35,962 INFO     kvs            : Accepted connect from ('10.128.146.29', 50478)
+2024-02-21 11:00:35,963 INFO     DisBatch       : Giving .cylinder 3 0 96	97	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_96.yaml
+2024-02-21 11:00:35,965 INFO     kvs            : Accepted connect from ('10.128.146.29', 50486)
+2024-02-21 11:00:35,965 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 1" available
+2024-02-21 11:00:36,006 INFO     kvs            : Accepted connect from ('10.128.146.29', 50500)
+2024-02-21 11:00:36,009 INFO     kvs            : Accepted connect from ('10.128.146.29', 50512)
+2024-02-21 11:00:36,011 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 2" available
+2024-02-21 11:00:36,011 INFO     kvs            : Accepted connect from ('10.128.146.29', 50516)
+2024-02-21 11:00:36,012 INFO     kvs            : Accepted connect from ('10.128.146.29', 50528)
+2024-02-21 11:00:36,013 INFO     kvs            : Accepted connect from ('10.128.146.29', 50542)
+2024-02-21 11:00:36,014 INFO     kvs            : Accepted connect from ('10.128.146.29', 50548)
+2024-02-21 11:00:36,014 INFO     kvs            : Accepted connect from ('10.128.146.29', 50554)
+2024-02-21 11:00:36,014 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 3" available
+2024-02-21 11:00:36,015 INFO     kvs            : Accepted connect from ('10.128.146.29', 50566)
+2024-02-21 11:00:36,015 INFO     kvs            : Accepted connect from ('10.128.146.29', 50574)
+2024-02-21 11:00:36,016 INFO     kvs            : Accepted connect from ('10.128.146.29', 50584)
+2024-02-21 11:00:36,016 INFO     kvs            : Accepted connect from ('10.128.146.29', 50586)
+2024-02-21 11:00:36,017 INFO     DisBatch       : Giving .cylinder 3 3 97	98	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_97.yaml
+2024-02-21 11:00:36,017 INFO     kvs            : Accepted connect from ('10.128.146.29', 50588)
+2024-02-21 11:00:36,017 INFO     kvs            : Accepted connect from ('10.128.146.29', 50596)
+2024-02-21 11:00:36,018 INFO     kvs            : Accepted connect from ('10.128.146.29', 50610)
+2024-02-21 11:00:36,018 INFO     kvs            : Accepted connect from ('10.128.146.29', 50614)
+2024-02-21 11:00:36,018 INFO     kvs            : Accepted connect from ('10.128.146.29', 50628)
+2024-02-21 11:00:36,019 INFO     kvs            : Accepted connect from ('10.128.146.29', 50638)
+2024-02-21 11:00:36,019 INFO     kvs            : Accepted connect from ('10.128.146.29', 50652)
+2024-02-21 11:00:36,021 INFO     kvs            : Accepted connect from ('10.128.146.29', 50666)
+2024-02-21 11:00:36,021 INFO     kvs            : Accepted connect from ('10.128.146.29', 50682)
+2024-02-21 11:00:36,021 INFO     kvs            : Accepted connect from ('10.128.146.29', 50688)
+2024-02-21 11:00:36,022 INFO     kvs            : Accepted connect from ('10.128.146.29', 50690)
+2024-02-21 11:00:36,022 INFO     kvs            : Accepted connect from ('10.128.146.29', 50704)
+2024-02-21 11:00:36,022 INFO     kvs            : Accepted connect from ('10.128.146.29', 50714)
+2024-02-21 11:00:36,019 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 4" available
+2024-02-21 11:00:36,023 INFO     kvs            : Accepted connect from ('10.128.146.29', 50724)
+2024-02-21 11:00:36,023 INFO     kvs            : Accepted connect from ('10.128.146.29', 50738)
+2024-02-21 11:00:36,024 INFO     kvs            : Accepted connect from ('10.128.146.29', 50752)
+2024-02-21 11:00:36,025 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 5" available
+2024-02-21 11:00:36,026 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 6" available
+2024-02-21 11:00:36,027 INFO     DisBatch       : Giving .cylinder 3 1 98	99	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_98.yaml
+2024-02-21 11:00:36,027 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 7" available
+2024-02-21 11:00:36,028 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 8" available
+2024-02-21 11:00:36,029 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 9" available
+2024-02-21 11:00:36,031 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 10" available
+2024-02-21 11:00:36,032 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 11" available
+2024-02-21 11:00:36,033 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 12" available
+2024-02-21 11:00:36,034 INFO     DisBatch       : Giving .cylinder 3 12 99	100	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_99.yaml
+2024-02-21 11:00:36,035 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 13" available
+2024-02-21 11:00:36,036 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 14" available
+2024-02-21 11:00:36,037 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 15" available
+2024-02-21 11:00:36,038 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 16" available
+2024-02-21 11:00:36,040 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 17" available
+2024-02-21 11:00:36,041 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 18" available
+2024-02-21 11:00:36,043 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 19" available
+2024-02-21 11:00:36,047 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 20" available
+2024-02-21 11:00:36,048 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 21" available
+2024-02-21 11:00:36,050 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 22" available
+2024-02-21 11:00:36,053 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 23" available
+2024-02-21 11:00:36,054 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 24" available
+2024-02-21 11:00:36,056 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 25" available
+2024-02-21 11:00:36,057 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 26" available
+2024-02-21 11:00:36,060 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 27" available
+2024-02-21 11:00:36,062 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 28" available
+2024-02-21 11:00:36,064 INFO     DisBatch       : Giving .cylinder 3 20 100	101	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_100.yaml
+2024-02-21 11:00:36,066 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 29" available
+2024-02-21 11:00:36,067 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 30" available
+2024-02-21 11:00:36,068 INFO     DisBatch       : Engine 3 (worker3029), ".cylinder 3 31" available
+2024-02-21 11:00:36,069 INFO     DisBatch       : Giving .cylinder 3 7 101	102	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_101.yaml
+2024-02-21 11:00:36,069 INFO     DisBatch       : Processed 128 tasks.
+2024-02-21 11:00:36,070 INFO     kvs            : Closing connection from ('10.128.146.27', 42196)
+2024-02-21 11:00:36,071 INFO     DisBatch       : Giving .cylinder 3 16 102	103	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_102.yaml
+2024-02-21 11:00:36,072 INFO     DisBatch       : Giving .cylinder 3 27 103	104	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_103.yaml
+2024-02-21 11:00:36,073 INFO     DisBatch       : Giving .cylinder 3 2 104	105	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_104.yaml
+2024-02-21 11:00:36,074 INFO     DisBatch       : Giving .cylinder 3 19 105	106	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_105.yaml
+2024-02-21 11:00:36,076 INFO     DisBatch       : Giving .cylinder 3 13 106	107	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_106.yaml
+2024-02-21 11:00:36,078 INFO     DisBatch       : Giving .cylinder 3 11 107	108	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_107.yaml
+2024-02-21 11:00:36,079 INFO     DisBatch       : Giving .cylinder 3 24 108	109	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_108.yaml
+2024-02-21 11:00:36,080 INFO     DisBatch       : Giving .cylinder 3 17 109	110	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_109.yaml
+2024-02-21 11:00:36,087 INFO     DisBatch       : Giving .cylinder 3 14 110	111	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_110.yaml
+2024-02-21 11:00:36,089 INFO     DisBatch       : Giving .cylinder 3 10 111	112	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_111.yaml
+2024-02-21 11:00:36,090 INFO     DisBatch       : Giving .cylinder 3 15 112	113	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_112.yaml
+2024-02-21 11:00:36,091 INFO     DisBatch       : Giving .cylinder 3 29 113	114	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_113.yaml
+2024-02-21 11:00:36,092 INFO     DisBatch       : Giving .cylinder 3 22 114	115	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_114.yaml
+2024-02-21 11:00:36,093 INFO     DisBatch       : Giving .cylinder 3 5 115	116	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_115.yaml
+2024-02-21 11:00:36,096 INFO     DisBatch       : Giving .cylinder 3 6 116	117	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_116.yaml
+2024-02-21 11:00:36,098 INFO     DisBatch       : Giving .cylinder 3 18 117	118	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_117.yaml
+2024-02-21 11:00:36,101 INFO     DisBatch       : Giving .cylinder 3 9 118	119	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_118.yaml
+2024-02-21 11:00:36,103 INFO     DisBatch       : Giving .cylinder 3 26 119	120	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_119.yaml
+2024-02-21 11:00:36,105 INFO     DisBatch       : Giving .cylinder 3 8 120	121	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_120.yaml
+2024-02-21 11:00:36,107 INFO     DisBatch       : Giving .cylinder 3 4 121	122	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_121.yaml
+2024-02-21 11:00:36,110 INFO     DisBatch       : Giving .cylinder 3 31 122	123	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_122.yaml
+2024-02-21 11:00:36,112 INFO     DisBatch       : Giving .cylinder 3 25 123	124	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_123.yaml
+2024-02-21 11:00:36,114 INFO     DisBatch       : Giving .cylinder 3 21 124	125	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_124.yaml
+2024-02-21 11:00:36,117 INFO     DisBatch       : Giving .cylinder 3 28 125	126	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_125.yaml
+2024-02-21 11:00:36,119 INFO     DisBatch       : Giving .cylinder 3 23 126	127	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_126.yaml
+2024-02-21 11:00:36,121 INFO     DisBatch       : Giving .cylinder 3 30 127	128	-1	N	source /mnt/home/rbrooks/ceph/venvs/mwlmc_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_127.yaml
+2024-02-21 11:00:36,126 INFO     DisBatch       : No more tasks: 128 accepted
+2024-02-21 11:00:36,127 INFO     DisBatch       : Notifying ".cylinder 3 9" there is no more work.
+2024-02-21 11:00:36,128 INFO     DisBatch       : Notifying ".cylinder 2 21" there is no more work.
+2024-02-21 11:00:36,129 INFO     DisBatch       : Notifying ".cylinder 2 0" there is no more work.
+2024-02-21 11:00:36,130 INFO     DisBatch       : Notifying ".cylinder 2 23" there is no more work.
+2024-02-21 11:00:36,130 INFO     DisBatch       : Notifying ".cylinder 1 26" there is no more work.
+2024-02-21 11:00:36,131 INFO     DisBatch       : Notifying ".cylinder 2 22" there is no more work.
+2024-02-21 11:00:36,131 INFO     DisBatch       : Notifying ".cylinder 0 7" there is no more work.
+2024-02-21 11:00:36,132 INFO     DisBatch       : Notifying ".cylinder 0 1" there is no more work.
+2024-02-21 11:00:36,132 INFO     DisBatch       : Notifying ".cylinder 3 26" there is no more work.
+2024-02-21 11:00:36,133 INFO     DisBatch       : Notifying ".cylinder 1 22" there is no more work.
+2024-02-21 11:00:36,133 INFO     DisBatch       : Notifying ".cylinder 0 29" there is no more work.
+2024-02-21 11:00:36,134 INFO     DisBatch       : Notifying ".cylinder 2 28" there is no more work.
+2024-02-21 11:00:36,134 INFO     DisBatch       : Notifying ".cylinder 3 31" there is no more work.
+2024-02-21 11:00:36,135 INFO     DisBatch       : Notifying ".cylinder 3 21" there is no more work.
+2024-02-21 11:00:36,135 INFO     DisBatch       : Notifying ".cylinder 2 11" there is no more work.
+2024-02-21 11:00:36,136 INFO     DisBatch       : Notifying ".cylinder 1 17" there is no more work.
+2024-02-21 11:00:36,136 INFO     DisBatch       : Notifying ".cylinder 2 14" there is no more work.
+2024-02-21 11:00:36,137 INFO     DisBatch       : Notifying ".cylinder 0 28" there is no more work.
+2024-02-21 11:00:36,137 INFO     DisBatch       : Notifying ".cylinder 2 12" there is no more work.
+2024-02-21 11:00:36,138 INFO     DisBatch       : Notifying ".cylinder 3 16" there is no more work.
+2024-02-21 11:00:36,138 INFO     DisBatch       : Notifying ".cylinder 0 22" there is no more work.
+2024-02-21 11:00:36,139 INFO     DisBatch       : Notifying ".cylinder 0 12" there is no more work.
+2024-02-21 11:00:36,139 INFO     DisBatch       : Notifying ".cylinder 1 0" there is no more work.
+2024-02-21 11:00:36,140 INFO     DisBatch       : Notifying ".cylinder 3 24" there is no more work.
+2024-02-21 11:00:36,140 INFO     DisBatch       : Notifying ".cylinder 1 21" there is no more work.
+2024-02-21 11:00:36,141 INFO     DisBatch       : Notifying ".cylinder 1 3" there is no more work.
+2024-02-21 11:00:36,142 INFO     DisBatch       : Notifying ".cylinder 2 18" there is no more work.
+2024-02-21 11:00:36,142 INFO     DisBatch       : Notifying ".cylinder 3 15" there is no more work.
+2024-02-21 11:00:36,143 INFO     DisBatch       : Notifying ".cylinder 2 16" there is no more work.
+2024-02-21 11:00:36,144 INFO     DisBatch       : Notifying ".cylinder 3 5" there is no more work.
+2024-02-21 11:00:36,145 INFO     DisBatch       : Notifying ".cylinder 3 6" there is no more work.
+2024-02-21 11:00:36,147 INFO     DisBatch       : Notifying ".cylinder 1 10" there is no more work.
+2024-02-21 11:00:36,147 INFO     DisBatch       : Notifying ".cylinder 1 28" there is no more work.
+2024-02-21 11:00:36,148 INFO     DisBatch       : Notifying ".cylinder 2 3" there is no more work.
+2024-02-21 11:00:36,148 INFO     DisBatch       : Notifying ".cylinder 0 20" there is no more work.
+2024-02-21 11:00:36,149 INFO     DisBatch       : Notifying ".cylinder 0 6" there is no more work.
+2024-02-21 11:00:36,149 INFO     DisBatch       : Notifying ".cylinder 2 15" there is no more work.
+2024-02-21 11:00:36,150 INFO     DisBatch       : Notifying ".cylinder 0 18" there is no more work.
+2024-02-21 11:00:36,150 INFO     DisBatch       : Notifying ".cylinder 1 30" there is no more work.
+2024-02-21 11:00:36,151 INFO     DisBatch       : Notifying ".cylinder 1 1" there is no more work.
+2024-02-21 11:00:36,151 INFO     DisBatch       : Notifying ".cylinder 2 2" there is no more work.
+2024-02-21 11:00:36,151 INFO     DisBatch       : Notifying ".cylinder 0 17" there is no more work.
+2024-02-21 11:00:36,152 INFO     DisBatch       : Notifying ".cylinder 1 13" there is no more work.
+2024-02-21 11:00:36,152 INFO     DisBatch       : Notifying ".cylinder 0 25" there is no more work.
+2024-02-21 11:00:36,153 INFO     DisBatch       : Notifying ".cylinder 3 3" there is no more work.
+2024-02-21 11:00:36,153 INFO     DisBatch       : Notifying ".cylinder 2 26" there is no more work.
+2024-02-21 11:00:36,154 INFO     DisBatch       : Notifying ".cylinder 1 6" there is no more work.
+2024-02-21 11:00:36,154 INFO     DisBatch       : Notifying ".cylinder 2 27" there is no more work.
+2024-02-21 11:00:36,154 INFO     DisBatch       : Notifying ".cylinder 1 5" there is no more work.
+2024-02-21 11:00:36,155 INFO     DisBatch       : Notifying ".cylinder 0 23" there is no more work.
+2024-02-21 11:00:36,155 INFO     DisBatch       : Notifying ".cylinder 1 7" there is no more work.
+2024-02-21 11:00:36,156 INFO     DisBatch       : Notifying ".cylinder 1 18" there is no more work.
+2024-02-21 11:00:36,156 INFO     DisBatch       : Notifying ".cylinder 3 20" there is no more work.
+2024-02-21 11:00:36,157 INFO     DisBatch       : Notifying ".cylinder 2 29" there is no more work.
+2024-02-21 11:00:36,157 INFO     DisBatch       : Notifying ".cylinder 3 27" there is no more work.
+2024-02-21 11:00:36,157 INFO     DisBatch       : Notifying ".cylinder 0 11" there is no more work.
+2024-02-21 11:00:36,158 INFO     DisBatch       : Notifying ".cylinder 3 19" there is no more work.
+2024-02-21 11:00:36,158 INFO     DisBatch       : Notifying ".cylinder 0 8" there is no more work.
+2024-02-21 11:00:36,159 INFO     DisBatch       : Notifying ".cylinder 0 2" there is no more work.
+2024-02-21 11:00:36,159 INFO     DisBatch       : Notifying ".cylinder 1 19" there is no more work.
+2024-02-21 11:00:36,160 INFO     DisBatch       : Notifying ".cylinder 3 11" there is no more work.
+2024-02-21 11:00:36,160 INFO     DisBatch       : Notifying ".cylinder 3 17" there is no more work.
+2024-02-21 11:00:36,160 INFO     DisBatch       : Notifying ".cylinder 3 14" there is no more work.
+2024-02-21 11:00:36,161 INFO     DisBatch       : Notifying ".cylinder 1 29" there is no more work.
+2024-02-21 11:00:36,161 INFO     DisBatch       : Notifying ".cylinder 3 29" there is no more work.
+2024-02-21 11:00:36,162 INFO     DisBatch       : Notifying ".cylinder 3 22" there is no more work.
+2024-02-21 11:00:36,162 INFO     DisBatch       : Notifying ".cylinder 0 27" there is no more work.
+2024-02-21 11:00:36,162 INFO     DisBatch       : Notifying ".cylinder 1 15" there is no more work.
+2024-02-21 11:00:36,163 INFO     DisBatch       : Notifying ".cylinder 1 11" there is no more work.
+2024-02-21 11:00:36,163 INFO     DisBatch       : Notifying ".cylinder 2 5" there is no more work.
+2024-02-21 11:00:36,164 INFO     DisBatch       : Notifying ".cylinder 3 18" there is no more work.
+2024-02-21 11:00:36,164 INFO     DisBatch       : Notifying ".cylinder 0 14" there is no more work.
+2024-02-21 11:00:36,165 INFO     DisBatch       : Notifying ".cylinder 0 10" there is no more work.
+2024-02-21 11:00:36,165 INFO     DisBatch       : Notifying ".cylinder 2 7" there is no more work.
+2024-02-21 11:00:36,166 INFO     DisBatch       : Notifying ".cylinder 2 20" there is no more work.
+2024-02-21 11:00:36,166 INFO     DisBatch       : Notifying ".cylinder 2 6" there is no more work.
+2024-02-21 11:00:36,166 INFO     DisBatch       : Notifying ".cylinder 0 3" there is no more work.
+2024-02-21 11:00:36,167 INFO     DisBatch       : Notifying ".cylinder 2 4" there is no more work.
+2024-02-21 11:00:36,167 INFO     DisBatch       : Notifying ".cylinder 3 25" there is no more work.
+2024-02-21 11:00:36,168 INFO     DisBatch       : Notifying ".cylinder 2 10" there is no more work.
+2024-02-21 11:00:36,168 INFO     DisBatch       : Notifying ".cylinder 1 20" there is no more work.
+2024-02-21 11:00:36,169 INFO     DisBatch       : Notifying ".cylinder 2 13" there is no more work.
+2024-02-21 11:00:36,169 INFO     DisBatch       : Notifying ".cylinder 2 31" there is no more work.
+2024-02-21 11:00:36,170 INFO     DisBatch       : Notifying ".cylinder 3 1" there is no more work.
+2024-02-21 11:00:36,171 INFO     DisBatch       : Notifying ".cylinder 3 23" there is no more work.
+2024-02-21 11:00:36,172 INFO     DisBatch       : Notifying ".cylinder 0 16" there is no more work.
+2024-02-21 11:00:36,172 INFO     DisBatch       : Notifying ".cylinder 3 7" there is no more work.
+2024-02-21 11:00:36,173 INFO     DisBatch       : Notifying ".cylinder 3 2" there is no more work.
+2024-02-21 11:00:36,173 INFO     DisBatch       : Notifying ".cylinder 2 24" there is no more work.
+2024-02-21 11:00:36,173 INFO     DisBatch       : Notifying ".cylinder 0 30" there is no more work.
+2024-02-21 11:00:36,174 INFO     DisBatch       : Notifying ".cylinder 1 25" there is no more work.
+2024-02-21 11:00:36,174 INFO     DisBatch       : Notifying ".cylinder 0 19" there is no more work.
+2024-02-21 11:00:36,174 INFO     DisBatch       : Notifying ".cylinder 0 24" there is no more work.
+2024-02-21 11:00:36,175 INFO     DisBatch       : Notifying ".cylinder 0 13" there is no more work.
+2024-02-21 11:00:36,175 INFO     DisBatch       : Notifying ".cylinder 0 15" there is no more work.
+2024-02-21 11:00:36,175 INFO     DisBatch       : Notifying ".cylinder 1 24" there is no more work.
+2024-02-21 11:00:36,176 INFO     DisBatch       : Notifying ".cylinder 0 26" there is no more work.
+2024-02-21 11:00:36,176 INFO     DisBatch       : Notifying ".cylinder 2 25" there is no more work.
+2024-02-21 11:00:36,176 INFO     DisBatch       : Notifying ".cylinder 2 30" there is no more work.
+2024-02-21 11:00:36,176 INFO     DisBatch       : Notifying ".cylinder 1 8" there is no more work.
+2024-02-21 11:00:36,177 INFO     DisBatch       : Notifying ".cylinder 3 0" there is no more work.
+2024-02-21 11:00:36,177 INFO     DisBatch       : Notifying ".cylinder 1 2" there is no more work.
+2024-02-21 11:00:36,177 INFO     DisBatch       : Notifying ".cylinder 0 4" there is no more work.
+2024-02-21 11:00:36,178 INFO     DisBatch       : Notifying ".cylinder 1 27" there is no more work.
+2024-02-21 11:00:36,178 INFO     DisBatch       : Notifying ".cylinder 1 12" there is no more work.
+2024-02-21 11:00:36,178 INFO     DisBatch       : Notifying ".cylinder 3 8" there is no more work.
+2024-02-21 11:00:36,178 INFO     DisBatch       : Notifying ".cylinder 3 4" there is no more work.
+2024-02-21 11:00:36,182 INFO     DisBatch       : Notifying ".cylinder 1 23" there is no more work.
+2024-02-21 11:00:36,183 INFO     DisBatch       : Notifying ".cylinder 3 28" there is no more work.
+2024-02-21 11:00:36,186 INFO     DisBatch       : Notifying ".cylinder 2 19" there is no more work.
+2024-02-21 11:00:36,187 INFO     DisBatch       : Notifying ".cylinder 2 1" there is no more work.
+2024-02-21 11:00:36,189 INFO     DisBatch       : Notifying ".cylinder 0 0" there is no more work.
+2024-02-21 11:00:36,192 INFO     DisBatch       : Notifying ".cylinder 3 12" there is no more work.
+2024-02-21 11:00:36,193 INFO     DisBatch       : Notifying ".cylinder 1 4" there is no more work.
+2024-02-21 11:00:36,194 INFO     DisBatch       : Notifying ".cylinder 3 30" there is no more work.
+2024-02-21 11:00:36,195 INFO     DisBatch       : Notifying ".cylinder 0 31" there is no more work.
+2024-02-21 11:00:36,195 INFO     DisBatch       : Notifying ".cylinder 2 9" there is no more work.
+2024-02-21 11:00:36,196 INFO     DisBatch       : Notifying ".cylinder 0 21" there is no more work.
+2024-02-21 11:00:36,197 INFO     DisBatch       : Notifying ".cylinder 1 14" there is no more work.
+2024-02-21 11:00:36,198 INFO     DisBatch       : Notifying ".cylinder 3 13" there is no more work.
+2024-02-21 11:00:36,199 INFO     DisBatch       : Notifying ".cylinder 2 17" there is no more work.
+2024-02-21 11:00:36,199 INFO     DisBatch       : Notifying ".cylinder 0 5" there is no more work.
+2024-02-21 11:00:36,200 INFO     DisBatch       : Notifying ".cylinder 3 10" there is no more work.
+2024-02-21 11:00:36,201 INFO     DisBatch       : Notifying ".cylinder 1 31" there is no more work.
+2024-02-21 11:00:36,201 INFO     DisBatch       : Notifying ".cylinder 2 8" there is no more work.
+2024-02-21 11:00:36,202 INFO     DisBatch       : Notifying ".cylinder 0 9" there is no more work.
+2024-02-21 11:00:36,203 INFO     DisBatch       : Notifying ".cylinder 1 9" there is no more work.
+2024-02-21 11:00:36,204 INFO     DisBatch       : Notifying ".cylinder 1 16" there is no more work.
+2024-02-21 11:00:44,402 INFO     DisBatch       : Engine 0, ".cylinder 0 20" stopped
+2024-02-21 11:00:45,653 INFO     DisBatch       : Engine 2, ".cylinder 2 16" stopped
+2024-02-21 11:00:46,083 INFO     DisBatch       : Engine 3, ".cylinder 3 20" stopped
+2024-02-21 11:00:46,118 INFO     DisBatch       : Engine 3, ".cylinder 3 14" stopped
+2024-02-21 11:00:46,669 INFO     DisBatch       : Engine 2, ".cylinder 2 28" stopped
+2024-02-21 11:00:47,271 INFO     DisBatch       : Engine 1, ".cylinder 1 8" stopped
+2024-02-21 11:00:49,096 INFO     DisBatch       : Engine 3, ".cylinder 3 13" stopped
+2024-02-21 11:00:57,285 INFO     DisBatch       : Engine 1, ".cylinder 1 26" stopped
+2024-02-21 11:00:59,324 INFO     DisBatch       : Engine 0, ".cylinder 0 2" stopped
+2024-02-21 11:01:04,311 INFO     DisBatch       : Engine 1, ".cylinder 1 19" stopped
+2024-02-21 11:01:18,324 INFO     DisBatch       : Engine 1, ".cylinder 1 18" stopped
+2024-02-21 11:01:38,376 INFO     DisBatch       : Engine 0, ".cylinder 0 4" stopped
+2024-02-21 11:01:47,416 INFO     DisBatch       : Engine 0, ".cylinder 0 15" stopped
+2024-02-21 11:02:04,174 INFO     DisBatch       : Engine 3, ".cylinder 3 11" stopped
+2024-02-21 11:02:13,738 INFO     DisBatch       : Engine 2, ".cylinder 2 18" stopped
+2024-02-21 11:02:19,212 INFO     DisBatch       : Engine 3, ".cylinder 3 26" stopped
+2024-02-21 11:02:23,274 INFO     DisBatch       : Engine 1, ".cylinder 1 1" stopped
+2024-02-21 11:02:26,515 INFO     DisBatch       : Engine 0, ".cylinder 0 29" stopped
+2024-02-21 11:02:33,746 INFO     DisBatch       : Engine 2, ".cylinder 2 27" stopped
+2024-02-21 11:02:33,762 INFO     DisBatch       : Engine 2, ".cylinder 2 25" stopped
+2024-02-21 11:02:34,747 INFO     DisBatch       : Engine 2, ".cylinder 2 12" stopped
+2024-02-21 11:02:41,496 INFO     DisBatch       : Engine 0, ".cylinder 0 19" stopped
+2024-02-21 11:02:42,783 INFO     DisBatch       : Engine 2, ".cylinder 2 20" stopped
+2024-02-21 11:02:45,779 INFO     DisBatch       : Engine 2, ".cylinder 2 30" stopped
+2024-02-21 11:02:46,527 INFO     DisBatch       : Engine 0, ".cylinder 0 31" stopped
+2024-02-21 11:02:48,511 INFO     DisBatch       : Engine 0, ".cylinder 0 22" stopped
+2024-02-21 11:02:49,495 INFO     DisBatch       : Engine 0, ".cylinder 0 18" stopped
+2024-02-21 11:02:50,445 INFO     DisBatch       : Engine 1, ".cylinder 1 16" stopped
+2024-02-21 11:02:51,444 INFO     DisBatch       : Engine 0, ".cylinder 0 5" stopped
+2024-02-21 11:02:51,541 INFO     DisBatch       : Engine 0, ".cylinder 0 27" stopped
+2024-02-21 11:02:52,680 INFO     DisBatch       : Engine 2, ".cylinder 2 2" stopped
+2024-02-21 11:02:52,725 INFO     DisBatch       : Engine 2, ".cylinder 2 15" stopped
+2024-02-21 11:02:52,795 INFO     DisBatch       : Engine 2, ".cylinder 2 21" stopped
+2024-02-21 11:02:53,372 INFO     DisBatch       : Engine 1, ".cylinder 1 3" stopped
+2024-02-21 11:02:53,421 INFO     DisBatch       : Engine 1, ".cylinder 1 25" stopped
+2024-02-21 11:02:53,432 INFO     DisBatch       : Engine 0, ".cylinder 0 0" stopped
+2024-02-21 11:02:55,233 INFO     DisBatch       : Engine 3, ".cylinder 3 7" stopped
+2024-02-21 11:02:56,462 INFO     DisBatch       : Engine 0, ".cylinder 0 7" stopped
+2024-02-21 11:02:56,771 INFO     DisBatch       : Engine 2, ".cylinder 2 9" stopped
+2024-02-21 11:02:58,776 INFO     DisBatch       : Engine 2, ".cylinder 2 29" stopped
+2024-02-21 11:02:59,414 INFO     DisBatch       : Engine 1, ".cylinder 1 23" stopped
+2024-02-21 11:02:59,425 INFO     DisBatch       : Engine 1, ".cylinder 1 5" stopped
+2024-02-21 11:02:59,451 INFO     DisBatch       : Engine 1, ".cylinder 1 28" stopped
+2024-02-21 11:03:00,420 INFO     DisBatch       : Engine 1, ".cylinder 1 7" stopped
+2024-02-21 11:03:02,253 INFO     DisBatch       : Engine 3, ".cylinder 3 22" stopped
+2024-02-21 11:03:03,443 INFO     DisBatch       : Engine 1, ".cylinder 1 31" stopped
+2024-02-21 11:03:03,752 INFO     DisBatch       : Engine 2, ".cylinder 2 11" stopped
+2024-02-21 11:03:03,799 INFO     DisBatch       : Engine 2, ".cylinder 2 23" stopped
+2024-02-21 11:03:04,540 INFO     DisBatch       : Engine 0, ".cylinder 0 24" stopped
+2024-02-21 11:03:05,469 INFO     DisBatch       : Engine 0, ".cylinder 0 6" stopped
+2024-02-21 11:03:06,483 INFO     DisBatch       : Engine 0, ".cylinder 0 14" stopped
+2024-02-21 11:03:07,132 INFO     DisBatch       : Engine 3, ".cylinder 3 0" stopped
+2024-02-21 11:03:07,269 INFO     DisBatch       : Engine 3, ".cylinder 3 4" stopped
+2024-02-21 11:03:08,433 INFO     DisBatch       : Engine 1, ".cylinder 1 14" stopped
+2024-02-21 11:03:09,240 INFO     DisBatch       : Engine 3, ".cylinder 3 16" stopped
+2024-02-21 11:03:09,263 INFO     DisBatch       : Engine 3, ".cylinder 3 18" stopped
+2024-02-21 11:03:13,262 INFO     DisBatch       : Engine 3, ".cylinder 3 17" stopped
+2024-02-21 11:03:14,453 INFO     DisBatch       : Engine 1, ".cylinder 1 9" stopped
+2024-02-21 11:03:14,774 INFO     DisBatch       : Engine 2, ".cylinder 2 10" stopped
+2024-02-21 11:03:14,785 INFO     DisBatch       : Engine 2, ".cylinder 2 14" stopped
+2024-02-21 11:03:16,685 INFO     DisBatch       : Engine 2, ".cylinder 2 0" stopped
+2024-02-21 11:03:19,270 INFO     DisBatch       : Engine 3, ".cylinder 3 5" stopped
+2024-02-21 11:03:19,825 INFO     DisBatch       : Engine 2, ".cylinder 2 22" stopped
+2024-02-21 11:03:20,257 INFO     DisBatch       : Engine 3, ".cylinder 3 19" stopped
+2024-02-21 11:03:21,200 INFO     DisBatch       : Engine 3, ".cylinder 3 3" stopped
+2024-02-21 11:03:23,410 INFO     DisBatch       : Engine 1, ".cylinder 1 6" stopped
+2024-02-21 11:03:24,298 INFO     DisBatch       : Engine 3, ".cylinder 3 23" stopped
+2024-02-21 11:03:24,548 INFO     DisBatch       : Engine 0, ".cylinder 0 23" stopped
+2024-02-21 11:03:24,558 INFO     DisBatch       : Engine 0, ".cylinder 0 26" stopped
+2024-02-21 11:03:25,488 INFO     DisBatch       : Engine 0, ".cylinder 0 8" stopped
+2024-02-21 11:03:25,497 INFO     DisBatch       : Engine 0, ".cylinder 0 11" stopped
+2024-02-21 11:03:25,499 INFO     DisBatch       : Engine 0, ".cylinder 0 9" stopped
+2024-02-21 11:03:28,265 INFO     DisBatch       : Engine 3, ".cylinder 3 2" stopped
+2024-02-21 11:03:29,761 INFO     DisBatch       : Engine 2, ".cylinder 2 6" stopped
+2024-02-21 11:03:30,466 INFO     DisBatch       : Engine 1, ".cylinder 1 4" stopped
+2024-02-21 11:03:32,228 INFO     DisBatch       : Engine 3, ".cylinder 3 12" stopped
+2024-02-21 11:03:32,476 INFO     DisBatch       : Engine 1, ".cylinder 1 29" stopped
+2024-02-21 11:03:32,765 INFO     DisBatch       : Engine 2, ".cylinder 2 7" stopped
+2024-02-21 11:03:38,305 INFO     DisBatch       : Engine 3, ".cylinder 3 8" stopped
+2024-02-21 11:03:39,497 INFO     DisBatch       : Engine 1, ".cylinder 1 10" stopped
+2024-02-21 11:03:40,310 INFO     DisBatch       : Engine 3, ".cylinder 3 25" stopped
+2024-02-21 11:03:42,514 INFO     DisBatch       : Engine 0, ".cylinder 0 10" stopped
+2024-02-21 11:03:43,463 INFO     DisBatch       : Engine 1, ".cylinder 1 20" stopped
+2024-02-21 11:03:44,572 INFO     DisBatch       : Engine 0, ".cylinder 0 21" stopped
+2024-02-21 11:03:46,284 INFO     DisBatch       : Engine 3, ".cylinder 3 27" stopped
+2024-02-21 11:03:48,468 INFO     DisBatch       : Engine 1, ".cylinder 1 27" stopped
+2024-02-21 11:03:48,507 INFO     DisBatch       : Engine 1, ".cylinder 1 15" stopped
+2024-02-21 11:03:50,735 INFO     DisBatch       : Engine 2, ".cylinder 2 4" stopped
+2024-02-21 11:03:51,760 INFO     DisBatch       : Engine 2, ".cylinder 2 8" stopped
+2024-02-21 11:03:54,496 INFO     DisBatch       : Engine 1, ".cylinder 1 21" stopped
+2024-02-21 11:03:54,600 INFO     DisBatch       : Engine 0, ".cylinder 0 25" stopped
+2024-02-21 11:03:54,807 INFO     DisBatch       : Engine 2, ".cylinder 2 19" stopped
+2024-02-21 11:03:54,835 INFO     DisBatch       : Engine 2, ".cylinder 2 24" stopped
+2024-02-21 11:03:55,254 INFO     DisBatch       : Engine 3, ".cylinder 3 1" stopped
+2024-02-21 11:03:56,477 INFO     DisBatch       : Engine 1, ".cylinder 1 13" stopped
+2024-02-21 11:03:56,766 INFO     DisBatch       : Engine 2, ".cylinder 2 5" stopped
+2024-02-21 11:03:57,315 INFO     DisBatch       : Engine 3, ".cylinder 3 15" stopped
+2024-02-21 11:03:57,505 INFO     DisBatch       : Engine 0, ".cylinder 0 1" stopped
+2024-02-21 11:03:58,523 INFO     DisBatch       : Engine 1, ".cylinder 1 11" stopped
+2024-02-21 11:03:58,792 INFO     DisBatch       : Engine 2, ".cylinder 2 3" stopped
+2024-02-21 11:03:59,426 INFO     DisBatch       : Engine 1, ".cylinder 1 2" stopped
+2024-02-21 11:03:59,843 INFO     DisBatch       : Engine 2, ".cylinder 2 13" stopped
+2024-02-21 11:04:00,838 INFO     DisBatch       : Engine 2, ".cylinder 2 17" stopped
+2024-02-21 11:04:02,568 INFO     DisBatch       : Engine 0, ".cylinder 0 17" stopped
+2024-02-21 11:04:02,839 INFO     DisBatch       : Engine 2, ".cylinder 2 26" stopped
+2024-02-21 11:04:03,389 INFO     DisBatch       : Engine 1, ".cylinder 1 0" stopped
+2024-02-21 11:04:03,498 INFO     DisBatch       : Engine 1, ".cylinder 1 17" stopped
+2024-02-21 11:04:05,318 INFO     DisBatch       : Engine 3, ".cylinder 3 9" stopped
+2024-02-21 11:04:06,325 INFO     DisBatch       : Engine 3, ".cylinder 3 29" stopped
+2024-02-21 11:04:06,336 INFO     DisBatch       : Engine 3, ".cylinder 3 31" stopped
+2024-02-21 11:04:08,476 INFO     DisBatch       : Engine 1, ".cylinder 1 12" stopped
+2024-02-21 11:04:09,630 INFO     DisBatch       : Engine 0, ".cylinder 0 30" stopped
+2024-02-21 11:04:09,632 INFO     DisBatch       : Engine 0, ".cylinder 0 28" stopped
+2024-02-21 11:04:11,343 INFO     DisBatch       : Engine 3, ".cylinder 3 28" stopped
+2024-02-21 11:04:11,758 INFO     DisBatch       : Engine 2, ".cylinder 2 1" stopped
+2024-02-21 11:04:12,885 INFO     DisBatch       : Engine 2, ".cylinder 2 31" stopped
+2024-02-21 11:04:12,887 INFO     kvs            : Accepted connect from ('10.128.146.28', 57840)
+2024-02-21 11:04:12,892 INFO     kvs            : Closing connection from ('10.128.146.28', 42674)
+2024-02-21 11:04:12,892 INFO     DisBatch       : Engine 2 stopped, OK
+2024-02-21 11:04:12,892 INFO     kvs            : Closing connection from ('10.128.146.28', 42688)
+2024-02-21 11:04:12,893 INFO     kvs            : Closing connection from ('10.128.146.28', 57840)
+2024-02-21 11:04:12,899 INFO     kvs            : Closing connection from ('10.128.146.28', 42660)
+2024-02-21 11:04:12,969 INFO     kvs            : Closing connection from ('10.128.146.28', 42976)
+2024-02-21 11:04:12,969 INFO     kvs            : Closing connection from ('10.128.146.28', 42970)
+2024-02-21 11:04:12,970 INFO     kvs            : Closing connection from ('10.128.146.28', 42960)
+2024-02-21 11:04:12,970 INFO     kvs            : Closing connection from ('10.128.146.28', 42944)
+2024-02-21 11:04:12,971 INFO     kvs            : Closing connection from ('10.128.146.28', 42942)
+2024-02-21 11:04:12,971 INFO     kvs            : Closing connection from ('10.128.146.28', 42926)
+2024-02-21 11:04:12,972 INFO     kvs            : Closing connection from ('10.128.146.28', 42924)
+2024-02-21 11:04:12,972 INFO     kvs            : Closing connection from ('10.128.146.28', 42920)
+2024-02-21 11:04:12,973 INFO     kvs            : Closing connection from ('10.128.146.28', 42906)
+2024-02-21 11:04:12,973 INFO     kvs            : Closing connection from ('10.128.146.28', 42892)
+2024-02-21 11:04:12,974 INFO     kvs            : Closing connection from ('10.128.146.28', 42874)
+2024-02-21 11:04:12,974 INFO     kvs            : Closing connection from ('10.128.146.28', 42876)
+2024-02-21 11:04:12,974 INFO     kvs            : Closing connection from ('10.128.146.28', 42864)
+2024-02-21 11:04:12,975 INFO     kvs            : Closing connection from ('10.128.146.28', 42854)
+2024-02-21 11:04:12,975 INFO     kvs            : Closing connection from ('10.128.146.28', 42850)
+2024-02-21 11:04:12,975 INFO     kvs            : Closing connection from ('10.128.146.28', 42828)
+2024-02-21 11:04:12,976 INFO     kvs            : Closing connection from ('10.128.146.28', 42840)
+2024-02-21 11:04:12,976 INFO     kvs            : Closing connection from ('10.128.146.28', 42798)
+2024-02-21 11:04:12,977 INFO     kvs            : Closing connection from ('10.128.146.28', 42812)
+2024-02-21 11:04:12,977 INFO     kvs            : Closing connection from ('10.128.146.28', 42788)
+2024-02-21 11:04:12,977 INFO     kvs            : Closing connection from ('10.128.146.28', 42776)
+2024-02-21 11:04:12,978 INFO     kvs            : Closing connection from ('10.128.146.28', 42768)
+2024-02-21 11:04:12,978 INFO     kvs            : Closing connection from ('10.128.146.28', 42766)
+2024-02-21 11:04:12,979 INFO     kvs            : Closing connection from ('10.128.146.28', 42754)
+2024-02-21 11:04:12,979 INFO     kvs            : Closing connection from ('10.128.146.28', 42752)
+2024-02-21 11:04:12,979 INFO     kvs            : Closing connection from ('10.128.146.28', 42748)
+2024-02-21 11:04:12,980 INFO     kvs            : Closing connection from ('10.128.146.28', 42742)
+2024-02-21 11:04:12,980 INFO     kvs            : Closing connection from ('10.128.146.28', 42738)
+2024-02-21 11:04:12,981 INFO     kvs            : Closing connection from ('10.128.146.28', 42726)
+2024-02-21 11:04:12,981 INFO     kvs            : Closing connection from ('10.128.146.28', 42714)
+2024-02-21 11:04:12,981 INFO     kvs            : Closing connection from ('10.128.146.28', 42710)
+2024-02-21 11:04:12,982 INFO     kvs            : Closing connection from ('10.128.146.28', 42700)
+2024-02-21 11:04:14,373 INFO     DisBatch       : Engine 3, ".cylinder 3 30" stopped
+2024-02-21 11:04:16,500 INFO     DisBatch       : Engine 1, ".cylinder 1 22" stopped
+2024-02-21 11:04:17,501 INFO     DisBatch       : Engine 1, ".cylinder 1 30" stopped
+2024-02-21 11:04:17,573 INFO     DisBatch       : Engine 0, ".cylinder 0 12" stopped
+2024-02-21 11:04:17,585 INFO     DisBatch       : Engine 0, ".cylinder 0 16" stopped
+2024-02-21 11:04:18,538 INFO     DisBatch       : Engine 0, ".cylinder 0 3" stopped
+2024-02-21 11:04:19,575 INFO     DisBatch       : Engine 0, ".cylinder 0 13" stopped
+2024-02-21 11:04:19,578 INFO     kvs            : Accepted connect from ('10.128.146.27', 45796)
+2024-02-21 11:04:19,581 INFO     kvs            : Closing connection from ('10.128.146.27', 56190)
+2024-02-21 11:04:19,582 INFO     kvs            : Closing connection from ('10.128.146.27', 56204)
+2024-02-21 11:04:19,582 INFO     kvs            : Closing connection from ('10.128.146.27', 45796)
+2024-02-21 11:04:19,583 INFO     DisBatch       : Engine 0 stopped, OK
+2024-02-21 11:04:19,583 INFO     kvs            : Closing connection from ('10.128.146.27', 56182)
+2024-02-21 11:04:19,638 INFO     kvs            : Closing connection from ('10.128.146.27', 56480)
+2024-02-21 11:04:19,639 INFO     kvs            : Closing connection from ('10.128.146.27', 56474)
+2024-02-21 11:04:19,640 INFO     kvs            : Closing connection from ('10.128.146.27', 56458)
+2024-02-21 11:04:19,640 INFO     kvs            : Closing connection from ('10.128.146.27', 56454)
+2024-02-21 11:04:19,641 INFO     kvs            : Closing connection from ('10.128.146.27', 56444)
+2024-02-21 11:04:19,641 INFO     kvs            : Closing connection from ('10.128.146.27', 56432)
+2024-02-21 11:04:19,642 INFO     kvs            : Closing connection from ('10.128.146.27', 56430)
+2024-02-21 11:04:19,642 INFO     kvs            : Closing connection from ('10.128.146.27', 56424)
+2024-02-21 11:04:19,643 INFO     kvs            : Closing connection from ('10.128.146.27', 56418)
+2024-02-21 11:04:19,644 INFO     kvs            : Closing connection from ('10.128.146.27', 56414)
+2024-02-21 11:04:19,644 INFO     kvs            : Closing connection from ('10.128.146.27', 56412)
+2024-02-21 11:04:19,644 INFO     kvs            : Closing connection from ('10.128.146.27', 56406)
+2024-02-21 11:04:19,645 INFO     kvs            : Closing connection from ('10.128.146.27', 56394)
+2024-02-21 11:04:19,646 INFO     kvs            : Closing connection from ('10.128.146.27', 56382)
+2024-02-21 11:04:19,646 INFO     kvs            : Closing connection from ('10.128.146.27', 56378)
+2024-02-21 11:04:19,646 INFO     kvs            : Closing connection from ('10.128.146.27', 56366)
+2024-02-21 11:04:19,647 INFO     kvs            : Closing connection from ('10.128.146.27', 56356)
+2024-02-21 11:04:19,647 INFO     kvs            : Closing connection from ('10.128.146.27', 56346)
+2024-02-21 11:04:19,648 INFO     kvs            : Closing connection from ('10.128.146.27', 56342)
+2024-02-21 11:04:19,648 INFO     kvs            : Closing connection from ('10.128.146.27', 56332)
+2024-02-21 11:04:19,649 INFO     kvs            : Closing connection from ('10.128.146.27', 56330)
+2024-02-21 11:04:19,649 INFO     kvs            : Closing connection from ('10.128.146.27', 56318)
+2024-02-21 11:04:19,650 INFO     kvs            : Closing connection from ('10.128.146.27', 56306)
+2024-02-21 11:04:19,651 INFO     kvs            : Closing connection from ('10.128.146.27', 56304)
+2024-02-21 11:04:19,651 INFO     kvs            : Closing connection from ('10.128.146.27', 56288)
+2024-02-21 11:04:19,652 INFO     kvs            : Closing connection from ('10.128.146.27', 56274)
+2024-02-21 11:04:19,652 INFO     kvs            : Closing connection from ('10.128.146.27', 56258)
+2024-02-21 11:04:19,653 INFO     kvs            : Closing connection from ('10.128.146.27', 56244)
+2024-02-21 11:04:19,653 INFO     kvs            : Closing connection from ('10.128.146.27', 56236)
+2024-02-21 11:04:19,654 INFO     kvs            : Closing connection from ('10.128.146.27', 56228)
+2024-02-21 11:04:19,654 INFO     kvs            : Closing connection from ('10.128.146.27', 56222)
+2024-02-21 11:04:19,655 INFO     kvs            : Closing connection from ('10.128.146.27', 56220)
+2024-02-21 11:04:20,339 INFO     DisBatch       : Engine 3, ".cylinder 3 10" stopped
+2024-02-21 11:04:20,352 INFO     DisBatch       : Engine 3, ".cylinder 3 21" stopped
+2024-02-21 11:04:23,547 INFO     DisBatch       : Engine 1, ".cylinder 1 24" stopped
+2024-02-21 11:04:23,548 INFO     kvs            : Accepted connect from ('10.128.146.30', 52840)
+2024-02-21 11:04:23,551 INFO     kvs            : Closing connection from ('10.128.146.30', 61206)
+2024-02-21 11:04:23,552 INFO     kvs            : Closing connection from ('10.128.146.30', 61214)
+2024-02-21 11:04:23,553 INFO     kvs            : Closing connection from ('10.128.146.30', 52840)
+2024-02-21 11:04:23,553 INFO     DisBatch       : Engine 1 stopped, OK
+2024-02-21 11:04:23,554 INFO     kvs            : Closing connection from ('10.128.146.30', 61202)
+2024-02-21 11:04:23,640 INFO     kvs            : Closing connection from ('10.128.146.30', 32888)
+2024-02-21 11:04:23,640 INFO     kvs            : Closing connection from ('10.128.146.30', 32886)
+2024-02-21 11:04:23,641 INFO     kvs            : Closing connection from ('10.128.146.30', 32876)
+2024-02-21 11:04:23,642 INFO     kvs            : Closing connection from ('10.128.146.30', 32866)
+2024-02-21 11:04:23,643 INFO     kvs            : Closing connection from ('10.128.146.30', 32844)
+2024-02-21 11:04:23,643 INFO     kvs            : Closing connection from ('10.128.146.30', 32850)
+2024-02-21 11:04:23,644 INFO     kvs            : Closing connection from ('10.128.146.30', 32834)
+2024-02-21 11:04:23,644 INFO     kvs            : Closing connection from ('10.128.146.30', 32830)
+2024-02-21 11:04:23,645 INFO     kvs            : Closing connection from ('10.128.146.30', 32816)
+2024-02-21 11:04:23,646 INFO     kvs            : Closing connection from ('10.128.146.30', 32808)
+2024-02-21 11:04:23,646 INFO     kvs            : Closing connection from ('10.128.146.30', 32792)
+2024-02-21 11:04:23,647 INFO     kvs            : Closing connection from ('10.128.146.30', 32774)
+2024-02-21 11:04:23,647 INFO     kvs            : Closing connection from ('10.128.146.30', 32778)
+2024-02-21 11:04:23,648 INFO     kvs            : Closing connection from ('10.128.146.30', 61432)
+2024-02-21 11:04:23,649 INFO     kvs            : Closing connection from ('10.128.146.30', 61424)
+2024-02-21 11:04:23,649 INFO     kvs            : Closing connection from ('10.128.146.30', 61416)
+2024-02-21 11:04:23,650 INFO     kvs            : Closing connection from ('10.128.146.30', 61402)
+2024-02-21 11:04:23,651 INFO     kvs            : Closing connection from ('10.128.146.30', 61390)
+2024-02-21 11:04:23,651 INFO     kvs            : Closing connection from ('10.128.146.30', 61376)
+2024-02-21 11:04:23,652 INFO     kvs            : Closing connection from ('10.128.146.30', 61370)
+2024-02-21 11:04:23,652 INFO     kvs            : Closing connection from ('10.128.146.30', 61360)
+2024-02-21 11:04:23,653 INFO     kvs            : Closing connection from ('10.128.146.30', 61334)
+2024-02-21 11:04:23,654 INFO     kvs            : Closing connection from ('10.128.146.30', 61348)
+2024-02-21 11:04:23,654 INFO     kvs            : Closing connection from ('10.128.146.30', 61318)
+2024-02-21 11:04:23,655 INFO     kvs            : Closing connection from ('10.128.146.30', 61306)
+2024-02-21 11:04:23,656 INFO     kvs            : Closing connection from ('10.128.146.30', 61302)
+2024-02-21 11:04:23,656 INFO     kvs            : Closing connection from ('10.128.146.30', 61282)
+2024-02-21 11:04:23,657 INFO     kvs            : Closing connection from ('10.128.146.30', 61286)
+2024-02-21 11:04:23,658 INFO     kvs            : Closing connection from ('10.128.146.30', 61270)
+2024-02-21 11:04:23,658 INFO     kvs            : Closing connection from ('10.128.146.30', 61256)
+2024-02-21 11:04:23,659 INFO     kvs            : Closing connection from ('10.128.146.30', 61240)
+2024-02-21 11:04:23,659 INFO     kvs            : Closing connection from ('10.128.146.30', 61224)
+2024-02-21 11:04:27,347 INFO     DisBatch       : Engine 3, ".cylinder 3 6" stopped
+2024-02-21 11:04:28,334 INFO     kvs            : Accepted connect from ('10.128.146.29', 58150)
+2024-02-21 11:04:28,337 INFO     kvs            : Closing connection from ('10.128.146.29', 50430)
+2024-02-21 11:04:28,338 INFO     kvs            : Closing connection from ('10.128.146.29', 58150)
+2024-02-21 11:04:28,339 INFO     kvs            : Closing connection from ('10.128.146.29', 50446)
+2024-02-21 11:04:28,339 INFO     kvs            : Closing connection from ('10.128.146.29', 50420)
+2024-02-21 11:04:28,393 INFO     kvs            : Closing connection from ('10.128.146.29', 50752)
+2024-02-21 11:04:28,394 INFO     kvs            : Closing connection from ('10.128.146.29', 50738)
+2024-02-21 11:04:28,394 INFO     kvs            : Closing connection from ('10.128.146.29', 50724)
+2024-02-21 11:04:28,395 INFO     kvs            : Closing connection from ('10.128.146.29', 50714)
+2024-02-21 11:04:28,396 INFO     kvs            : Closing connection from ('10.128.146.29', 50704)
+2024-02-21 11:04:28,396 INFO     kvs            : Closing connection from ('10.128.146.29', 50690)
+2024-02-21 11:04:28,397 INFO     kvs            : Closing connection from ('10.128.146.29', 50688)
+2024-02-21 11:04:28,397 INFO     kvs            : Closing connection from ('10.128.146.29', 50682)
+2024-02-21 11:04:28,398 INFO     kvs            : Closing connection from ('10.128.146.29', 50666)
+2024-02-21 11:04:28,399 INFO     kvs            : Closing connection from ('10.128.146.29', 50652)
+2024-02-21 11:04:28,399 INFO     kvs            : Closing connection from ('10.128.146.29', 50638)
+2024-02-21 11:04:28,415 INFO     kvs            : Closing connection from ('10.128.146.29', 50628)
+2024-02-21 11:04:28,417 INFO     kvs            : Closing connection from ('10.128.146.29', 50614)
+2024-02-21 11:04:28,418 INFO     kvs            : Closing connection from ('10.128.146.29', 50596)
+2024-02-21 11:04:28,418 INFO     kvs            : Closing connection from ('10.128.146.29', 50610)
+2024-02-21 11:04:28,424 INFO     kvs            : Closing connection from ('10.128.146.29', 50588)
+2024-02-21 11:04:28,425 INFO     kvs            : Closing connection from ('10.128.146.29', 50586)
+2024-02-21 11:04:28,425 INFO     kvs            : Closing connection from ('10.128.146.29', 50584)
+2024-02-21 11:04:28,433 INFO     kvs            : Closing connection from ('10.128.146.29', 50574)
+2024-02-21 11:04:28,433 INFO     kvs            : Closing connection from ('10.128.146.29', 50566)
+2024-02-21 11:04:28,434 INFO     kvs            : Closing connection from ('10.128.146.29', 50554)
+2024-02-21 11:04:28,435 INFO     kvs            : Closing connection from ('10.128.146.29', 50548)
+2024-02-21 11:04:28,437 INFO     kvs            : Closing connection from ('10.128.146.29', 50542)
+2024-02-21 11:04:28,437 INFO     kvs            : Closing connection from ('10.128.146.29', 50528)
+2024-02-21 11:04:28,438 INFO     kvs            : Closing connection from ('10.128.146.29', 50512)
+2024-02-21 11:04:28,439 INFO     kvs            : Closing connection from ('10.128.146.29', 50516)
+2024-02-21 11:04:28,440 INFO     kvs            : Closing connection from ('10.128.146.29', 50500)
+2024-02-21 11:04:28,440 INFO     kvs            : Closing connection from ('10.128.146.29', 50486)
+2024-02-21 11:04:28,441 INFO     kvs            : Closing connection from ('10.128.146.29', 50478)
+2024-02-21 11:04:28,441 INFO     kvs            : Closing connection from ('10.128.146.29', 50466)
+2024-02-21 11:04:28,442 INFO     kvs            : Closing connection from ('10.128.146.29', 50452)
+2024-02-21 11:04:28,443 INFO     kvs            : Closing connection from ('10.128.146.29', 50450)
+2024-02-21 11:04:28,889 INFO     DisBatch       : Finished barrier 128: 128	-1	-1	D	#NO MORE TASKS BARRIER.
+2024-02-21 11:04:28,891 INFO     DisBatch       : Engine 3, ".cylinder 3 24" stopped
+2024-02-21 11:04:28,893 INFO     DisBatch       : Engine 3 stopped, OK
+2024-02-21 11:04:28,894 INFO     DisBatch       : Driver done
+2024-02-21 11:04:28,896 INFO     kvs            : Closing connection from ('10.128.146.27', 42192)
+2024-02-21 11:04:28,896 INFO     DisBatch       : Shutting down KVS server.
+2024-02-21 11:04:28,897 INFO     kvs            : Calling server shutdown
+2024-02-21 11:04:28,968 INFO     DisBatch       : Waiting for Execution context to finish...
+2024-02-21 11:04:29,970 INFO     DisBatch       : Execution context returned 0

@@ -1,0 +1,12 @@
+
+Running on hosts: worker3104
+Running on 1 nodes.
+Running on 1 processors.
+Current working directory is /mnt/home/rbrooks/ceph/oceanus/bash
+
+Initialising MW ... 
+sphcoefs::read_coef_file: reading coefficients from file . . . success!!
+Initialising LMC ... 
+sphcoefs::read_coef_file: reading coefficients from file . . . success!!
+Initialising MW disc ... 
+cylcoefs::read_simple_coef_file: reading coefficients from file . . . success!!

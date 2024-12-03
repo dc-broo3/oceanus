@@ -15,9 +15,11 @@ import pathlib
 
 from scipy.spatial.transform import Rotation
 
+print("loading mwlmc model...")
 from mwlmc import model as mwlmc_model
+print("mwlmc_model has been called...")
 Model = mwlmc_model.MWLMC()
-print("mwlmc Model successfully loaded!")
+print("mwlmc model successfully loaded and set!")
 
 def plummer_force(r, m, b):
     """
@@ -258,7 +260,7 @@ def widths_deforms(lons, lats):
     lons_mainbody = lons[(lons >= lower_value) & (lons <= upper_value)]
     lats_mainbody = lats[(lons >= lower_value) & (lons <= upper_value)] 
     # Create bins
-    lon_bins = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50)
+    lon_bins, Delta_phi1 = np.linspace(np.nanmin(lons_mainbody), np.nanmax(lons_mainbody), 50, retstep=True)
     # Slice lons_mainbody into bins
     bin_indices = np.digitize(lons_mainbody, lon_bins)
     # Create a mask array
@@ -268,8 +270,13 @@ def widths_deforms(lons, lats):
 
     # Calculate width for each bin
     local_width = np.array([np.nanstd(lats_mainbody[m]) for m in mask.T])
-    track_deforms = np.array([np.abs(np.nanmedian(lats_mainbody[m])) for m in mask.T])
-    return np.nanmedian(local_width), np.nanmedian(track_deforms)
+    dev_bins = np.array([np.abs(np.nanmedian(lats_mainbody[m])) for m in mask.T])
+
+    # Calculate gradient of the deviation for adjacent bins)
+    Delta_dev_bins = np.diff(dev_bins)
+    ddev_dphi1 = Delta_dev_bins / Delta_phi1
+
+    return np.nanmedian(local_width), np.nanmedian(dev_bins), np.percentile(ddev_dphi1, 95)
 
 def pm_misalignment(lons, xfs, vfs):
     
@@ -320,7 +327,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     inpath, snapname, outpath, filename, \
     fc, Mprog, a_s, pericenter, apocenter, Tbegin, Tfinal, dtmin, \
     mwhflag, mwdflag, lmcflag, strip_rate, \
-    static_mwh, static_mwd, lmc_switch, motion = params
+    static_mwh, static_mwd, static_lmc, disc_switch, lmc_switch, motion = params
     
     print("Parameters present!")
     # fullfile_path = pathlib.Path(outpath) / filename + '.hdf5'
@@ -334,7 +341,6 @@ def lagrange_cloud_strip_adT(params, overwrite):
     
     new_G = G.to(u.kpc*(u.km/u.s)**2/u.Msun)
     Lunits = (u.kpc*u.km)/u.s
-    lambda_source = 1. # the multiplier of how far away from the tidal radius to strip from.
     max_steps = int((Tfinal - Tbegin) / dtmin) + 2 
     max_particles = int( ((max_steps)*strip_rate) + 1)
     
@@ -347,6 +353,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
         print("MWH has been set to rigid!")
         #Some line of code here to check they have been set to zero and reinstalled
         _, MWHcoeffs = Model.return_mw_coefficients()
+        
         assert np.allclose(np.array(MWHcoeffs)[:,1:],0)==True, "MW halo coefficients need to be set to zero"
         
     if static_mwd==True:
@@ -360,6 +367,30 @@ def lagrange_cloud_strip_adT(params, overwrite):
         MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
         assert np.allclose(np.array(MWDctmp)[:,1:],0)==True, "MW disc coefficients (c) need to be set to zero"
         assert np.allclose(np.array(MWDstmp)[:,1:],0)==True, "MW disc coefficients (s) need to be set to zero"
+
+    if disc_switch==True:
+        MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
+        MWDctmp, MWDstmp = np.array(MWDctmp), np.array(MWDstmp)
+        MWDctmp *= 0 
+        MWDstmp *= 0 
+        Model.install_disc_coefficients(MWDctmp,MWDstmp)
+        print("MWD has been turned off!")
+        #Some line of code here to check they have been set to zero and reinstalled.
+        MWDfloats, MWDctmp, MWDstmp = Model.return_disc_coefficients()
+        assert np.allclose(np.array(MWDctmp), 0)==True, "MW disc coefficients (c) need to be set to zero"
+        assert np.allclose(np.array(MWDstmp), 0)==True, "MW disc coefficients (s) need to be set to zero"
+
+    if static_lmc==True:
+        # The LMC should also be static!
+        _, LMCcoeffs = Model.return_lmc_coefficients()
+        LMCcoeffs = np.array(LMCcoeffs)
+        LMCcoeffs[:,0] = LMCcoeffs[:,0][0] 
+        LMCcoeffs[:,1:] = LMCcoeffs[:,1:]*0
+        Model.install_lmc_coefficients(LMCcoeffs)
+        print("LMC has been turned off!")
+        #Some line of code here to check they have been set to zero and reinstalled.
+        _, LMCcoeffs = Model.return_lmc_coefficients()
+        assert np.allclose(np.array(LMCcoeffs)[:,1:],0)==True, "LMC halo coefficients need to be set to zero"
         
     if lmc_switch==True:
         _, LMCcoeffs = Model.return_lmc_coefficients()
@@ -370,6 +401,8 @@ def lagrange_cloud_strip_adT(params, overwrite):
         #Some line of code here to check they have been set to zero and reinstalled.
         _, LMCcoeffs = Model.return_lmc_coefficients()
         assert np.allclose(np.array(LMCcoeffs),0)==True, "LMC coefficients need to be set to zero"
+
+    
     
     w0 = gd.PhaseSpacePosition.from_w(fc.T, units=galactic)
     print('rewinding progenitor...')
@@ -414,8 +447,8 @@ def lagrange_cloud_strip_adT(params, overwrite):
         sigma_s = ((new_G.value * Mprog * mass_frac) / (r_t**2 + a_s**2)**0.5)**0.5
 
         # Calculate positions and velocities of points of particle release
-        source_coords_in = prog_xs[0:3] - lambda_source * r_t[:, None] * r_hat
-        source_coords_out = prog_xs[0:3] + lambda_source * r_t[:, None] * r_hat
+        source_coords_in = prog_xs[0:3] - r_t[:, None] * r_hat
+        source_coords_out = prog_xs[0:3] + r_t[:, None] * r_hat
 
         prog_velocity_r = np.sum(prog_vs[0:3]*r_hat)
         prog_velocity_tan = prog_vs[0:3] - prog_velocity_r * r_hat
@@ -535,7 +568,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     lons, lats = lons_lats(xs_snaps[-1], vs_snaps[-1])
     sigma_v = local_veldis(lons, vs_snaps[-1])
     length = np.nanpercentile(lons, 95) - np.nanpercentile(lons, 5)
-    width, track_deform = widths_deforms(lons, lats)
+    width, track_deform, grad_track_deform = widths_deforms(lons, lats)
     pm_angle = pm_misalignment(lons, xs_snaps[-1], vs_snaps[-1])
     # med_lon, med_lat = np.nanmedian(lons), np.nanmedian(lats)
     
@@ -554,7 +587,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
     pot_label = harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, static_mwh, motion)    
     write_stream_hdf5(outpath, filename, xs_snaps, vs_snaps, ts2,
                       Es, Ls, Lzs, Lxs, sigma_v, 
-                      length, width, track_deform, pm_angle,
+                      length, width, track_deform, grad_track_deform, pm_angle,
                       lmc_close_sep, gls, gbs,
                       pot_label, fc, Mprog, a_s, 
                       pericenter, apocenter)
@@ -586,7 +619,9 @@ def readparams(paramfile):
     strip_rate = d["strip_rate"]
     motion = d["motion"]
     static_mwh = d["static_mwh"]
-    static_mwd = d["mwd_switch"]
+    static_mwd = d["static_mwd"] # need to update this in ics code
+    static_lmc = d["static_lmc"] # need to update this in ics code
+    disc_switch = d["disc_switch"]
     lmc_switch = d["lmc_switch"]
 
     #change to is instance?
@@ -608,11 +643,11 @@ def readparams(paramfile):
     print("Read yaml contents and returning function...")
 
     return [inpath, snapname, outpath, outname, prog_ics ,prog_mass, prog_scale, pericenter, apocenter, Tbegin, Tfinal, dtmin, 
-            haloflag, discflag, lmcflag, strip_rate, static_mwh, static_mwd, lmc_switch, motion]
+            haloflag, discflag, lmcflag, strip_rate, static_mwh, static_mwd, static_lmc, disc_switch, lmc_switch, motion]
 
 def write_stream_hdf5(outpath, filename, positions, velocities, times, 
                       energies, Ls, Lzs, Lxs, sigma_v, 
-                      length, width, track_deform, pm_angles,
+                      length, width, track_deform, grad_track_deform, pm_angles,
                       lmc_sep, gls, gbs,
                       potential, progics, progmass, progscale, 
                       pericenter, apocenter):
@@ -636,6 +671,7 @@ def write_stream_hdf5(outpath, filename, positions, velocities, times,
     hf.create_dataset('lengths', data=length)
     hf.create_dataset('widths', data=width)
     hf.create_dataset('track_deform', data=track_deform)
+    hf.create_dataset('grad_track_deform', data=grad_track_deform)
     hf.create_dataset('pm_misalignment', data=pm_angles) 
     # hf.create_dataset('av_lon', data=med_lon)
     # hf.create_dataset('av_lat', data=med_lat)
@@ -699,6 +735,9 @@ def harmonicflags_to_potlabel(mwhflag, mwdflag, lmcflag, mwh_static, motion):
         
     elif mwhflag==63 and mwdflag==0 and lmcflag==63:
         label = 'full-mwh-no-mwd-full-lmc'  
+
+    else:
+        label='bespoke'
          
     return label
     

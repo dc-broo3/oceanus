@@ -1,0 +1,1 @@
+#DISBATCH REPEAT 1024 start 0 /mnt/home/rbrooks/ceph/oceanus/bash/run-agama-streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/agama-mw/param_${DISBATCH_REPEAT_INDEX}.yaml

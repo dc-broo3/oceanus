@@ -1,0 +1,15 @@
+The following modules were not unloaded:
+  (Use "module --force purge" to unload all):
+
+  1) modules/2.3-20240529   2) openblas/single-0.3.26
+sphcache::read_sph_cache: trying to read cached table . . . success!!
+sphcache::read_sph_cache: trying to read cached table . . . success!!
+cylcache::read_cyl_cache: trying to read cached table . . . success!!
+/mnt/sw/nix/store/gpkc8q6zjnp3n3h3w9hbmbj6gjbxs85w-python-3.10.10-view/lib/python3.10/site-packages/astropy/units/quantity.py:611: RuntimeWarning: invalid value encountered in power
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+/mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py:318: RuntimeWarning: invalid value encountered in arccos
+  pm_angles_rad = np.arccos(L_dot_J_bins) * u.rad
+/mnt/home/rbrooks/ceph/oceanus/src/streamgenerato/mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py:318: RuntimeWarning: invalid value encountered in arccos
+  pm_angles_rad = np.arccos(L_dot_J_bins) * u.rad
+/mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py:585: RuntimeWarning: All-NaN slice encountered
+  lmc_close_sep = np.nanmin(lmc_sep, axis=0)

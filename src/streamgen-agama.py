@@ -268,7 +268,7 @@ def lagrange_cloud_strip_adT(params, overwrite):
                                                                     np.array(fc),
                                                                     mass_sat)
     
-    xv_prog_stream = np.concatenate([orbit_sat[0].reshape(1,6), xv_stream])
+    xv_prog_stream = np.concatenate([orbit_sat[-1].reshape(1,6), xv_stream])
     print("stream generated!")
     xs, vs = xv_prog_stream[:,:3], xv_prog_stream[:,3:6] # only have the final snapshot
     

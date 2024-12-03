@@ -1,0 +1,8 @@
+---
+inpath : "/mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/agama-mw" 
+outpath : "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/high-vel-dis/agama-mw/"
+Tbegin : -5.0
+Tfinal :  0.  
+num_particles : 20000
+...
+

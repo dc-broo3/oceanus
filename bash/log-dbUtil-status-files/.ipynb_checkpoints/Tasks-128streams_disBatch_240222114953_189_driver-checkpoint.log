@@ -1,0 +1,671 @@
+2024-02-22 11:49:53,759 INFO     DisBatch       : Starting feeder (542668) on worker5478 in /mnt/ceph/users/rbrooks/oceanus/bash.
+2024-02-22 11:49:53,760 INFO     DisBatch       : Args: ['/cm/local/apps/slurm/var/spool/job3220891/slurm_script', '-p', './log-dbUtil-status-files/', 'Tasks-128streams']
+2024-02-22 11:49:53,760 INFO     DisBatch       : Env: environ({'LS_COLORS': 'rs=0:di=38;5;33:ln=38;5;51:mh=00:pi=40;38;5;11:so=38;5;13:do=38;5;5:bd=48;5;232;38;5;11:cd=48;5;232;38;5;3:or=48;5;232;38;5;9:mi=01;05;37;41:su=48;5;196;38;5;15:sg=48;5;11;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;21;38;5;15:ex=38;5;40:*.tar=38;5;9:*.tgz=38;5;9:*.arc=38;5;9:*.arj=38;5;9:*.taz=38;5;9:*.lha=38;5;9:*.lz4=38;5;9:*.lzh=38;5;9:*.lzma=38;5;9:*.tlz=38;5;9:*.txz=38;5;9:*.tzo=38;5;9:*.t7z=38;5;9:*.zip=38;5;9:*.z=38;5;9:*.dz=38;5;9:*.gz=38;5;9:*.lrz=38;5;9:*.lz=38;5;9:*.lzo=38;5;9:*.xz=38;5;9:*.zst=38;5;9:*.tzst=38;5;9:*.bz2=38;5;9:*.bz=38;5;9:*.tbz=38;5;9:*.tbz2=38;5;9:*.tz=38;5;9:*.deb=38;5;9:*.rpm=38;5;9:*.jar=38;5;9:*.war=38;5;9:*.ear=38;5;9:*.sar=38;5;9:*.rar=38;5;9:*.alz=38;5;9:*.ace=38;5;9:*.zoo=38;5;9:*.cpio=38;5;9:*.7z=38;5;9:*.rz=38;5;9:*.cab=38;5;9:*.wim=38;5;9:*.swm=38;5;9:*.dwm=38;5;9:*.esd=38;5;9:*.jpg=38;5;13:*.jpeg=38;5;13:*.mjpg=38;5;13:*.mjpeg=38;5;13:*.gif=38;5;13:*.bmp=38;5;13:*.pbm=38;5;13:*.pgm=38;5;13:*.ppm=38;5;13:*.tga=38;5;13:*.xbm=38;5;13:*.xpm=38;5;13:*.tif=38;5;13:*.tiff=38;5;13:*.png=38;5;13:*.svg=38;5;13:*.svgz=38;5;13:*.mng=38;5;13:*.pcx=38;5;13:*.mov=38;5;13:*.mpg=38;5;13:*.mpeg=38;5;13:*.m2v=38;5;13:*.mkv=38;5;13:*.webm=38;5;13:*.ogm=38;5;13:*.mp4=38;5;13:*.m4v=38;5;13:*.mp4v=38;5;13:*.vob=38;5;13:*.qt=38;5;13:*.nuv=38;5;13:*.wmv=38;5;13:*.asf=38;5;13:*.rm=38;5;13:*.rmvb=38;5;13:*.flc=38;5;13:*.avi=38;5;13:*.fli=38;5;13:*.flv=38;5;13:*.gl=38;5;13:*.dl=38;5;13:*.xcf=38;5;13:*.xwd=38;5;13:*.yuv=38;5;13:*.cgm=38;5;13:*.emf=38;5;13:*.ogv=38;5;13:*.ogx=38;5;13:*.aac=38;5;45:*.au=38;5;45:*.flac=38;5;45:*.m4a=38;5;45:*.mid=38;5;45:*.midi=38;5;45:*.mka=38;5;45:*.mp3=38;5;45:*.mpc=38;5;45:*.ogg=38;5;45:*.ra=38;5;45:*.wav=38;5;45:*.oga=38;5;45:*.opus=38;5;45:*.spx=38;5;45:*.xspf=38;5;45:', 'LD_LIBRARY_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib:/cm/shared/apps/slurm/current/lib64', 'LMOD_SITE_MODULEPATH': '/mnt/sw/lmod/x86_64/rocky8/modules', '__LMOD_REF_COUNT_PATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch:1;/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/bin:1;/cm/shared/apps/slurm/current/bin:1;/usr/lib64/ccache:1;/usr/local/bin:1;/usr/bin:1;/usr/local/sbin:1;/usr/sbin:1;/opt/dell/srvadmin/bin:1;/mnt/home/rbrooks/.local/bin:1', '_ModuleTable002_': 'bW9kL3g4Nl82NC9yb2NreTgvbW9kdWxlcy9tb2R1bGVzLzIuMi0yMDIzMDgwOC5sdWEiLApmdWxsTmFtZSA9ICJtb2R1bGVzLzIuMi0yMDIzMDgwOCIsCmxvYWRPcmRlciA9IDEsCnByb3BUID0gewpsbW9kID0gewpzdGlja3kgPSAxLAp9LAp9LApzdGFja0RlcHRoID0gMCwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gIm1vZHVsZXMiLAp3ViA9ICJeMDAwMDAwMDIuMDAwMDAwMDAyLip6ZmluYWwtLjAyMDIzMDgwOC4qemZpbmFsIiwKfSwKb3BlbmJsYXMgPSB7CmZuID0gIi9tbnQvc3cvbml4L3N0b3JlLzNrNTRubGZhNmthOWhnNnlqc3FnY3FiemlxanB4aXBrLW1vZHVsZXMvbGludXgtcm9ja3k4LXg4Nl82NC9Db3JlL29wZW5ibGFzL3RocmVhZGVkLTAuMy4yMy5s', 'SSH_CONNECTION': '172.28.53.179 61917 10.250.144.1 22', '__LMOD_REF_COUNT_C_INCLUDE_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include:1;/cm/shared/apps/slurm/current/include:1', 'LANG': 'en_US.UTF-8', 'MODULEPATH_BASE': '/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64', 'HISTCONTROL': 'ignoredups', 'FLEXIBLAS_LIBRARY_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib', 'HOSTNAME': 'worker5478', 'LMOD_SYSTEM_DEFAULT_MODULES': 'modules:slurm:openblas', 'OLDPWD': '/mnt/home/rbrooks/ceph/oceanus', '__LMOD_REF_COUNT__LMFILES_': '/mnt/sw/lmod/x86_64/rocky8/modules/modules/2.2-20230808.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/slurm.lua:1;/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/openblas/threaded-0.3.23.lua:1;/mnt/sw/lmod/x86_64/rocky8/modules/disBatch/beta.lua:1', 'C_INCLUDE_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include:/cm/shared/apps/slurm/current/include', '__LMOD_SET_FPATH': '1', 'FPATH': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/init/ksh_funcs', '__LMOD_REF_COUNT_CPLUS_INCLUDE_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include:1;/cm/shared/apps/slurm/current/include:1', 'KDEDIRS': '/usr', 'LMOD_RC': '/mnt/sw/lmod/lmodrc.lua', '__LMOD_REF_COUNT_LD_LIBRARY_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib:1;/cm/shared/apps/slurm/current/lib64:1', '__LMOD_REF_COUNT_PKG_CONFIG_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib/pkgconfig:1;/cm/shared/apps/slurm/current/lib64/pkgconfig:1', 'OPENBLAS_BASE': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23', '__LMOD_REF_COUNT_SLURM_BASE': '/cm/shared/apps/slurm/current:1', '_ModuleTable004_': 'PSB7CnN0aWNreSA9IDEsCn0sCn0sCnN0YWNrRGVwdGggPSAwLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAic2x1cm0iLAp3ViA9ICJNLip6ZmluYWwiLAp9LAp9LAptcGF0aEEgPSB7CiIvbW50L3N3L25peC9zdG9yZS8zazU0bmxmYTZrYTloZzZ5anNxZ2NxYnppcWpweGlway1tb2R1bGVzL2xpbnV4LXJvY2t5OC14ODZfNjQvQ29yZSIKLCAiL21udC9zdy9sbW9kL3g4Nl82NC9yb2NreTgvbW9kdWxlcyIKLCAiL21udC9zdy9uaXgvc3RvcmUveDI0MHpjaTNjNHk1a2JyNnl3MnFjZnBmY3lkZGExMXEtbG1vZC04LjYuNS9tb2R1bGVmaWxlcy9MaW51eCIKLCAiL21udC9zdy9uaXgvc3RvcmUveDI0MHpjaTNjNHk1a2JyNnl3MnFjZnBmY3lkZGExMXEtbG1vZC04LjYu', '__LMOD_REF_COUNT_PYTHONPATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch:1', 'S_COLORS': 'auto', 'LMOD_FAMILY_BLAS': 'openblas', 'which_declare': 'declare -f', 'XDG_SESSION_ID': 'c48680', 'USER': 'rbrooks', '__LMOD_REF_COUNT_SLURM_ROOT': '/cm/shared/apps/slurm/current:1', 'LMOD_FAMILY_BLAS_VERSION': 'threaded-0.3.23', '__LMOD_REF_COUNT_MODULEPATH': '/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core:1;/mnt/sw/lmod/x86_64/rocky8/modules:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Linux:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Core:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/modulefiles/Core:1', '__LMOD_REF_COUNT_OPENBLAS_BASE': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23:1', '__LMOD_REF_COUNT_LOADEDMODULES': 'modules/2.2-20230808:1;slurm:1;openblas/threaded-0.3.23:1;disBatch/beta:1', 'PWD': '/mnt/home/rbrooks/ceph/oceanus/bash', 'ENABLE_LMOD': '1', 'HOME': '/mnt/home/rbrooks', 'CMAKE_PREFIX_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23:/cm/shared/apps/slurm/current', 'SSH_CLIENT': '172.28.53.179 61917 22', 'LMOD_VERSION': '8.6.5', 'LMOD_SITE_MSG_FILE': '/mnt/sw/lmod/site_msg.lua', 'BASH_ENV': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/init/bash', 'XDG_DATA_DIRS': '/usr/share', 'FLEXIBLAS': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib/libopenblas.so', '__LMOD_REF_COUNT_LIBRARY_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib:1;/cm/shared/apps/slurm/current/lib64:1', 'LIBRARY_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib:/cm/shared/apps/slurm/current/lib64', '__LMOD_REF_COUNT_CMAKE_PREFIX_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23:1;/cm/shared/apps/slurm/current:1', 'LMOD_sys': 'Linux', '_ModuleTable001_': 'X01vZHVsZVRhYmxlXyA9IHsKTVR2ZXJzaW9uID0gMywKY19yZWJ1aWxkVGltZSA9IDcyMDAuMCwKY19zaG9ydFRpbWUgPSAwLjAwMDg5NDA2OTY3MTYzMDg2LApkZXB0aFQgPSB7fSwKZmFtaWx5ID0gewpibGFzID0gIm9wZW5ibGFzIiwKfSwKbVQgPSB7CmRpc0JhdGNoID0gewpmbiA9ICIvbW50L3N3L2xtb2QveDg2XzY0L3JvY2t5OC9tb2R1bGVzL2Rpc0JhdGNoL2JldGEubHVhIiwKZnVsbE5hbWUgPSAiZGlzQmF0Y2gvYmV0YSIsCmxvYWRPcmRlciA9IDQsCnByb3BUID0ge30sCnN0YWNrRGVwdGggPSAwLApzdGF0dXMgPSAiYWN0aXZlIiwKdXNlck5hbWUgPSAiZGlzQmF0Y2giLAp3ViA9ICJeYmV0YS4qemZpbmFsIiwKfSwKbW9kdWxlcyA9IHsKZm4gPSAiL21udC9zdy9s', 'SLURM_CONF': '/cm/shared/apps/slurm/var/etc/slurm/slurm.conf', 'LOADEDMODULES': 'modules/2.2-20230808:slurm:openblas/threaded-0.3.23:disBatch/beta', 'LMOD_AVAIL_STYLE': 'system:<trim>:group', '_ModuleTable006_': 'LTguNi41L2xtb2QvbG1vZC9tb2R1bGVmaWxlcy9Db3JlIiwKfQo=', '__LMOD_REF_COUNT_MANPATH': '/cm/shared/apps/slurm/current/man:1;/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/share/man:1;/usr/local/share/man:1;/usr/share/man:1;/cm/local/apps/environment-modules/current/share/man:1', '_ModuleTable003_': 'dWEiLApmdWxsTmFtZSA9ICJvcGVuYmxhcy90aHJlYWRlZC0wLjMuMjMiLApsb2FkT3JkZXIgPSAzLApwcm9wVCA9IHsKbG1vZCA9IHsKc3RpY2t5ID0gMSwKfSwKfSwKc3RhY2tEZXB0aCA9IDAsCnN0YXR1cyA9ICJhY3RpdmUiLAp1c2VyTmFtZSA9ICJvcGVuYmxhcyIsCndWID0gIip0aHJlYWRlZC4qemZpbmFsLS4wMDAwMDAwMDAuMDAwMDAwMDAzLjAwMDAwMDAyMy4qemZpbmFsIiwKfSwKc2x1cm0gPSB7CmZuID0gIi9tbnQvc3cvbml4L3N0b3JlLzNrNTRubGZhNmthOWhnNnlqc3FnY3FiemlxanB4aXBrLW1vZHVsZXMvbGludXgtcm9ja3k4LXg4Nl82NC9Db3JlL3NsdXJtLmx1YSIsCmZ1bGxOYW1lID0gInNsdXJtIiwKbG9hZE9yZGVyID0gMiwKcHJvcFQgPSB7Cmxtb2Qg', 'SLURM_ROOT': '/cm/shared/apps/slurm/current', 'LMOD_ROOT': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod', 'SSH_TTY': '/dev/pts/81', 'OPENBLAS_ROOT': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23', 'MAIL': '/var/spool/mail/rbrooks', '__Init_Default_Modules': '1', 'CMD_WLM_CLUSTER_NAME': 'slurm', 'SHELL': '/bin/bash', 'TERM': 'xterm-256color', 'LMOD_ADMIN_FILE': '/mnt/sw/lmod/admin.list', '_ModuleTable_Sz_': '6', 'SLURM_BASE': '/cm/shared/apps/slurm/current', '__LMOD_REF_COUNT_OPENBLAS_ROOT': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23:1', 'SHLVL': '2', 'PYTHONPATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch', 'MANPATH': '/cm/shared/apps/slurm/current/man:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/share/man:/usr/local/share/man:/usr/share/man:/cm/local/apps/environment-modules/current/share/man::', 'MODULEPATH': '/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core:/mnt/sw/lmod/x86_64/rocky8/modules:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Linux:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles/Core:/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/modulefiles/Core', 'XDG_CACHE_HOME': '/dev/shm/.cache-rbrooks', 'LOGNAME': 'rbrooks', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/2479/bus', 'XDG_RUNTIME_DIR': '/run/user/2479', 'CPLUS_INCLUDE_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/include:/cm/shared/apps/slurm/current/include', 'MODULEPATH_ROOT': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/modulefiles', 'LMOD_PACKAGE_PATH': '/mnt/sw/lmod/site', 'PATH': '/mnt/home/carriero/projects/disBatch/beta/disBatch:/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/bin:/cm/shared/apps/slurm/current/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/dell/srvadmin/bin:/mnt/home/rbrooks/.local/bin', '_LMFILES_': '/mnt/sw/lmod/x86_64/rocky8/modules/modules/2.2-20230808.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/slurm.lua:/mnt/sw/nix/store/3k54nlfa6ka9hg6yjsqgcqbziqjpxipk-modules/linux-rocky8-x86_64/Core/openblas/threaded-0.3.23.lua:/mnt/sw/lmod/x86_64/rocky8/modules/disBatch/beta.lua', 'DEBUGINFOD_URLS': 'https://debuginfod.centos.org/ ', 'MODULESHOME': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod', 'LMOD_SETTARG_FULL_SUPPORT': 'no', 'PKG_CONFIG_PATH': '/mnt/sw/nix/store/pmwk60bp5k4qr8vsg411p7vzhr502d83-openblas-0.3.23/lib/pkgconfig:/cm/shared/apps/slurm/current/lib64/pkgconfig', 'HISTSIZE': '1000', 'LMOD_PKG': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod', 'LMOD_CMD': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/libexec/lmod', '_ModuleTable005_': 'NS9tb2R1bGVmaWxlcy9Db3JlIiwgIi9tbnQvc3cvbml4L3N0b3JlL3gyNDB6Y2kzYzR5NWticjZ5dzJxY2ZwZmN5ZGRhMTFxLWxtb2QtOC42LjUvbG1vZC9sbW9kL21vZHVsZWZpbGVzL0NvcmUiLAp9LApzeXN0ZW1CYXNlTVBBVEggPSAiL21udC9zdy9sbW9kL3g4Nl82NC9yb2NreTgvbW9kdWxlczovbW50L3N3L25peC9zdG9yZS94MjQwemNpM2M0eTVrYnI2eXcycWNmcGZjeWRkYTExcS1sbW9kLTguNi41L21vZHVsZWZpbGVzL0xpbnV4Oi9tbnQvc3cvbml4L3N0b3JlL3gyNDB6Y2kzYzR5NWticjZ5dzJxY2ZwZmN5ZGRhMTFxLWxtb2QtOC42LjUvbW9kdWxlZmlsZXMvQ29yZTovbW50L3N3L25peC9zdG9yZS94MjQwemNpM2M0eTVrYnI2eXcycWNmcGZjeWRkYTExcS1sbW9k', 'CVS_RSH': 'ssh', 'LESSOPEN': '||/usr/bin/lesspipe.sh %s', 'LMOD_DIR': '/mnt/sw/nix/store/x240zci3c4y5kbr6yw2qcfpfcydda11q-lmod-8.6.5/lmod/lmod/libexec', 'BASH_FUNC_which%%': '() {  ( alias;\n eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@\n}', 'BASH_FUNC_module%%': '() {  eval $($LMOD_CMD bash "$@") && eval $(${LMOD_SETTARG_CMD:-:} -s sh)\n}', 'BASH_FUNC_ml%%': '() {  eval $($LMOD_DIR/ml_cmd "$@")\n}', '_': '/cm/shared/apps/slurm/current/bin/sbatch', 'SLURM_JOB_NAME': 'disBatch', 'SLURM_PRIO_PROCESS': '0', 'SLURM_SUBMIT_DIR': '/mnt/ceph/users/rbrooks/oceanus/bash', 'SLURM_SUBMIT_HOST': 'rustyamd1', 'SLURM_CLUSTER_NAME': 'slurm', 'SLURM_JOB_ID': '3220891', 'SLURM_JOB_NUM_NODES': '1', 'SLURM_JOB_NODELIST': 'worker5478', 'SLURM_JOB_PARTITION': 'cca', 'SLURM_NODE_ALIASES': '(null)', 'SLURM_JOB_CPUS_PER_NODE': '128', 'ENVIRONMENT': 'BATCH', 'SLURM_JOBID': '3220891', 'SLURM_NNODES': '1', 'SLURM_NODELIST': 'worker5478', 'SLURM_TASKS_PER_NODE': '128', 'SLURM_JOB_ACCOUNT': 'cca', 'SLURM_JOB_QOS': 'gen', 'SLURM_TOPOLOGY_ADDR': 'worker5478', 'SLURM_TOPOLOGY_ADDR_PATTERN': 'node', 'SLURM_CPUS_ON_NODE': '128', 'SLURM_TASK_PID': '542668', 'SLURM_NODEID': '0', 'SLURM_PROCID': '0', 'SLURM_LOCALID': '0', 'SLURM_GTIDS': '0', 'SLURM_JOB_UID': '2479', 'SLURM_JOB_USER': 'rbrooks', 'SLURM_WORKING_CLUSTER': 'slurm:rusty-mgr1:6800:9728:109', 'SLURM_JOB_GID': '2479', 'SLURMD_NODENAME': 'worker5478', 'TMPDIR': '/tmp'})
+2024-02-22 11:49:53,763 INFO     kvs            : Setting queue size to 4000
+2024-02-22 11:49:53,877 INFO     DisBatch       : KVS Server: 10.250.146.222:34873
+2024-02-22 11:49:53,879 INFO     kvs            : Accepted connect from ('10.250.146.222', 36376)
+2024-02-22 11:49:53,921 INFO     kvs            : Accepted connect from ('10.250.146.222', 36386)
+2024-02-22 11:49:53,922 INFO     kvs            : Accepted connect from ('10.250.146.222', 36390)
+2024-02-22 11:49:53,925 INFO     DisBatch       : Processing repeat: 128 0 1
+2024-02-22 11:49:53,928 INFO     DisBatch       : Posting per engine task ".per engine START 0" 0	1	-1	P	#ENDLIST
+2024-02-22 11:49:53,930 INFO     DisBatch       : Posting per engine task ".per engine STOP 0" 0	1	-1	P	#ENDLIST
+2024-02-22 11:49:54,041 INFO     kvs            : Accepted connect from ('10.250.146.222', 36392)
+2024-02-22 11:49:59,272 INFO     kvs            : Accepted connect from ('10.250.146.222', 36398)
+2024-02-22 11:49:59,324 INFO     kvs            : Accepted connect from ('10.250.146.222', 36412)
+2024-02-22 11:49:59,326 INFO     kvs            : Accepted connect from ('10.250.146.222', 36418)
+2024-02-22 11:49:59,329 INFO     kvs            : Accepted connect from ('10.250.146.222', 36430)
+2024-02-22 11:49:59,330 INFO     kvs            : Accepted connect from ('10.250.146.222', 36446)
+2024-02-22 11:49:59,331 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 0" available
+2024-02-22 11:49:59,332 INFO     kvs            : Accepted connect from ('10.250.146.222', 36460)
+2024-02-22 11:49:59,332 INFO     DisBatch       : Giving .cylinder 0 0 0	1	0	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,333 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 1" available
+2024-02-22 11:49:59,333 INFO     kvs            : Accepted connect from ('10.250.146.222', 36472)
+2024-02-22 11:49:59,334 INFO     DisBatch       : Giving .cylinder 0 1 1	1	1	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,338 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 2" available
+2024-02-22 11:49:59,339 INFO     DisBatch       : Giving .cylinder 0 2 2	1	2	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,340 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 3" available
+2024-02-22 11:49:59,340 INFO     kvs            : Accepted connect from ('10.250.146.222', 36486)
+2024-02-22 11:49:59,341 INFO     DisBatch       : Giving .cylinder 0 3 3	1	3	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,356 INFO     kvs            : Accepted connect from ('10.250.146.222', 36502)
+2024-02-22 11:49:59,358 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 4" available
+2024-02-22 11:49:59,359 INFO     DisBatch       : Giving .cylinder 0 4 4	1	4	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,369 INFO     kvs            : Accepted connect from ('10.250.146.222', 36518)
+2024-02-22 11:49:59,370 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 5" available
+2024-02-22 11:49:59,371 INFO     DisBatch       : Giving .cylinder 0 5 5	1	5	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,377 INFO     kvs            : Accepted connect from ('10.250.146.222', 36524)
+2024-02-22 11:49:59,382 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 6" available
+2024-02-22 11:49:59,383 INFO     DisBatch       : Giving .cylinder 0 6 6	1	6	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,384 INFO     kvs            : Accepted connect from ('10.250.146.222', 36528)
+2024-02-22 11:49:59,393 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 7" available
+2024-02-22 11:49:59,393 INFO     kvs            : Accepted connect from ('10.250.146.222', 36536)
+2024-02-22 11:49:59,394 INFO     DisBatch       : Giving .cylinder 0 7 7	1	7	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,408 INFO     kvs            : Accepted connect from ('10.250.146.222', 36542)
+2024-02-22 11:49:59,408 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 8" available
+2024-02-22 11:49:59,409 INFO     DisBatch       : Giving .cylinder 0 8 8	1	8	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,415 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 9" available
+2024-02-22 11:49:59,416 INFO     DisBatch       : Giving .cylinder 0 9 9	1	9	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,417 INFO     kvs            : Accepted connect from ('10.250.146.222', 36558)
+2024-02-22 11:49:59,423 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 10" available
+2024-02-22 11:49:59,424 INFO     DisBatch       : Giving .cylinder 0 10 10	1	10	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,429 INFO     kvs            : Accepted connect from ('10.250.146.222', 36574)
+2024-02-22 11:49:59,435 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 11" available
+2024-02-22 11:49:59,436 INFO     DisBatch       : Giving .cylinder 0 11 11	1	11	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,439 INFO     kvs            : Accepted connect from ('10.250.146.222', 36590)
+2024-02-22 11:49:59,444 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 12" available
+2024-02-22 11:49:59,445 INFO     DisBatch       : Giving .cylinder 0 12 12	1	12	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,450 INFO     kvs            : Accepted connect from ('10.250.146.222', 36596)
+2024-02-22 11:49:59,455 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 13" available
+2024-02-22 11:49:59,455 INFO     DisBatch       : Giving .cylinder 0 13 13	1	13	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,458 INFO     kvs            : Accepted connect from ('10.250.146.222', 36604)
+2024-02-22 11:49:59,465 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 14" available
+2024-02-22 11:49:59,466 INFO     DisBatch       : Giving .cylinder 0 14 14	1	14	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,474 INFO     kvs            : Accepted connect from ('10.250.146.222', 36616)
+2024-02-22 11:49:59,479 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 15" available
+2024-02-22 11:49:59,480 INFO     DisBatch       : Giving .cylinder 0 15 15	1	15	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,485 INFO     kvs            : Accepted connect from ('10.250.146.222', 36630)
+2024-02-22 11:49:59,490 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 16" available
+2024-02-22 11:49:59,491 INFO     DisBatch       : Giving .cylinder 0 16 16	1	16	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,501 INFO     kvs            : Accepted connect from ('10.250.146.222', 36642)
+2024-02-22 11:49:59,506 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 17" available
+2024-02-22 11:49:59,507 INFO     DisBatch       : Giving .cylinder 0 17 17	1	17	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,511 INFO     kvs            : Accepted connect from ('10.250.146.222', 36656)
+2024-02-22 11:49:59,515 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 18" available
+2024-02-22 11:49:59,516 INFO     DisBatch       : Giving .cylinder 0 18 18	1	18	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,519 INFO     kvs            : Accepted connect from ('10.250.146.222', 36658)
+2024-02-22 11:49:59,525 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 19" available
+2024-02-22 11:49:59,525 INFO     DisBatch       : Giving .cylinder 0 19 19	1	19	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,543 INFO     kvs            : Accepted connect from ('10.250.146.222', 36660)
+2024-02-22 11:49:59,548 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 20" available
+2024-02-22 11:49:59,548 INFO     DisBatch       : Giving .cylinder 0 20 20	1	20	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,554 INFO     kvs            : Accepted connect from ('10.250.146.222', 36664)
+2024-02-22 11:49:59,555 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 21" available
+2024-02-22 11:49:59,556 INFO     DisBatch       : Giving .cylinder 0 21 21	1	21	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,559 INFO     kvs            : Accepted connect from ('10.250.146.222', 36672)
+2024-02-22 11:49:59,561 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 22" available
+2024-02-22 11:49:59,562 INFO     DisBatch       : Giving .cylinder 0 22 22	1	22	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,578 INFO     kvs            : Accepted connect from ('10.250.146.222', 36682)
+2024-02-22 11:49:59,581 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 23" available
+2024-02-22 11:49:59,582 INFO     DisBatch       : Giving .cylinder 0 23 23	1	23	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,597 INFO     kvs            : Accepted connect from ('10.250.146.222', 36696)
+2024-02-22 11:49:59,600 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 24" available
+2024-02-22 11:49:59,601 INFO     DisBatch       : Giving .cylinder 0 24 24	1	24	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,605 INFO     kvs            : Accepted connect from ('10.250.146.222', 36708)
+2024-02-22 11:49:59,615 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 25" available
+2024-02-22 11:49:59,615 INFO     DisBatch       : Giving .cylinder 0 25 25	1	25	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,620 INFO     kvs            : Accepted connect from ('10.250.146.222', 36720)
+2024-02-22 11:49:59,625 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 26" available
+2024-02-22 11:49:59,625 INFO     DisBatch       : Giving .cylinder 0 26 26	1	26	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,638 INFO     kvs            : Accepted connect from ('10.250.146.222', 36724)
+2024-02-22 11:49:59,643 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 27" available
+2024-02-22 11:49:59,644 INFO     DisBatch       : Giving .cylinder 0 27 27	1	27	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,652 INFO     kvs            : Accepted connect from ('10.250.146.222', 36734)
+2024-02-22 11:49:59,658 INFO     kvs            : Accepted connect from ('10.250.146.222', 36750)
+2024-02-22 11:49:59,659 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 28" available
+2024-02-22 11:49:59,660 INFO     DisBatch       : Giving .cylinder 0 28 28	1	28	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,666 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 29" available
+2024-02-22 11:49:59,667 INFO     DisBatch       : Giving .cylinder 0 29 29	1	29	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,674 INFO     kvs            : Accepted connect from ('10.250.146.222', 36758)
+2024-02-22 11:49:59,683 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 30" available
+2024-02-22 11:49:59,684 INFO     DisBatch       : Giving .cylinder 0 30 30	1	30	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,684 INFO     kvs            : Accepted connect from ('10.250.146.222', 36760)
+2024-02-22 11:49:59,692 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 31" available
+2024-02-22 11:49:59,693 INFO     DisBatch       : Giving .cylinder 0 31 31	1	31	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,701 INFO     kvs            : Accepted connect from ('10.250.146.222', 36770)
+2024-02-22 11:49:59,708 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 32" available
+2024-02-22 11:49:59,708 INFO     DisBatch       : Giving .cylinder 0 32 32	1	32	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,720 INFO     kvs            : Accepted connect from ('10.250.146.222', 36772)
+2024-02-22 11:49:59,722 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 33" available
+2024-02-22 11:49:59,723 INFO     DisBatch       : Giving .cylinder 0 33 33	1	33	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,746 INFO     kvs            : Accepted connect from ('10.250.146.222', 36774)
+2024-02-22 11:49:59,747 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 34" available
+2024-02-22 11:49:59,747 INFO     DisBatch       : Giving .cylinder 0 34 34	1	34	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,754 INFO     kvs            : Accepted connect from ('10.250.146.222', 36778)
+2024-02-22 11:49:59,762 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 35" available
+2024-02-22 11:49:59,763 INFO     DisBatch       : Giving .cylinder 0 35 35	1	35	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,765 INFO     kvs            : Accepted connect from ('10.250.146.222', 36794)
+2024-02-22 11:49:59,775 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 36" available
+2024-02-22 11:49:59,776 INFO     kvs            : Accepted connect from ('10.250.146.222', 36802)
+2024-02-22 11:49:59,776 INFO     DisBatch       : Giving .cylinder 0 36 36	1	36	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,778 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 37" available
+2024-02-22 11:49:59,779 INFO     DisBatch       : Giving .cylinder 0 37 37	1	37	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,791 INFO     kvs            : Accepted connect from ('10.250.146.222', 36814)
+2024-02-22 11:49:59,795 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 38" available
+2024-02-22 11:49:59,795 INFO     DisBatch       : Giving .cylinder 0 38 38	1	38	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,805 INFO     kvs            : Accepted connect from ('10.250.146.222', 36828)
+2024-02-22 11:49:59,812 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 39" available
+2024-02-22 11:49:59,813 INFO     DisBatch       : Giving .cylinder 0 39 39	1	39	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,815 INFO     kvs            : Accepted connect from ('10.250.146.222', 36832)
+2024-02-22 11:49:59,824 INFO     kvs            : Accepted connect from ('10.250.146.222', 36834)
+2024-02-22 11:49:59,828 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 40" available
+2024-02-22 11:49:59,829 INFO     DisBatch       : Giving .cylinder 0 40 40	1	40	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,835 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 41" available
+2024-02-22 11:49:59,836 INFO     DisBatch       : Giving .cylinder 0 41 41	1	41	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,838 INFO     kvs            : Accepted connect from ('10.250.146.222', 36850)
+2024-02-22 11:49:59,853 INFO     kvs            : Accepted connect from ('10.250.146.222', 36862)
+2024-02-22 11:49:59,853 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 42" available
+2024-02-22 11:49:59,854 INFO     DisBatch       : Giving .cylinder 0 42 42	1	42	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,864 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 43" available
+2024-02-22 11:49:59,864 INFO     kvs            : Accepted connect from ('10.250.146.222', 36866)
+2024-02-22 11:49:59,865 INFO     DisBatch       : Giving .cylinder 0 43 43	1	43	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,874 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 44" available
+2024-02-22 11:49:59,875 INFO     DisBatch       : Giving .cylinder 0 44 44	1	44	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,917 INFO     kvs            : Accepted connect from ('10.250.146.222', 36868)
+2024-02-22 11:49:59,917 INFO     kvs            : Accepted connect from ('10.250.146.222', 36872)
+2024-02-22 11:49:59,917 INFO     kvs            : Accepted connect from ('10.250.146.222', 36884)
+2024-02-22 11:49:59,918 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 45" available
+2024-02-22 11:49:59,919 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 46" available
+2024-02-22 11:49:59,919 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 47" available
+2024-02-22 11:49:59,920 INFO     DisBatch       : Giving .cylinder 0 46 45	1	45	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,921 INFO     kvs            : Accepted connect from ('10.250.146.222', 36892)
+2024-02-22 11:49:59,921 INFO     DisBatch       : Giving .cylinder 0 47 46	1	46	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,922 INFO     DisBatch       : Giving .cylinder 0 45 47	1	47	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,923 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 48" available
+2024-02-22 11:49:59,924 INFO     DisBatch       : Giving .cylinder 0 48 48	1	48	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,950 INFO     kvs            : Accepted connect from ('10.250.146.222', 36894)
+2024-02-22 11:49:59,953 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 49" available
+2024-02-22 11:49:59,954 INFO     DisBatch       : Giving .cylinder 0 49 49	1	49	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,976 INFO     kvs            : Accepted connect from ('10.250.146.222', 36896)
+2024-02-22 11:49:59,986 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 50" available
+2024-02-22 11:49:59,987 INFO     DisBatch       : Giving .cylinder 0 50 50	1	50	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:49:59,988 INFO     kvs            : Accepted connect from ('10.250.146.222', 36904)
+2024-02-22 11:49:59,992 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 51" available
+2024-02-22 11:49:59,992 INFO     DisBatch       : Giving .cylinder 0 51 51	1	51	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,013 INFO     kvs            : Accepted connect from ('10.250.146.222', 36906)
+2024-02-22 11:50:00,015 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 52" available
+2024-02-22 11:50:00,016 INFO     DisBatch       : Giving .cylinder 0 52 52	1	52	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,028 INFO     kvs            : Accepted connect from ('10.250.146.222', 36910)
+2024-02-22 11:50:00,029 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 53" available
+2024-02-22 11:50:00,030 INFO     DisBatch       : Giving .cylinder 0 53 53	1	53	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,036 INFO     kvs            : Accepted connect from ('10.250.146.222', 36926)
+2024-02-22 11:50:00,044 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 54" available
+2024-02-22 11:50:00,045 INFO     DisBatch       : Giving .cylinder 0 54 54	1	54	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,053 INFO     kvs            : Accepted connect from ('10.250.146.222', 36942)
+2024-02-22 11:50:00,057 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 55" available
+2024-02-22 11:50:00,058 INFO     DisBatch       : Giving .cylinder 0 55 55	1	55	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,062 INFO     kvs            : Accepted connect from ('10.250.146.222', 36952)
+2024-02-22 11:50:00,075 INFO     kvs            : Accepted connect from ('10.250.146.222', 36966)
+2024-02-22 11:50:00,075 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 56" available
+2024-02-22 11:50:00,076 INFO     DisBatch       : Giving .cylinder 0 56 56	1	56	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,085 INFO     kvs            : Accepted connect from ('10.250.146.222', 36976)
+2024-02-22 11:50:00,109 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 58" available
+2024-02-22 11:50:00,110 INFO     DisBatch       : Giving .cylinder 0 58 57	1	57	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,112 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 57" available
+2024-02-22 11:50:00,112 INFO     kvs            : Accepted connect from ('10.250.146.222', 36984)
+2024-02-22 11:50:00,113 INFO     DisBatch       : Giving .cylinder 0 57 58	1	58	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,122 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 59" available
+2024-02-22 11:50:00,123 INFO     kvs            : Accepted connect from ('10.250.146.222', 36986)
+2024-02-22 11:50:00,123 INFO     DisBatch       : Giving .cylinder 0 59 59	1	59	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,131 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 60" available
+2024-02-22 11:50:00,132 INFO     DisBatch       : Giving .cylinder 0 60 60	1	60	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,142 INFO     kvs            : Accepted connect from ('10.250.146.222', 36998)
+2024-02-22 11:50:00,152 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 61" available
+2024-02-22 11:50:00,153 INFO     DisBatch       : Giving .cylinder 0 61 61	1	61	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,163 INFO     kvs            : Accepted connect from ('10.250.146.222', 37004)
+2024-02-22 11:50:00,173 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 62" available
+2024-02-22 11:50:00,174 INFO     DisBatch       : Giving .cylinder 0 62 62	1	62	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,174 INFO     kvs            : Accepted connect from ('10.250.146.222', 37006)
+2024-02-22 11:50:00,189 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 63" available
+2024-02-22 11:50:00,189 INFO     kvs            : Accepted connect from ('10.250.146.222', 37008)
+2024-02-22 11:50:00,190 INFO     DisBatch       : Giving .cylinder 0 63 63	1	63	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,200 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 64" available
+2024-02-22 11:50:00,201 INFO     DisBatch       : Giving .cylinder 0 64 64	1	64	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,202 INFO     kvs            : Accepted connect from ('10.250.146.222', 37020)
+2024-02-22 11:50:00,225 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 65" available
+2024-02-22 11:50:00,225 INFO     kvs            : Accepted connect from ('10.250.146.222', 37026)
+2024-02-22 11:50:00,226 INFO     DisBatch       : Giving .cylinder 0 65 65	1	65	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,229 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 66" available
+2024-02-22 11:50:00,230 INFO     DisBatch       : Giving .cylinder 0 66 66	1	66	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,233 INFO     kvs            : Accepted connect from ('10.250.146.222', 37038)
+2024-02-22 11:50:00,246 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 67" available
+2024-02-22 11:50:00,247 INFO     DisBatch       : Giving .cylinder 0 67 67	1	67	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,247 INFO     kvs            : Accepted connect from ('10.250.146.222', 37046)
+2024-02-22 11:50:00,279 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 68" available
+2024-02-22 11:50:00,280 INFO     DisBatch       : Giving .cylinder 0 68 68	1	68	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,281 INFO     kvs            : Accepted connect from ('10.250.146.222', 37060)
+2024-02-22 11:50:00,302 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 69" available
+2024-02-22 11:50:00,303 INFO     DisBatch       : Giving .cylinder 0 69 69	1	69	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,308 INFO     kvs            : Accepted connect from ('10.250.146.222', 37068)
+2024-02-22 11:50:00,337 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 70" available
+2024-02-22 11:50:00,337 INFO     kvs            : Accepted connect from ('10.250.146.222', 37078)
+2024-02-22 11:50:00,339 INFO     DisBatch       : Giving .cylinder 0 70 70	1	70	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,347 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 71" available
+2024-02-22 11:50:00,348 INFO     DisBatch       : Giving .cylinder 0 71 71	1	71	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,358 INFO     kvs            : Accepted connect from ('10.250.146.222', 37088)
+2024-02-22 11:50:00,370 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 72" available
+2024-02-22 11:50:00,373 INFO     kvs            : Accepted connect from ('10.250.146.222', 37096)
+2024-02-22 11:50:00,376 INFO     DisBatch       : Giving .cylinder 0 72 72	1	72	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,395 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 73" available
+2024-02-22 11:50:00,396 INFO     DisBatch       : Giving .cylinder 0 73 73	1	73	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,408 INFO     kvs            : Accepted connect from ('10.250.146.222', 37100)
+2024-02-22 11:50:00,419 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 74" available
+2024-02-22 11:50:00,420 INFO     DisBatch       : Giving .cylinder 0 74 74	1	74	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,450 INFO     kvs            : Accepted connect from ('10.250.146.222', 37104)
+2024-02-22 11:50:00,463 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 75" available
+2024-02-22 11:50:00,464 INFO     DisBatch       : Giving .cylinder 0 75 75	1	75	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,473 INFO     kvs            : Accepted connect from ('10.250.146.222', 37114)
+2024-02-22 11:50:00,485 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 76" available
+2024-02-22 11:50:00,486 INFO     DisBatch       : Giving .cylinder 0 76 76	1	76	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,494 INFO     kvs            : Accepted connect from ('10.250.146.222', 37128)
+2024-02-22 11:50:00,512 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 77" available
+2024-02-22 11:50:00,513 INFO     DisBatch       : Giving .cylinder 0 77 77	1	77	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,514 INFO     kvs            : Accepted connect from ('10.250.146.222', 37130)
+2024-02-22 11:50:00,545 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 78" available
+2024-02-22 11:50:00,545 INFO     kvs            : Accepted connect from ('10.250.146.222', 37136)
+2024-02-22 11:50:00,546 INFO     DisBatch       : Giving .cylinder 0 78 78	1	78	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,550 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 79" available
+2024-02-22 11:50:00,551 INFO     DisBatch       : Giving .cylinder 0 79 79	1	79	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,561 INFO     kvs            : Accepted connect from ('10.250.146.222', 37140)
+2024-02-22 11:50:00,571 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 80" available
+2024-02-22 11:50:00,571 INFO     kvs            : Accepted connect from ('10.250.146.222', 37152)
+2024-02-22 11:50:00,572 INFO     DisBatch       : Giving .cylinder 0 80 80	1	80	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,596 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 81" available
+2024-02-22 11:50:00,597 INFO     DisBatch       : Giving .cylinder 0 81 81	1	81	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,597 INFO     kvs            : Accepted connect from ('10.250.146.222', 37166)
+2024-02-22 11:50:00,614 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 82" available
+2024-02-22 11:50:00,615 INFO     DisBatch       : Giving .cylinder 0 82 82	1	82	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,622 INFO     kvs            : Accepted connect from ('10.250.146.222', 37176)
+2024-02-22 11:50:00,630 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 83" available
+2024-02-22 11:50:00,630 INFO     DisBatch       : Giving .cylinder 0 83 83	1	83	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,631 INFO     kvs            : Accepted connect from ('10.250.146.222', 37186)
+2024-02-22 11:50:00,643 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 84" available
+2024-02-22 11:50:00,644 INFO     DisBatch       : Giving .cylinder 0 84 84	1	84	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,656 INFO     kvs            : Accepted connect from ('10.250.146.222', 37192)
+2024-02-22 11:50:00,662 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 85" available
+2024-02-22 11:50:00,663 INFO     DisBatch       : Giving .cylinder 0 85 85	1	85	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,681 INFO     kvs            : Accepted connect from ('10.250.146.222', 37208)
+2024-02-22 11:50:00,690 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 86" available
+2024-02-22 11:50:00,691 INFO     DisBatch       : Giving .cylinder 0 86 86	1	86	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,696 INFO     kvs            : Accepted connect from ('10.250.146.222', 37214)
+2024-02-22 11:50:00,713 INFO     kvs            : Accepted connect from ('10.250.146.222', 37222)
+2024-02-22 11:50:00,713 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 87" available
+2024-02-22 11:50:00,714 INFO     DisBatch       : Giving .cylinder 0 87 87	1	87	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,722 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 88" available
+2024-02-22 11:50:00,722 INFO     DisBatch       : Giving .cylinder 0 88 88	1	88	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,746 INFO     kvs            : Accepted connect from ('10.250.146.222', 37234)
+2024-02-22 11:50:00,758 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 89" available
+2024-02-22 11:50:00,759 INFO     DisBatch       : Giving .cylinder 0 89 89	1	89	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,781 INFO     kvs            : Accepted connect from ('10.250.146.222', 37248)
+2024-02-22 11:50:00,782 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 90" available
+2024-02-22 11:50:00,783 INFO     DisBatch       : Giving .cylinder 0 90 90	1	90	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,800 INFO     kvs            : Accepted connect from ('10.250.146.222', 37252)
+2024-02-22 11:50:00,810 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 91" available
+2024-02-22 11:50:00,811 INFO     DisBatch       : Giving .cylinder 0 91 91	1	91	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,838 INFO     kvs            : Accepted connect from ('10.250.146.222', 37254)
+2024-02-22 11:50:00,847 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 92" available
+2024-02-22 11:50:00,848 INFO     DisBatch       : Giving .cylinder 0 92 92	1	92	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,870 INFO     kvs            : Accepted connect from ('10.250.146.222', 37256)
+2024-02-22 11:50:00,873 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 93" available
+2024-02-22 11:50:00,875 INFO     DisBatch       : Giving .cylinder 0 93 93	1	93	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,877 INFO     kvs            : Accepted connect from ('10.250.146.222', 37272)
+2024-02-22 11:50:00,891 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 94" available
+2024-02-22 11:50:00,892 INFO     DisBatch       : Giving .cylinder 0 94 94	1	94	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,903 INFO     kvs            : Accepted connect from ('10.250.146.222', 37288)
+2024-02-22 11:50:00,918 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 95" available
+2024-02-22 11:50:00,919 INFO     DisBatch       : Giving .cylinder 0 95 95	1	95	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,943 INFO     kvs            : Accepted connect from ('10.250.146.222', 37298)
+2024-02-22 11:50:00,947 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 96" available
+2024-02-22 11:50:00,948 INFO     DisBatch       : Giving .cylinder 0 96 96	1	96	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,971 INFO     kvs            : Accepted connect from ('10.250.146.222', 37300)
+2024-02-22 11:50:00,976 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 97" available
+2024-02-22 11:50:00,977 INFO     DisBatch       : Giving .cylinder 0 97 97	1	97	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:00,985 INFO     kvs            : Accepted connect from ('10.250.146.222', 37314)
+2024-02-22 11:50:00,993 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 98" available
+2024-02-22 11:50:00,993 INFO     kvs            : Accepted connect from ('10.250.146.222', 37326)
+2024-02-22 11:50:00,994 INFO     DisBatch       : Giving .cylinder 0 98 98	1	98	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,016 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 99" available
+2024-02-22 11:50:01,016 INFO     kvs            : Accepted connect from ('10.250.146.222', 37328)
+2024-02-22 11:50:01,017 INFO     DisBatch       : Giving .cylinder 0 99 99	1	99	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,027 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 100" available
+2024-02-22 11:50:01,028 INFO     DisBatch       : Giving .cylinder 0 100 100	1	100	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,028 INFO     kvs            : Accepted connect from ('10.250.146.222', 37330)
+2024-02-22 11:50:01,047 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 101" available
+2024-02-22 11:50:01,047 INFO     kvs            : Accepted connect from ('10.250.146.222', 37340)
+2024-02-22 11:50:01,048 INFO     DisBatch       : Giving .cylinder 0 101 101	1	101	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,052 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 102" available
+2024-02-22 11:50:01,053 INFO     DisBatch       : Giving .cylinder 0 102 102	1	102	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,073 INFO     kvs            : Accepted connect from ('10.250.146.222', 37344)
+2024-02-22 11:50:01,092 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 103" available
+2024-02-22 11:50:01,093 INFO     DisBatch       : Giving .cylinder 0 103 103	1	103	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,119 INFO     kvs            : Accepted connect from ('10.250.146.222', 37348)
+2024-02-22 11:50:01,128 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 104" available
+2024-02-22 11:50:01,130 INFO     DisBatch       : Giving .cylinder 0 104 104	1	104	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,145 INFO     kvs            : Accepted connect from ('10.250.146.222', 37354)
+2024-02-22 11:50:01,147 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 105" available
+2024-02-22 11:50:01,148 INFO     DisBatch       : Giving .cylinder 0 105 105	1	105	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,169 INFO     kvs            : Accepted connect from ('10.250.146.222', 37364)
+2024-02-22 11:50:01,172 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 106" available
+2024-02-22 11:50:01,173 INFO     DisBatch       : Giving .cylinder 0 106 106	1	106	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,205 INFO     kvs            : Accepted connect from ('10.250.146.222', 37376)
+2024-02-22 11:50:01,208 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 107" available
+2024-02-22 11:50:01,209 INFO     kvs            : Accepted connect from ('10.250.146.222', 37390)
+2024-02-22 11:50:01,210 INFO     DisBatch       : Giving .cylinder 0 107 107	1	107	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,211 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 108" available
+2024-02-22 11:50:01,212 INFO     DisBatch       : Giving .cylinder 0 108 108	1	108	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,269 INFO     kvs            : Accepted connect from ('10.250.146.222', 37394)
+2024-02-22 11:50:01,269 INFO     kvs            : Accepted connect from ('10.250.146.222', 37396)
+2024-02-22 11:50:01,270 INFO     kvs            : Accepted connect from ('10.250.146.222', 37410)
+2024-02-22 11:50:01,270 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 109" available
+2024-02-22 11:50:01,270 INFO     kvs            : Accepted connect from ('10.250.146.222', 37424)
+2024-02-22 11:50:01,271 INFO     kvs            : Accepted connect from ('10.250.146.222', 37436)
+2024-02-22 11:50:01,272 INFO     kvs            : Accepted connect from ('10.250.146.222', 37442)
+2024-02-22 11:50:01,272 INFO     kvs            : Accepted connect from ('10.250.146.222', 37452)
+2024-02-22 11:50:01,273 INFO     kvs            : Accepted connect from ('10.250.146.222', 37456)
+2024-02-22 11:50:01,273 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 110" available
+2024-02-22 11:50:01,274 INFO     kvs            : Accepted connect from ('10.250.146.222', 37464)
+2024-02-22 11:50:01,275 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 111" available
+2024-02-22 11:50:01,275 INFO     kvs            : Accepted connect from ('10.250.146.222', 37472)
+2024-02-22 11:50:01,276 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 112" available
+2024-02-22 11:50:01,277 INFO     kvs            : Accepted connect from ('10.250.146.222', 37488)
+2024-02-22 11:50:01,278 INFO     DisBatch       : Giving .cylinder 0 111 109	1	109	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,278 INFO     kvs            : Accepted connect from ('10.250.146.222', 37498)
+2024-02-22 11:50:01,279 INFO     kvs            : Accepted connect from ('10.250.146.222', 37514)
+2024-02-22 11:50:01,279 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 113" available
+2024-02-22 11:50:01,280 INFO     kvs            : Accepted connect from ('10.250.146.222', 37522)
+2024-02-22 11:50:01,281 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 114" available
+2024-02-22 11:50:01,282 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 115" available
+2024-02-22 11:50:01,283 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 116" available
+2024-02-22 11:50:01,284 INFO     DisBatch       : Giving .cylinder 0 110 110	1	110	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,285 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 117" available
+2024-02-22 11:50:01,286 INFO     DisBatch       : Giving .cylinder 0 114 111	1	111	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,287 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 118" available
+2024-02-22 11:50:01,289 INFO     DisBatch       : Giving .cylinder 0 115 112	1	112	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,290 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 119" available
+2024-02-22 11:50:01,291 INFO     DisBatch       : Giving .cylinder 0 116 113	1	113	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,291 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 120" available
+2024-02-22 11:50:01,292 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 121" available
+2024-02-22 11:50:01,293 INFO     DisBatch       : Giving .cylinder 0 112 114	1	114	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,294 INFO     DisBatch       : Giving .cylinder 0 113 115	1	115	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,295 INFO     kvs            : Accepted connect from ('10.250.146.222', 37538)
+2024-02-22 11:50:01,295 INFO     DisBatch       : Giving .cylinder 0 109 116	1	116	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,296 INFO     DisBatch       : Giving .cylinder 0 119 117	1	117	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,297 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 122" available
+2024-02-22 11:50:01,299 INFO     DisBatch       : Giving .cylinder 0 117 118	1	118	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,299 INFO     DisBatch       : Giving .cylinder 0 121 119	1	119	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,300 INFO     DisBatch       : Giving .cylinder 0 118 120	1	120	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,301 INFO     DisBatch       : Giving .cylinder 0 120 121	1	121	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,302 INFO     DisBatch       : Giving .cylinder 0 122 122	1	122	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,307 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 123" available
+2024-02-22 11:50:01,308 INFO     DisBatch       : Giving .cylinder 0 123 123	1	123	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,413 INFO     kvs            : Accepted connect from ('10.250.146.222', 37550)
+2024-02-22 11:50:01,422 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 124" available
+2024-02-22 11:50:01,423 INFO     DisBatch       : Giving .cylinder 0 124 124	1	124	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,503 INFO     kvs            : Accepted connect from ('10.250.146.222', 37554)
+2024-02-22 11:50:01,503 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 125" available
+2024-02-22 11:50:01,505 INFO     DisBatch       : Giving .cylinder 0 125 125	1	125	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,554 INFO     kvs            : Accepted connect from ('10.250.146.222', 37568)
+2024-02-22 11:50:01,557 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 126" available
+2024-02-22 11:50:01,558 INFO     DisBatch       : Giving .cylinder 0 126 126	1	126	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,616 INFO     DisBatch       : Engine 0 (worker5478), ".cylinder 0 127" available
+2024-02-22 11:50:01,617 INFO     DisBatch       : Processed 128 tasks.
+2024-02-22 11:50:01,618 INFO     DisBatch       : Giving .cylinder 0 127 127	1	127	N	/mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/ics-yaml-files/param_${DISBATCH_REPEAT_INDEX}.yaml
+2024-02-22 11:50:01,618 INFO     kvs            : Closing connection from ('10.250.146.222', 36390)
+2024-02-22 11:50:01,619 INFO     DisBatch       : No more tasks: 128 accepted
+2024-02-22 11:50:01,619 INFO     DisBatch       : Notifying ".cylinder 0 40" there is no more work.
+2024-02-22 11:50:01,620 INFO     DisBatch       : Notifying ".cylinder 0 86" there is no more work.
+2024-02-22 11:50:01,620 INFO     DisBatch       : Notifying ".cylinder 0 100" there is no more work.
+2024-02-22 11:50:01,621 INFO     DisBatch       : Notifying ".cylinder 0 6" there is no more work.
+2024-02-22 11:50:01,621 INFO     DisBatch       : Notifying ".cylinder 0 33" there is no more work.
+2024-02-22 11:50:01,621 INFO     DisBatch       : Notifying ".cylinder 0 27" there is no more work.
+2024-02-22 11:50:01,622 INFO     DisBatch       : Notifying ".cylinder 0 77" there is no more work.
+2024-02-22 11:50:01,622 INFO     DisBatch       : Notifying ".cylinder 0 18" there is no more work.
+2024-02-22 11:50:01,622 INFO     DisBatch       : Notifying ".cylinder 0 112" there is no more work.
+2024-02-22 11:50:01,623 INFO     DisBatch       : Notifying ".cylinder 0 68" there is no more work.
+2024-02-22 11:50:01,623 INFO     DisBatch       : Notifying ".cylinder 0 1" there is no more work.
+2024-02-22 11:50:01,623 INFO     DisBatch       : Notifying ".cylinder 0 0" there is no more work.
+2024-02-22 11:50:01,624 INFO     DisBatch       : Notifying ".cylinder 0 2" there is no more work.
+2024-02-22 11:50:01,624 INFO     DisBatch       : Notifying ".cylinder 0 83" there is no more work.
+2024-02-22 11:50:01,624 INFO     DisBatch       : Notifying ".cylinder 0 95" there is no more work.
+2024-02-22 11:50:01,625 INFO     DisBatch       : Notifying ".cylinder 0 110" there is no more work.
+2024-02-22 11:50:01,625 INFO     DisBatch       : Notifying ".cylinder 0 37" there is no more work.
+2024-02-22 11:50:01,626 INFO     DisBatch       : Notifying ".cylinder 0 127" there is no more work.
+2024-02-22 11:50:01,626 INFO     DisBatch       : Notifying ".cylinder 0 41" there is no more work.
+2024-02-22 11:50:01,626 INFO     DisBatch       : Notifying ".cylinder 0 4" there is no more work.
+2024-02-22 11:50:01,627 INFO     DisBatch       : Notifying ".cylinder 0 125" there is no more work.
+2024-02-22 11:50:01,627 INFO     DisBatch       : Notifying ".cylinder 0 99" there is no more work.
+2024-02-22 11:50:01,627 INFO     DisBatch       : Notifying ".cylinder 0 102" there is no more work.
+2024-02-22 11:50:01,628 INFO     DisBatch       : Notifying ".cylinder 0 52" there is no more work.
+2024-02-22 11:50:01,628 INFO     DisBatch       : Notifying ".cylinder 0 3" there is no more work.
+2024-02-22 11:50:01,628 INFO     DisBatch       : Notifying ".cylinder 0 58" there is no more work.
+2024-02-22 11:50:01,629 INFO     DisBatch       : Notifying ".cylinder 0 117" there is no more work.
+2024-02-22 11:50:01,629 INFO     DisBatch       : Notifying ".cylinder 0 7" there is no more work.
+2024-02-22 11:50:01,629 INFO     DisBatch       : Notifying ".cylinder 0 88" there is no more work.
+2024-02-22 11:50:01,630 INFO     DisBatch       : Notifying ".cylinder 0 11" there is no more work.
+2024-02-22 11:50:01,630 INFO     DisBatch       : Notifying ".cylinder 0 96" there is no more work.
+2024-02-22 11:50:01,631 INFO     DisBatch       : Notifying ".cylinder 0 119" there is no more work.
+2024-02-22 11:50:01,631 INFO     DisBatch       : Notifying ".cylinder 0 56" there is no more work.
+2024-02-22 11:50:01,631 INFO     DisBatch       : Notifying ".cylinder 0 5" there is no more work.
+2024-02-22 11:50:01,632 INFO     DisBatch       : Notifying ".cylinder 0 31" there is no more work.
+2024-02-22 11:50:01,632 INFO     DisBatch       : Notifying ".cylinder 0 44" there is no more work.
+2024-02-22 11:50:01,632 INFO     DisBatch       : Notifying ".cylinder 0 70" there is no more work.
+2024-02-22 11:50:01,633 INFO     DisBatch       : Notifying ".cylinder 0 17" there is no more work.
+2024-02-22 11:50:01,633 INFO     DisBatch       : Notifying ".cylinder 0 34" there is no more work.
+2024-02-22 11:50:01,633 INFO     DisBatch       : Notifying ".cylinder 0 66" there is no more work.
+2024-02-22 11:50:01,634 INFO     DisBatch       : Notifying ".cylinder 0 29" there is no more work.
+2024-02-22 11:50:01,634 INFO     DisBatch       : Notifying ".cylinder 0 36" there is no more work.
+2024-02-22 11:50:01,634 INFO     DisBatch       : Notifying ".cylinder 0 84" there is no more work.
+2024-02-22 11:50:01,635 INFO     DisBatch       : Notifying ".cylinder 0 87" there is no more work.
+2024-02-22 11:50:01,635 INFO     DisBatch       : Notifying ".cylinder 0 63" there is no more work.
+2024-02-22 11:50:01,635 INFO     DisBatch       : Notifying ".cylinder 0 92" there is no more work.
+2024-02-22 11:50:01,636 INFO     DisBatch       : Notifying ".cylinder 0 30" there is no more work.
+2024-02-22 11:50:01,636 INFO     DisBatch       : Notifying ".cylinder 0 32" there is no more work.
+2024-02-22 11:50:01,636 INFO     DisBatch       : Notifying ".cylinder 0 50" there is no more work.
+2024-02-22 11:50:01,637 INFO     DisBatch       : Notifying ".cylinder 0 62" there is no more work.
+2024-02-22 11:50:01,637 INFO     DisBatch       : Notifying ".cylinder 0 64" there is no more work.
+2024-02-22 11:50:01,637 INFO     DisBatch       : Notifying ".cylinder 0 22" there is no more work.
+2024-02-22 11:50:01,638 INFO     DisBatch       : Notifying ".cylinder 0 24" there is no more work.
+2024-02-22 11:50:01,638 INFO     DisBatch       : Notifying ".cylinder 0 113" there is no more work.
+2024-02-22 11:50:01,639 INFO     DisBatch       : Notifying ".cylinder 0 21" there is no more work.
+2024-02-22 11:50:01,639 INFO     DisBatch       : Notifying ".cylinder 0 107" there is no more work.
+2024-02-22 11:50:01,639 INFO     DisBatch       : Notifying ".cylinder 0 104" there is no more work.
+2024-02-22 11:50:01,640 INFO     DisBatch       : Notifying ".cylinder 0 80" there is no more work.
+2024-02-22 11:50:01,640 INFO     DisBatch       : Notifying ".cylinder 0 55" there is no more work.
+2024-02-22 11:50:01,641 INFO     DisBatch       : Notifying ".cylinder 0 26" there is no more work.
+2024-02-22 11:50:01,641 INFO     DisBatch       : Notifying ".cylinder 0 39" there is no more work.
+2024-02-22 11:50:01,641 INFO     DisBatch       : Notifying ".cylinder 0 81" there is no more work.
+2024-02-22 11:50:01,642 INFO     DisBatch       : Notifying ".cylinder 0 82" there is no more work.
+2024-02-22 11:50:01,642 INFO     DisBatch       : Notifying ".cylinder 0 79" there is no more work.
+2024-02-22 11:50:01,642 INFO     DisBatch       : Notifying ".cylinder 0 90" there is no more work.
+2024-02-22 11:50:01,643 INFO     DisBatch       : Notifying ".cylinder 0 106" there is no more work.
+2024-02-22 11:50:01,643 INFO     DisBatch       : Notifying ".cylinder 0 20" there is no more work.
+2024-02-22 11:50:01,643 INFO     DisBatch       : Notifying ".cylinder 0 93" there is no more work.
+2024-02-22 11:50:01,644 INFO     DisBatch       : Notifying ".cylinder 0 94" there is no more work.
+2024-02-22 11:50:01,644 INFO     DisBatch       : Notifying ".cylinder 0 116" there is no more work.
+2024-02-22 11:50:01,645 INFO     DisBatch       : Notifying ".cylinder 0 65" there is no more work.
+2024-02-22 11:50:01,645 INFO     DisBatch       : Notifying ".cylinder 0 53" there is no more work.
+2024-02-22 11:50:01,645 INFO     DisBatch       : Notifying ".cylinder 0 123" there is no more work.
+2024-02-22 11:50:01,646 INFO     DisBatch       : Notifying ".cylinder 0 47" there is no more work.
+2024-02-22 11:50:01,646 INFO     DisBatch       : Notifying ".cylinder 0 25" there is no more work.
+2024-02-22 11:50:01,646 INFO     DisBatch       : Notifying ".cylinder 0 69" there is no more work.
+2024-02-22 11:50:01,647 INFO     DisBatch       : Notifying ".cylinder 0 71" there is no more work.
+2024-02-22 11:50:01,647 INFO     DisBatch       : Notifying ".cylinder 0 97" there is no more work.
+2024-02-22 11:50:01,648 INFO     DisBatch       : Notifying ".cylinder 0 8" there is no more work.
+2024-02-22 11:50:01,648 INFO     DisBatch       : Notifying ".cylinder 0 59" there is no more work.
+2024-02-22 11:50:01,648 INFO     DisBatch       : Notifying ".cylinder 0 78" there is no more work.
+2024-02-22 11:50:01,649 INFO     DisBatch       : Notifying ".cylinder 0 60" there is no more work.
+2024-02-22 11:50:01,649 INFO     DisBatch       : Notifying ".cylinder 0 109" there is no more work.
+2024-02-22 11:50:01,650 INFO     DisBatch       : Notifying ".cylinder 0 124" there is no more work.
+2024-02-22 11:50:01,650 INFO     DisBatch       : Notifying ".cylinder 0 122" there is no more work.
+2024-02-22 11:50:01,650 INFO     DisBatch       : Notifying ".cylinder 0 38" there is no more work.
+2024-02-22 11:50:01,651 INFO     DisBatch       : Notifying ".cylinder 0 9" there is no more work.
+2024-02-22 11:50:01,651 INFO     DisBatch       : Notifying ".cylinder 0 54" there is no more work.
+2024-02-22 11:50:01,651 INFO     DisBatch       : Notifying ".cylinder 0 57" there is no more work.
+2024-02-22 11:50:01,652 INFO     DisBatch       : Notifying ".cylinder 0 91" there is no more work.
+2024-02-22 11:50:01,652 INFO     DisBatch       : Notifying ".cylinder 0 67" there is no more work.
+2024-02-22 11:50:01,652 INFO     DisBatch       : Notifying ".cylinder 0 19" there is no more work.
+2024-02-22 11:50:01,653 INFO     DisBatch       : Notifying ".cylinder 0 12" there is no more work.
+2024-02-22 11:50:01,653 INFO     DisBatch       : Notifying ".cylinder 0 13" there is no more work.
+2024-02-22 11:50:01,654 INFO     DisBatch       : Notifying ".cylinder 0 10" there is no more work.
+2024-02-22 11:50:01,654 INFO     DisBatch       : Notifying ".cylinder 0 76" there is no more work.
+2024-02-22 11:50:01,654 INFO     DisBatch       : Notifying ".cylinder 0 72" there is no more work.
+2024-02-22 11:50:01,655 INFO     DisBatch       : Notifying ".cylinder 0 51" there is no more work.
+2024-02-22 11:50:01,655 INFO     DisBatch       : Notifying ".cylinder 0 98" there is no more work.
+2024-02-22 11:50:01,656 INFO     DisBatch       : Notifying ".cylinder 0 14" there is no more work.
+2024-02-22 11:50:01,656 INFO     DisBatch       : Notifying ".cylinder 0 111" there is no more work.
+2024-02-22 11:50:01,656 INFO     DisBatch       : Notifying ".cylinder 0 23" there is no more work.
+2024-02-22 11:50:01,657 INFO     DisBatch       : Notifying ".cylinder 0 49" there is no more work.
+2024-02-22 11:50:01,657 INFO     DisBatch       : Notifying ".cylinder 0 120" there is no more work.
+2024-02-22 11:50:01,657 INFO     DisBatch       : Notifying ".cylinder 0 105" there is no more work.
+2024-02-22 11:50:01,658 INFO     DisBatch       : Notifying ".cylinder 0 61" there is no more work.
+2024-02-22 11:50:01,658 INFO     DisBatch       : Notifying ".cylinder 0 74" there is no more work.
+2024-02-22 11:50:01,659 INFO     DisBatch       : Notifying ".cylinder 0 42" there is no more work.
+2024-02-22 11:50:01,659 INFO     DisBatch       : Notifying ".cylinder 0 101" there is no more work.
+2024-02-22 11:50:01,659 INFO     DisBatch       : Notifying ".cylinder 0 126" there is no more work.
+2024-02-22 11:50:01,660 INFO     DisBatch       : Notifying ".cylinder 0 121" there is no more work.
+2024-02-22 11:50:01,660 INFO     DisBatch       : Notifying ".cylinder 0 16" there is no more work.
+2024-02-22 11:50:01,660 INFO     DisBatch       : Notifying ".cylinder 0 28" there is no more work.
+2024-02-22 11:50:01,661 INFO     DisBatch       : Notifying ".cylinder 0 43" there is no more work.
+2024-02-22 11:50:01,661 INFO     DisBatch       : Notifying ".cylinder 0 15" there is no more work.
+2024-02-22 11:50:01,661 INFO     DisBatch       : Notifying ".cylinder 0 45" there is no more work.
+2024-02-22 11:50:01,662 INFO     DisBatch       : Notifying ".cylinder 0 103" there is no more work.
+2024-02-22 11:50:01,662 INFO     DisBatch       : Notifying ".cylinder 0 118" there is no more work.
+2024-02-22 11:50:01,662 INFO     DisBatch       : Notifying ".cylinder 0 75" there is no more work.
+2024-02-22 11:50:01,663 INFO     DisBatch       : Notifying ".cylinder 0 89" there is no more work.
+2024-02-22 11:50:01,663 INFO     DisBatch       : Notifying ".cylinder 0 114" there is no more work.
+2024-02-22 11:50:01,664 INFO     DisBatch       : Notifying ".cylinder 0 115" there is no more work.
+2024-02-22 11:50:01,664 INFO     DisBatch       : Notifying ".cylinder 0 48" there is no more work.
+2024-02-22 11:50:01,664 INFO     DisBatch       : Notifying ".cylinder 0 35" there is no more work.
+2024-02-22 11:50:01,665 INFO     DisBatch       : Notifying ".cylinder 0 108" there is no more work.
+2024-02-22 11:50:01,665 INFO     DisBatch       : Notifying ".cylinder 0 73" there is no more work.
+2024-02-22 11:50:01,666 INFO     DisBatch       : Notifying ".cylinder 0 46" there is no more work.
+2024-02-22 11:50:01,666 INFO     DisBatch       : Notifying ".cylinder 0 85" there is no more work.
+2024-02-22 11:50:04,814 INFO     DisBatch       : Engine 0, ".cylinder 0 34" stopped
+2024-02-22 11:50:04,826 INFO     DisBatch       : Engine 0, ".cylinder 0 36" stopped
+2024-02-22 11:50:04,902 INFO     DisBatch       : Engine 0, ".cylinder 0 40" stopped
+2024-02-22 11:50:04,924 INFO     DisBatch       : Engine 0, ".cylinder 0 42" stopped
+2024-02-22 11:50:04,998 INFO     DisBatch       : Engine 0, ".cylinder 0 45" stopped
+2024-02-22 11:50:05,000 INFO     DisBatch       : Engine 0, ".cylinder 0 47" stopped
+2024-02-22 11:50:05,037 INFO     DisBatch       : Engine 0, ".cylinder 0 50" stopped
+2024-02-22 11:50:05,138 INFO     DisBatch       : Engine 0, ".cylinder 0 56" stopped
+2024-02-22 11:50:05,175 INFO     DisBatch       : Engine 0, ".cylinder 0 58" stopped
+2024-02-22 11:50:05,194 INFO     DisBatch       : Engine 0, ".cylinder 0 60" stopped
+2024-02-22 11:50:05,241 INFO     DisBatch       : Engine 0, ".cylinder 0 62" stopped
+2024-02-22 11:50:05,312 INFO     DisBatch       : Engine 0, ".cylinder 0 64" stopped
+2024-02-22 11:50:05,338 INFO     DisBatch       : Engine 0, ".cylinder 0 65" stopped
+2024-02-22 11:50:05,354 INFO     DisBatch       : Engine 0, ".cylinder 0 66" stopped
+2024-02-22 11:50:05,372 INFO     DisBatch       : Engine 0, ".cylinder 0 67" stopped
+2024-02-22 11:50:05,374 INFO     DisBatch       : Engine 0, ".cylinder 0 68" stopped
+2024-02-22 11:50:05,379 INFO     DisBatch       : Engine 0, ".cylinder 0 69" stopped
+2024-02-22 11:50:05,388 INFO     DisBatch       : Engine 0, ".cylinder 0 1" stopped
+2024-02-22 11:50:05,389 INFO     DisBatch       : Engine 0, ".cylinder 0 2" stopped
+2024-02-22 11:50:05,401 INFO     DisBatch       : Engine 0, ".cylinder 0 3" stopped
+2024-02-22 11:50:05,402 INFO     DisBatch       : Engine 0, ".cylinder 0 4" stopped
+2024-02-22 11:50:05,423 INFO     DisBatch       : Engine 0, ".cylinder 0 5" stopped
+2024-02-22 11:50:05,430 INFO     DisBatch       : Engine 0, ".cylinder 0 6" stopped
+2024-02-22 11:50:05,436 INFO     DisBatch       : Engine 0, ".cylinder 0 70" stopped
+2024-02-22 11:50:05,441 INFO     DisBatch       : Engine 0, ".cylinder 0 7" stopped
+2024-02-22 11:50:05,510 INFO     DisBatch       : Engine 0, ".cylinder 0 8" stopped
+2024-02-22 11:50:05,511 INFO     DisBatch       : Engine 0, ".cylinder 0 10" stopped
+2024-02-22 11:50:05,511 INFO     DisBatch       : Engine 0, ".cylinder 0 73" stopped
+2024-02-22 11:50:05,512 INFO     DisBatch       : Engine 0, ".cylinder 0 71" stopped
+2024-02-22 11:50:05,513 INFO     DisBatch       : Engine 0, ".cylinder 0 13" stopped
+2024-02-22 11:50:05,515 INFO     DisBatch       : Engine 0, ".cylinder 0 9" stopped
+2024-02-22 11:50:05,516 INFO     DisBatch       : Engine 0, ".cylinder 0 11" stopped
+2024-02-22 11:50:05,517 INFO     DisBatch       : Engine 0, ".cylinder 0 72" stopped
+2024-02-22 11:50:05,518 INFO     DisBatch       : Engine 0, ".cylinder 0 12" stopped
+2024-02-22 11:50:05,519 INFO     DisBatch       : Engine 0, ".cylinder 0 74" stopped
+2024-02-22 11:50:05,557 INFO     DisBatch       : Engine 0, ".cylinder 0 14" stopped
+2024-02-22 11:50:05,558 INFO     DisBatch       : Engine 0, ".cylinder 0 16" stopped
+2024-02-22 11:50:05,559 INFO     DisBatch       : Engine 0, ".cylinder 0 15" stopped
+2024-02-22 11:50:05,560 INFO     DisBatch       : Engine 0, ".cylinder 0 17" stopped
+2024-02-22 11:50:05,566 INFO     DisBatch       : Engine 0, ".cylinder 0 18" stopped
+2024-02-22 11:50:05,567 INFO     DisBatch       : Engine 0, ".cylinder 0 76" stopped
+2024-02-22 11:50:05,612 INFO     DisBatch       : Engine 0, ".cylinder 0 19" stopped
+2024-02-22 11:50:05,613 INFO     DisBatch       : Engine 0, ".cylinder 0 20" stopped
+2024-02-22 11:50:05,618 INFO     DisBatch       : Engine 0, ".cylinder 0 21" stopped
+2024-02-22 11:50:05,623 INFO     DisBatch       : Engine 0, ".cylinder 0 22" stopped
+2024-02-22 11:50:05,632 INFO     DisBatch       : Engine 0, ".cylinder 0 78" stopped
+2024-02-22 11:50:05,637 INFO     DisBatch       : Engine 0, ".cylinder 0 79" stopped
+2024-02-22 11:50:05,638 INFO     DisBatch       : Engine 0, ".cylinder 0 80" stopped
+2024-02-22 11:50:05,639 INFO     DisBatch       : Engine 0, ".cylinder 0 23" stopped
+2024-02-22 11:50:05,663 INFO     DisBatch       : Engine 0, ".cylinder 0 24" stopped
+2024-02-22 11:50:05,672 INFO     DisBatch       : Engine 0, ".cylinder 0 25" stopped
+2024-02-22 11:50:05,683 INFO     DisBatch       : Engine 0, ".cylinder 0 26" stopped
+2024-02-22 11:50:05,696 INFO     DisBatch       : Engine 0, ".cylinder 0 82" stopped
+2024-02-22 11:50:05,701 INFO     DisBatch       : Engine 0, ".cylinder 0 83" stopped
+2024-02-22 11:50:05,706 INFO     DisBatch       : Engine 0, ".cylinder 0 27" stopped
+2024-02-22 11:50:05,728 INFO     DisBatch       : Engine 0, ".cylinder 0 28" stopped
+2024-02-22 11:50:05,729 INFO     DisBatch       : Engine 0, ".cylinder 0 29" stopped
+2024-02-22 11:50:05,730 INFO     DisBatch       : Engine 0, ".cylinder 0 84" stopped
+2024-02-22 11:50:05,746 INFO     DisBatch       : Engine 0, ".cylinder 0 30" stopped
+2024-02-22 11:50:05,750 INFO     DisBatch       : Engine 0, ".cylinder 0 85" stopped
+2024-02-22 11:50:05,762 INFO     DisBatch       : Engine 0, ".cylinder 0 32" stopped
+2024-02-22 11:50:05,763 INFO     DisBatch       : Engine 0, ".cylinder 0 31" stopped
+2024-02-22 11:50:05,775 INFO     DisBatch       : Engine 0, ".cylinder 0 33" stopped
+2024-02-22 11:50:05,789 INFO     DisBatch       : Engine 0, ".cylinder 0 86" stopped
+2024-02-22 11:50:05,807 INFO     DisBatch       : Engine 0, ".cylinder 0 87" stopped
+2024-02-22 11:50:05,811 INFO     DisBatch       : Engine 0, ".cylinder 0 88" stopped
+2024-02-22 11:50:05,820 INFO     DisBatch       : Engine 0, ".cylinder 0 35" stopped
+2024-02-22 11:50:05,826 INFO     DisBatch       : Engine 0, ".cylinder 0 37" stopped
+2024-02-22 11:50:05,872 INFO     DisBatch       : Engine 0, ".cylinder 0 38" stopped
+2024-02-22 11:50:05,877 INFO     DisBatch       : Engine 0, ".cylinder 0 39" stopped
+2024-02-22 11:50:05,882 INFO     DisBatch       : Engine 0, ".cylinder 0 89" stopped
+2024-02-22 11:50:05,882 INFO     DisBatch       : Engine 0, ".cylinder 0 90" stopped
+2024-02-22 11:50:05,899 INFO     DisBatch       : Engine 0, ".cylinder 0 91" stopped
+2024-02-22 11:50:05,913 INFO     DisBatch       : Engine 0, ".cylinder 0 41" stopped
+2024-02-22 11:50:05,927 INFO     DisBatch       : Engine 0, ".cylinder 0 43" stopped
+2024-02-22 11:50:05,928 INFO     DisBatch       : Engine 0, ".cylinder 0 44" stopped
+2024-02-22 11:50:05,949 INFO     DisBatch       : Engine 0, ".cylinder 0 92" stopped
+2024-02-22 11:50:05,972 INFO     DisBatch       : Engine 0, ".cylinder 0 93" stopped
+2024-02-22 11:50:05,985 INFO     DisBatch       : Engine 0, ".cylinder 0 94" stopped
+2024-02-22 11:50:05,996 INFO     DisBatch       : Engine 0, ".cylinder 0 48" stopped
+2024-02-22 11:50:05,997 INFO     DisBatch       : Engine 0, ".cylinder 0 46" stopped
+2024-02-22 11:50:06,014 INFO     DisBatch       : Engine 0, ".cylinder 0 96" stopped
+2024-02-22 11:50:06,018 INFO     DisBatch       : Engine 0, ".cylinder 0 49" stopped
+2024-02-22 11:50:06,038 INFO     DisBatch       : Engine 0, ".cylinder 0 51" stopped
+2024-02-22 11:50:06,074 INFO     DisBatch       : Engine 0, ".cylinder 0 52" stopped
+2024-02-22 11:50:06,080 INFO     DisBatch       : Engine 0, ".cylinder 0 98" stopped
+2024-02-22 11:50:06,109 INFO     DisBatch       : Engine 0, ".cylinder 0 53" stopped
+2024-02-22 11:50:06,118 INFO     DisBatch       : Engine 0, ".cylinder 0 54" stopped
+2024-02-22 11:50:06,130 INFO     DisBatch       : Engine 0, ".cylinder 0 55" stopped
+2024-02-22 11:50:06,142 INFO     DisBatch       : Engine 0, ".cylinder 0 100" stopped
+2024-02-22 11:50:06,173 INFO     DisBatch       : Engine 0, ".cylinder 0 102" stopped
+2024-02-22 11:50:06,190 INFO     DisBatch       : Engine 0, ".cylinder 0 57" stopped
+2024-02-22 11:50:06,202 INFO     DisBatch       : Engine 0, ".cylinder 0 59" stopped
+2024-02-22 11:50:06,207 INFO     DisBatch       : Engine 0, ".cylinder 0 103" stopped
+2024-02-22 11:50:06,216 INFO     DisBatch       : Engine 0, ".cylinder 0 105" stopped
+2024-02-22 11:50:06,217 INFO     DisBatch       : Engine 0, ".cylinder 0 104" stopped
+2024-02-22 11:50:06,241 INFO     DisBatch       : Engine 0, ".cylinder 0 61" stopped
+2024-02-22 11:50:06,247 INFO     DisBatch       : Engine 0, ".cylinder 0 106" stopped
+2024-02-22 11:50:06,261 INFO     DisBatch       : Engine 0, ".cylinder 0 107" stopped
+2024-02-22 11:50:06,265 INFO     DisBatch       : Engine 0, ".cylinder 0 108" stopped
+2024-02-22 11:50:06,287 INFO     DisBatch       : Engine 0, ".cylinder 0 63" stopped
+2024-02-22 11:50:06,375 INFO     DisBatch       : Engine 0, ".cylinder 0 0" stopped
+2024-02-22 11:50:06,510 INFO     DisBatch       : Engine 0, ".cylinder 0 111" stopped
+2024-02-22 11:50:06,560 INFO     DisBatch       : Engine 0, ".cylinder 0 115" stopped
+2024-02-22 11:50:06,561 INFO     DisBatch       : Engine 0, ".cylinder 0 110" stopped
+2024-02-22 11:50:06,562 INFO     DisBatch       : Engine 0, ".cylinder 0 114" stopped
+2024-02-22 11:50:06,562 INFO     DisBatch       : Engine 0, ".cylinder 0 109" stopped
+2024-02-22 11:50:06,563 INFO     DisBatch       : Engine 0, ".cylinder 0 119" stopped
+2024-02-22 11:50:06,564 INFO     DisBatch       : Engine 0, ".cylinder 0 116" stopped
+2024-02-22 11:50:06,566 INFO     DisBatch       : Engine 0, ".cylinder 0 75" stopped
+2024-02-22 11:50:06,617 INFO     DisBatch       : Engine 0, ".cylinder 0 77" stopped
+2024-02-22 11:50:06,619 INFO     DisBatch       : Engine 0, ".cylinder 0 112" stopped
+2024-02-22 11:50:06,620 INFO     DisBatch       : Engine 0, ".cylinder 0 118" stopped
+2024-02-22 11:50:06,621 INFO     DisBatch       : Engine 0, ".cylinder 0 117" stopped
+2024-02-22 11:50:06,622 INFO     DisBatch       : Engine 0, ".cylinder 0 123" stopped
+2024-02-22 11:50:06,623 INFO     DisBatch       : Engine 0, ".cylinder 0 113" stopped
+2024-02-22 11:50:06,623 INFO     DisBatch       : Engine 0, ".cylinder 0 120" stopped
+2024-02-22 11:50:06,624 INFO     DisBatch       : Engine 0, ".cylinder 0 122" stopped
+2024-02-22 11:50:06,625 INFO     DisBatch       : Engine 0, ".cylinder 0 121" stopped
+2024-02-22 11:50:06,638 INFO     DisBatch       : Engine 0, ".cylinder 0 124" stopped
+2024-02-22 11:50:06,655 INFO     DisBatch       : Engine 0, ".cylinder 0 125" stopped
+2024-02-22 11:50:06,656 INFO     DisBatch       : Engine 0, ".cylinder 0 126" stopped
+2024-02-22 11:50:06,667 INFO     DisBatch       : Engine 0, ".cylinder 0 127" stopped
+2024-02-22 11:50:06,683 INFO     DisBatch       : Engine 0, ".cylinder 0 81" stopped
+2024-02-22 11:50:06,999 INFO     DisBatch       : Engine 0, ".cylinder 0 95" stopped
+2024-02-22 11:50:07,042 INFO     DisBatch       : Engine 0, ".cylinder 0 97" stopped
+2024-02-22 11:50:07,152 INFO     DisBatch       : Finished barrier 128: 128	-1	-1	D	#NO MORE TASKS BARRIER.
+2024-02-22 11:50:07,153 INFO     DisBatch       : Engine 0, ".cylinder 0 101" stopped
+2024-02-22 11:50:07,154 INFO     DisBatch       : Engine 0, ".cylinder 0 99" stopped
+2024-02-22 11:50:07,156 INFO     kvs            : Accepted connect from ('10.250.146.222', 42562)
+2024-02-22 11:50:07,158 INFO     kvs            : Closing connection from ('10.250.146.222', 36412)
+2024-02-22 11:50:07,158 INFO     DisBatch       : Engine 0 stopped, OK
+2024-02-22 11:50:07,158 INFO     kvs            : Closing connection from ('10.250.146.222', 36418)
+2024-02-22 11:50:07,165 INFO     kvs            : Closing connection from ('10.250.146.222', 42562)
+2024-02-22 11:50:07,166 INFO     kvs            : Closing connection from ('10.250.146.222', 36398)
+2024-02-22 11:50:07,167 INFO     DisBatch       : Driver done
+2024-02-22 11:50:07,168 INFO     kvs            : Closing connection from ('10.250.146.222', 36386)
+2024-02-22 11:50:07,168 INFO     DisBatch       : Shutting down KVS server.
+2024-02-22 11:50:07,169 INFO     kvs            : Calling server shutdown
+2024-02-22 11:50:07,172 INFO     DisBatch       : Waiting for Execution context to finish...
+2024-02-22 11:50:14,180 INFO     DisBatch       : Execution context returned 0

@@ -1,5 +1,1 @@
-source /mnt/home/rbrooks/ceph/venvs/mwlmc_fulldiscexp_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py -o -f /mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/param_1.yaml
-source /mnt/home/rbrooks/ceph/venvs/mwlmc_fulldiscexp_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py -o -f /mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/param_15.yaml
-source /mnt/home/rbrooks/ceph/venvs/mwlmc_fulldiscexp_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py -o -f /mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/param_39.yaml
-source /mnt/home/rbrooks/ceph/venvs/mwlmc_fulldiscexp_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py -o -f /mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/param_53.yaml
-source /mnt/home/rbrooks/ceph/venvs/mwlmc_fulldiscexp_venv/bin/activate ; python3 /mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py -o -f /mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/param_106.yaml
+#DISBATCH REPEAT 128 start 0 /mnt/home/rbrooks/ceph/oceanus/bash/run_streams.sh ${DISBATCH_REPEAT_INDEX} /mnt/home/rbrooks/ceph/oceanus/ics/high-vel-dis/rigid-mw/param_${DISBATCH_REPEAT_INDEX}.yaml

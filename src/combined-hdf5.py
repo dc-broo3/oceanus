@@ -32,16 +32,16 @@ def combine_hdf5_files(input_dir, input_sub, output_file):
 # ending = "full-mwh-full-mwd-no-lmc/"
 # ending = "full-mwh-full-mwd-full-lmc/"
 # ending = "static-mw/"
-# ending = "rigid-mw/"
+ending = "rigid-mw/"
 
-# input_ =  "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/" 
+input_ =  "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/" 
 # Output master HDF5 file
-# output_ = what_potential(input_ + ending + "stream_0.hdf5") #all streams will have same label, saves doing same steps for 10^X streams
+output_ = what_potential(input_ + ending + "stream_0.hdf5") #all streams will have same label, saves doing same steps for 10^X streams
 
 # Agama streams
-input_ =  "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/" 
-ending = "high-vel-dis/agama-mw/"
-output_ = "combined-files/1024-agama.hdf5"
+# input_ =  "/mnt/home/rbrooks/ceph/oceanus/analysis/stream-runs/" 
+# ending = "high-vel-dis/agama-mw/"
+# output_ = "combined-files/1024-agama.hdf5"
 
 # Combine HDF5 files
 combine_hdf5_files(input_, ending, output_)

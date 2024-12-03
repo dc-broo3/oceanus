@@ -152,6 +152,10 @@ def streamparams(ics, mass_scales, peris, apos):
     gens = ["gen-params-rigid-mw.yaml", "gen-params-static-mw.yaml", "gen-params-rm-mwh-mwd-lmc.yaml", "gen-params-em-mwh-mwd-lmc.yaml", \
             "gen-params-md-mwh-mwd-lmc.yaml", "gen-params-mq-mwh-mwd-lmc.yaml", "gen-params-mdq-mwh-mwd-lmc.yaml", \
             "gen-params-full-mwh-mwd-lmc.yaml", "gen-params-full-mwh-mwd-no-lmc.yaml", "gen-params-full-mwh-no-mwd-full-lmc.yaml"]
+
+#     exts = ["rigid-mw", "static-mw", ]
+    
+#     gens = ["gen-params-rigid-mw.yaml", "gen-params-static-mw.yaml"]
     
     path = "/mnt/ceph/users/rbrooks/oceanus/ics/generation-files/"
     
@@ -184,6 +188,7 @@ def streamparams(ics, mass_scales, peris, apos):
                         'snapname':str("param_{}".format(i)),
                         'outpath':outpath,
                         'outname':str("stream_{}".format(i))}
+            # file_name = f"/mnt/home/rbrooks/ceph/oceanus/ics/{exts[j]}/param_{i}.yaml"
             file_name = f"/mnt/home/rbrooks/ceph/oceanus/ics/{exts[j]}/param_{i}.yaml"
             with open(file_name, 'w') as yaml_file:
                 yaml.dump(yaml_data, yaml_file, default_flow_style=False)

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=rbrooks@flatironinstitute.org
+#SBATCH --mail-user=richard.brooks.22@ucl.ac.uk
 #SBATCH --time=00:30:00
 #SBATCH --job-name=oceanus
 #SBATCH -N1 --ntasks-per-node=1
@@ -27,7 +27,10 @@ VENVDIR=/mnt/home/rbrooks/ceph/venvs
 source $VENVDIR/mwlmc_fulldiscexp_venv/bin/activate
 
 pipeline=/mnt/home/rbrooks/ceph/oceanus/src/streamgenerator.py
-param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/rigid-mw.yaml
-# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/full-mwh-full-mwd-full-lmc.yaml
-# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/gd1/full-mwh-full-mwd-no-lmc.yaml
+
+# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/param_272/rigid-mwhalo.yaml
+# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/param_272/rigid-mwhalodisc.yaml
+# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/param_272/rigid-mwhalo-lmc.yaml
+# param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/param_272/rigid-mwhalodisc-lmc.yaml
+param=/mnt/home/rbrooks/ceph/oceanus/ics/param-files/param_272/rigid-mwhalodisc-deformlmc.yaml
 python3 $pipeline -o -f $param
