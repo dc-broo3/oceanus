@@ -19,7 +19,7 @@ $ git clone --recursive https://github.com/dc-broo3/oceanus.git
 
 ## Virtual environment instructions :computer:
 
-On Rusty, a virtual environment ready to use to run the stream generation code can be found at:
+On Flatiron's Rusty computing cluster, a virtual environment ready to use to run the stream generation code can be found at:
 
 ```bash
 $ source /mnt/home/rbrooks/ceph/venvs/mwlmc_fulldiscexp_venv/bin/activate
